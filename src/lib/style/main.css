@@ -1,0 +1,34 @@
+/* RESET ------------------------------------------------ */
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+/* INIT ------------------------------------------------- */
+html,
+body {
+	overscroll-behavior-y: none;
+	background-color: var(--clr-bg);
+}
+
+body {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+/* LAYOUT VARS ------------------------------------------ */
+:root {
+	--clamp--content-width--max: 1440px;
+}
+
+/* LAYOUT ----------------------------------------------- */
+main {
+	width: 100%;
+	max-width: var(--clamp--content-width--max);
+	display: flex;
+	flex-direction: column;
+	border-right: var(--bdw) solid var(--clr-dv);
+	border-left: var(--bdw) solid var(--clr-dv);
+}

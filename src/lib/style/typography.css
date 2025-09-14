@@ -1,0 +1,227 @@
+/* Main Barlow font faces */
+@font-face {
+	font-family: 'Barlow';
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	src: url('/font/Barlow-Regular.woff2') format('woff2');
+}
+@font-face {
+	font-family: 'Barlow';
+	font-style: normal;
+	font-weight: 500;
+	font-display: swap;
+	src: url('/font/Barlow-Medium.woff2') format('woff2');
+}
+@font-face {
+	font-family: 'Barlow';
+	font-style: normal;
+	font-weight: 700;
+	font-display: swap;
+	src: url('/font/Barlow-Bold.woff2') format('woff2');
+}
+@font-face {
+	font-family: 'Barlow';
+	font-style: normal;
+	font-weight: 800;
+	font-display: swap;
+	src: url('/font/Barlow-ExtraBold.woff2') format('woff2');
+}
+
+/* Main Barlow Condensed font faces */
+@font-face {
+	font-family: 'Barlow Condensed';
+	font-style: normal;
+	font-weight: 600;
+	font-display: swap;
+	src: url('/font/BarlowCondensed-SemiBold.woff2') format('woff2');
+}
+@font-face {
+	font-family: 'Barlow Condensed';
+	font-style: normal;
+	font-weight: 700;
+	font-display: swap;
+	src: url('/font/BarlowCondensed-Bold.woff2') format('woff2');
+}
+@font-face {
+	font-family: 'Barlow Condensed';
+	font-style: normal;
+	font-weight: 800;
+	font-display: swap;
+	src: url('/font/BarlowCondensed-ExtraBold.woff2') format('woff2');
+}
+
+/* Fallbacks for Barlow */
+@font-face {
+	font-family: 'Barlow Fallback 400';
+	font-style: normal;
+	font-weight: 400;
+	src: local('Arial');
+	ascent-override: 103.13%;
+	descent-override: 20.63%;
+	line-gap-override: 0%;
+	size-adjust: 96.96%;
+}
+@font-face {
+	font-family: 'Barlow Fallback 500';
+	font-style: normal;
+	font-weight: 500;
+	src: local('Arial');
+	ascent-override: 101.81%;
+	descent-override: 20.36%;
+	line-gap-override: 0%;
+	size-adjust: 98.22%;
+}
+@font-face {
+	font-family: 'Barlow Fallback 700';
+	font-style: normal;
+	font-weight: 700;
+	src: local('Arial');
+	ascent-override: 99.46%;
+	descent-override: 19.89%;
+	line-gap-override: 0%;
+	size-adjust: 100.54%;
+}
+@font-face {
+	font-family: 'Barlow Fallback 800';
+	font-style: normal;
+	font-weight: 800;
+	src: local('Arial');
+	ascent-override: 98.21%;
+	descent-override: 19.64%;
+	line-gap-override: 0%;
+	size-adjust: 101.82%;
+}
+
+/* Fallbacks for Barlow Condensed */
+@font-face {
+	font-family: 'Barlow Condensed Fallback 600';
+	font-style: normal;
+	font-weight: 600;
+	src: local('Arial');
+	ascent-override: 123.84%;
+	descent-override: 24.77%;
+	line-gap-override: 0%;
+	size-adjust: 80.75%;
+}
+@font-face {
+	font-family: 'Barlow Condensed Fallback 700';
+	font-style: normal;
+	font-weight: 700;
+	src: local('Arial');
+	ascent-override: 120.83%;
+	descent-override: 24.17%;
+	line-gap-override: 0%;
+	size-adjust: 82.76%;
+}
+@font-face {
+	font-family: 'Barlow Condensed Fallback 800';
+	font-style: normal;
+	font-weight: 800;
+	src: local('Arial');
+	ascent-override: 117.99%;
+	descent-override: 23.6%;
+	line-gap-override: 0%;
+	size-adjust: 84.76%;
+}
+
+/* VARS ------------------------------------------------- */
+:root {
+	--font-family--heading: 'Barlow', 'Barlow Fallback 800', Arial, sans-serif;
+	--font-family-heading--secondary:
+		'Barlow Condensed', 'Barlow Condensed Fallback 700', Arial, sans-serif;
+	--font-family--label: 'Barlow', 'Barlow Fallback 600', Arial, sans-serif;
+	--font-family--label--secondary:
+		'Barlow Condensed', 'Barlow Condensed Fallback 600', Arial, sans-serif;
+	--font-family--body: 'Barlow', 'Barlow Fallback 400', Arial, sans-serif;
+	--font-family--body--secondary: 'Barlow', 'Barlow Fallback 500', Arial, sans-serif;
+	--font-size--heading: var(--fs-4);
+	--font-size--heading--s: var(--fs-3);
+	--font-size--heading--l: var(--fs-5);
+	--font-size--heading--secondary: var(--fs-2);
+	--font-size--heading--secondary--s: var(--fs-1);
+	--font-size--heading--secondary--l: var(--fs-3);
+	--font-size--label: var(--fs-3);
+	--font-size--label--s: var(--fs-2);
+	--font-size--label--l: var(--fs-4);
+	--font-size--label--secondary: var(--fs-3);
+	--font-size--label--secondary--s: var(--fs-2);
+	--font-size--label--secondary--l: var(--fs-4);
+	--font-size--body: var(--fs-2);
+	--font-size--body--s: var(--fs-1);
+	--font-size--body--l: var(--fs-3);
+	--font-size--body--secondary: var(--fs-2);
+	--font-size--body--secondary: var(--fs-2);
+	--font-size--body--secondary--s: var(--fs-1);
+	--font-size--body--secondary--l: var(--fs-3);
+	--font-weight--heading: 800;
+	--font-weight--heading--secondary: 700;
+	--font-weight--label: 600;
+	--font-weight--label--secondary: 700;
+	--font-weight--body: 400;
+	--font-weight--body--secondary: 500;
+	--text-case--heading: uppercase;
+	--text-case--heading--secondary: capitalize;
+	--text-case--label: uppercase;
+	--text-case--body: none;
+	--text-case--body--secondary: none;
+	--font--heading: var(--font-weight--heading) var(--font-size--heading) var(--font-family--heading);
+	--font--heading--s: var(--font-weight--heading) var(--font-size--heading--s)
+		var(--font-family--heading);
+	--font--heading--l: var(--font-weight--heading) var(--font-size--heading--l)
+		var(--font-family--heading);
+	--font--heading--secondary: var(--font-weight--heading--secondary)
+		var(--font-size--heading--secondary) var(--font-family-heading--secondary);
+	--font--heading--secondary--s: var(--font-weight--heading--secondary)
+		var(--font-size--heading--secondary--s) var(--font-family-heading--secondary);
+	--font--heading--secondary--l: var(--font-weight--heading--secondary)
+		var(--font-size--heading--secondary--l) var(--font-family-heading--secondary);
+	--font--label: var(--font-weight--label) var(--font-size--label) var(--font-family--label);
+	--font--label--s: var(--font-weight--label) var(--font-size--label--s) var(--font-family--label);
+	--font--label--l: var(--font-weight--label) var(--font-size--label--l) var(--font-family--label);
+	--font--label--secondary: var(--font-weight--label--secondary) var(--font-size--label--secondary)
+		var(--font-family--label--secondary);
+	--font--label--secondary--s: var(--font-weight--label--secondary)
+		var(--font-size--label--secondary--s) var(--font-family--label--secondary);
+	--font--label--secondary--l: var(--font-weight--label--secondary)
+		var(--font-size--label--secondary--l) var(--font-family--label--secondary);
+	--font--body: var(--font-weight--body) var(--font-size--body) var(--font-family--body);
+	--font--body--s: var(--font-weight--body) var(--font-size--body--s) var(--font-family--body);
+	--font--body--l: var(--font-weight--body) var(--font-size--body--l) var(--font-family--body);
+	--font--body--secondary: var(--font-weight--body--secondary) var(--font-size--body--secondary)
+		var(--font-family--body--secondary);
+	--font--body--secondary--s: var(--font-weight--body--secondary)
+		var(--font-size--body--secondary--s) var(--font-family--body--secondary);
+	--font--body--secondary--l: var(--font-weight--body--secondary)
+		var(--font-size--body--secondary--l) var(--font-family--body--secondary);
+}
+
+/* INIT ------------------------------------------------- */
+* {
+	color: var(--clr-ink);
+}
+
+h1,
+h2 {
+	font: var(--font--heading);
+}
+
+h3,
+h4,
+h5,
+h6 {
+	font: var(--font--heading--secondary);
+}
+
+span,
+label {
+	font: var(--font--label);
+}
+
+p {
+	font: var(--font--body);
+}
+
+a {
+	text-decoration: none;
+}
