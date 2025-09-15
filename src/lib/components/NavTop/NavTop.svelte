@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { NAV_ITEMS } from '$lib/config';
 	import Button from '../Button/Button.svelte';
+	import { goto } from '$app/navigation';
 
 	const navItems = NAV_ITEMS.filter((item) => item.showInTopNav);
 </script>
@@ -21,6 +22,7 @@
 								label={item.label}
 								intent={item.actionType}
 								colorway={item.actionType === 'primary' ? 'primary' : 'dv'}
+								onclick={() => goto(item.href)}
 							/>
 						{:else}
 							<a href={item.href}>{item.label}</a>

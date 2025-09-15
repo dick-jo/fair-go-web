@@ -1,15 +1,17 @@
 <script lang="ts">
 	interface Props {
 		label: string;
+		onclick?: () => void
 		intent?: 'primary' | 'secondary';
 		colorway?: 'primary' | 'bg' | 'dv' | 'ev';
 	}
 
-	let { label, intent = 'primary', colorway = 'primary' }: Props = $props();
+	let { label, 	onclick, intent = 'primary', colorway = 'primary' }: Props = $props();
+
 </script>
 
 <!-- MARKUP -------------------------------------------- -->
-<button class={['host', 'button', `intent--${intent}`, `colorway--${colorway}`]}>
+<button onclick={() => onclick?.()} class={['host', 'button', `intent--${intent}`, `colorway--${colorway}`]}>
 	<span class="label">
 		{label}
 	</span>
