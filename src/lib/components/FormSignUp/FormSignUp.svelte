@@ -1,22 +1,16 @@
 <script lang="ts">
 	import { supabase } from '$lib/supabaseClient';
 	import type { ContactFormData } from '$lib/types';
+	import Input from '../Input/Input.svelte';
 
 	interface Props {
 		variant?: 'full' | 'email-only';
 		source?: string;
-		buttonText?: string;
-		placeholder?: string;
 	}
 
-	let {
-		variant = 'full',
-		source = 'unknown',
-		buttonText = 'Join Us',
-		placeholder = 'Enter your email'
-	}: Props = $props();
+	let { variant = 'full', source = 'unknown' }: Props = $props();
 
-	// Form state using Svelte 5 runes
+	// STATE ------------------------------------------------ //
 	let formData = $state<ContactFormData>({
 		email: '',
 		first_name: '',
@@ -24,10 +18,13 @@
 		postcode: ''
 	});
 
+	$inspect(formData);
+
 	let isSubmitting = $state(false);
 	let submitStatus = $state<'idle' | 'success' | 'error'>('idle');
 	let errorMessage = $state('');
 
+	// FORM ------------------------------------------------- //
 	async function handleSubmit(event: Event) {
 		event.preventDefault();
 
@@ -62,8 +59,6 @@
 				}
 				throw new Error(error.message);
 			}
-
-			console.log('Contact created:', data);
 
 			// Send welcome email (don't fail signup if email fails)
 			fetch('/api/send-welcome-email', {
@@ -127,8 +122,14 @@
 		{/if}
 
 		<div class="form-field">
-			<label for="email">Email</label>
-			<input id="email" type="email" bind:value={formData.email} {placeholder} required />
+			<Input
+				id="email"
+				type="email"
+				label="Email"
+				bind:value={formData.email}
+				error="error"
+				required
+			/>
 		</div>
 
 		{#if variant === 'full'}
@@ -140,13 +141,15 @@
 					bind:value={formData.postcode}
 					placeholder="e.g. 5000"
 					title="Please enter a 4-digit postcode"
+					minLength="4"
+					maxlength="4"
 					required
 				/>
 			</div>
 		{/if}
 
 		<button type="submit" disabled={isSubmitting}>
-			{isSubmitting ? 'Joining...' : buttonText}
+			{isSubmitting ? 'Joining...' : 'Join Us'}
 		</button>
 
 		{#if submitStatus === 'success'}
