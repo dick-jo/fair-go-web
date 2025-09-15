@@ -12,15 +12,27 @@
 			return;
 		}
 
-		const { data, error: authError } = await supabase.auth.signUp({
-			email,
-			password,
-		});
-
+		const { data, error: authError } = await supabase.auth.signUp({ email, password });
 		if (authError) {
 			error = authError.message;
+			return;
+		}
+
+		const userId = data.user!.id;
+		const userEmail = data.user!.email!;
+		const { data: existingContact } = await supabase
+			.from('contacts')
+			.select('*')
+			.eq('email', userEmail)
+			.single();
+
+		if (existingContact) {
+			success = 'thank you for sign up!';
+			await supabase.from('contacts').update({ auth_id: userId }).eq('email', userEmail);
 		} else {
 			success = 'Check your email for confirmation!';
+			await supabase.from('contacts').insert({ email: userEmail, auth_id: userId });
+			await supabase.auth.resend({ type: 'signup', email: userEmail });
 		}
 	}
 </script>
