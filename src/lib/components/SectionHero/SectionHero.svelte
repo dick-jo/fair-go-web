@@ -1,11 +1,11 @@
 <script lang="ts">
+	import FormSignUp from '../FormSignUp/FormSignUp.svelte';
 	import HeroCarousel from '../HeroCarousel/HeroCarousel.svelte';
 	import type { HeroCarouselItem } from '../HeroCarousel/types';
 
 	interface Props {
 		heroCarouselItems: HeroCarouselItem[];
 	}
-
 	let { heroCarouselItems }: Props = $props();
 </script>
 
@@ -16,14 +16,16 @@
 	</div>
 
 	<div class="secondary">
-		<div class="wrapper"></div>
+		<div class="wrapper">
+			<FormSignUp />
+		</div>
 	</div>
 </section>
 
 <!-- CSS ----------------------------------------------- -->
 <style>
 	.host {
-		--loc-host-height: 560px;
+		--loc-host-height: 640px;
 		--loc-gap: var(--gap-l);
 		height: var(--loc-host-height);
 		padding: var(--loc-gap);

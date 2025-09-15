@@ -1,7 +1,9 @@
 <script lang="ts">
 	import { ArrowLeftIcon, ArrowRightIcon } from '@lucide/svelte';
 	import type { HeroCarouselItem } from './types';
-	import { splitStringToChunks } from '$lib/utils';
+	import { getMediaUrl, splitStringToChunks } from '$lib/utils';
+	import { blur, fly } from 'svelte/transition';
+	import { HERO_CAROUSEL_T_TRANSITION, HERO_CAROUSEL_T_IDLE } from './constants';
 
 	interface Props {
 		items: HeroCarouselItem[];
@@ -9,43 +11,148 @@
 
 	let { items }: Props = $props();
 
-	$inspect(items);
+	// STATE ------------------------------------------------ //
+	let activeItemIndex = $state<number>(0);
+	let isTransitioning = $state<boolean>(false);
+	let isPaused = $state<boolean>(false);
+	let pendingItemIndex: number | null = null;
+	let timeoutId: ReturnType<typeof setTimeout> | null = null;
+
+	// API -------------------------------------------------- //
+	function next() {
+		if (isTransitioning) return;
+		pendingItemIndex = (activeItemIndex + 1) % items.length;
+		isTransitioning = true;
+		clearAutoAdvance(); // Reset timer on manual navigation
+	}
+
+	function prev() {
+		if (isTransitioning) return;
+		pendingItemIndex = (activeItemIndex - 1 + items.length) % items.length;
+		isTransitioning = true;
+		clearAutoAdvance(); // Reset timer on manual navigation
+	}
+
+	function goto(i: number) {
+		if (isTransitioning || i === activeItemIndex) return;
+		pendingItemIndex = i;
+		isTransitioning = true;
+		clearAutoAdvance(); // Reset timer on manual navigation
+	}
+
+	function handleOutroEnd() {
+		if (pendingItemIndex !== null) {
+			activeItemIndex = pendingItemIndex;
+			pendingItemIndex = null;
+		}
+		isTransitioning = false;
+	}
+
+	function clearAutoAdvance() {
+		if (timeoutId) {
+			clearTimeout(timeoutId);
+			timeoutId = null;
+		}
+	}
+
+	function startAutoAdvance() {
+		clearAutoAdvance();
+		timeoutId = setTimeout(() => {
+			if (!isPaused && !isTransitioning) {
+				next();
+			}
+		}, HERO_CAROUSEL_T_IDLE);
+	}
+
+	function handleVisibilityChange() {
+		if (document.visibilityState === 'hidden') {
+			clearAutoAdvance();
+		} else if (!isPaused && !isTransitioning) {
+			startAutoAdvance();
+		}
+	}
+
+	$effect(() => {
+		if (!isPaused && !isTransitioning) {
+			startAutoAdvance();
+		}
+		return () => {
+			clearAutoAdvance();
+		};
+	});
+
+	$effect(() => {
+		if (typeof window === 'undefined') return;
+
+		window.addEventListener('visibilitychange', handleVisibilityChange);
+
+		return () => {
+			window.removeEventListener('visibilitychange', handleVisibilityChange);
+		};
+	});
 </script>
 
-<!-- MARKUP -------------------------------------------- -->
-<div class="host">
+<div
+	class="host"
+	role="region"
+	aria-label="Hero carousel"
+	onmouseenter={() => (isPaused = true)}
+	onmouseleave={() => {
+		isPaused = false;
+		if (!isTransitioning) startAutoAdvance();
+	}}
+>
 	<div class="media-container">
-		<img src={items[0].image_url} alt={items[0].label} />
+		{#if !isTransitioning}
+			<img
+				src={getMediaUrl(items[activeItemIndex].media)}
+				alt={items[activeItemIndex].media?.alt ?? items[activeItemIndex].label}
+				transition:blur={{ duration: HERO_CAROUSEL_T_TRANSITION }}
+				onoutroend={handleOutroEnd}
+			/>
+		{/if}
 		<div class="overlay"></div>
 	</div>
 
 	<div class="body">
-		<div class="primary">
-			<h3 class="label">{items[0].label}</h3>
-			<h2 class="title">
-				{#each splitStringToChunks(items[0].title, 2) as chunk}
-					<span>{chunk}</span>
-				{/each}
-			</h2>
-		</div>
+		{#if !isTransitioning}
+			<div class="primary">
+				<h3 class="label" transition:fly={{ x: -100, duration: HERO_CAROUSEL_T_TRANSITION }}>
+					{items[activeItemIndex].label}
+				</h3>
+				<h2 class="title" transition:fly={{ x: -200, duration: HERO_CAROUSEL_T_TRANSITION }}>
+					{#each splitStringToChunks(items[activeItemIndex].title, 2) as chunk}
+						<span>{chunk}</span>
+					{/each}
+				</h2>
+			</div>
+		{/if}
+
 		<div class="secondary">
-			<button>
+			<button onclick={next}>
 				<ArrowLeftIcon />
 			</button>
 
 			<div class="body">
-				<div class="pip" data-active="true"></div>
-				<div class="pip" data-active="false"></div>
+				{#each items as _, i}
+					<button
+						class="pip--wrapper"
+						aria-label="carousel navigation"
+						data-active={i === activeItemIndex}
+						onclick={() => goto(i)}
+					>
+						<div class="pip"></div>
+					</button>
+				{/each}
 			</div>
 
-			<button>
+			<button onclick={prev}>
 				<ArrowRightIcon />
 			</button>
 		</div>
 	</div>
 </div>
 
-<!-- CSS ----------------------------------------------- -->
 <style>
 	.host {
 		--loc-gap: var(--gap-max);
@@ -58,7 +165,11 @@
 		display: flex;
 		flex-direction: column;
 		justify-content: end;
-		background-color: var(--clr-dv-tr-light);
+		background-color: var(--clr-dv);
+		background-image: url('brand/brand-a-mono-dv-heavy-text-subtract-opacity-perc-25.svg');
+		background-size: 33%;
+		background-repeat: no-repeat;
+		background-position: center center;
 		border: var(--bdw) solid var(--clr-dv);
 		border-radius: var(--bdr-l);
 
@@ -76,7 +187,7 @@
 				width: 100%;
 				height: 100%;
 				object-fit: cover;
-				object-position: center;
+				object-position: top;
 			}
 
 			.overlay {
@@ -187,18 +298,39 @@
 					align-items: center;
 					gap: var(--gap-s);
 
-					.pip {
-						--loc-size: var(--sp-1);
+					/* PIPS ------------------------------------------------- */
+					.pip--wrapper {
+						--loc-size: var(--sp-3);
+						--loc-size--inner: var(--sp-1);
 						--loc-clr-bg: var(--clr-bg-tr-invisible);
 						--loc-clr-border: var(--clr-bg);
+						--loc-transition: var(--t-ix-hover);
 						&[data-active='true'] {
 							--loc-clr-bg: var(--clr-bg);
 						}
+						&:hover {
+							--loc-size--inner: calc(var(--sp-1) + var(--sp-min));
+							--loc-clr-bg: var(--clr-primary);
+							--loc-clr-border: var(--clr-primary);
+						}
 						width: var(--loc-size);
 						height: var(--loc-size);
+						display: flex;
+						justify-content: center;
+						align-items: center;
+						border-style: none;
+						background-color: transparent;
+						cursor: pointer;
+						transition: var(--loc-transition);
+					}
+
+					.pip {
+						width: var(--loc-size--inner);
+						height: var(--loc-size--inner);
 						background-color: var(--loc-clr-bg);
 						border: var(--bdw) solid var(--loc-clr-border);
 						border-radius: var(--loc-size);
+						transition: var(--loc-transition);
 					}
 				}
 			}

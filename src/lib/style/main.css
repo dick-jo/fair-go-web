@@ -20,7 +20,7 @@ body {
 
 /* LAYOUT VARS ------------------------------------------ */
 :root {
-	--clamp--content-width--max: 1440px;
+	--clamp--content-width--max: 1600px;
 }
 
 /* LAYOUT ----------------------------------------------- */
