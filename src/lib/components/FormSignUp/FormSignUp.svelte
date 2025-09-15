@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { PUBLIC_SUPABASE_ANON_KEY, PUBLIC_SUPABASE_URL } from '$env/static/public';
 	import { supabase } from '$lib/supabaseClient';
 	import type { ContactFormData } from '$lib/types';
 

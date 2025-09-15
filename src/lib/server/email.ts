@@ -12,11 +12,13 @@ export async function sendWelcomeEmail(email: string, firstName?: string | null)
 			to: email,
 			subject: 'Welcome to Fair Go!',
 			html: `
-        <h1>Welcome ${name}!</h1>
-        <p>Thanks for joining our movement for a fair go for all Australians.</p>
-        <p>We'll keep you updated on our campaigns and how you can get involved.</p>
-        <p>The Fair Go Team</p>
-      `
+  <h1>Welcome ${name}!</h1>
+  <p>Thanks for joining our movement for a fair go for all Australians.</p>
+  <p>We'll keep you updated on our campaigns and how you can get involved.</p>
+  <p>The Fair Go Team</p>
+  <hr>
+  <p><small>You can <a href="https://yoursite.com/email-preferences">manage your email preferences</a> at any time.</small></p>
+`
 		});
 
 		if (error) {
