@@ -8,7 +8,7 @@
 /* INIT ------------------------------------------------- */
 html,
 body {
-	overscroll-behavior-y: none;
+	overscroll-behavior: none;
 	background-color: var(--clr-bg);
 }
 
@@ -21,14 +21,52 @@ body {
 /* LAYOUT VARS ------------------------------------------ */
 :root {
 	--clamp--content-width--max: 1600px;
+	--clamp--content-width--s: 1200px;
+	--clamp--content-width--s-x: 800px;
 }
 
 /* LAYOUT ----------------------------------------------- */
 main {
 	width: 100%;
 	max-width: var(--clamp--content-width--max);
+	min-height: 80vh;
 	display: flex;
 	flex-direction: column;
 	border-right: var(--bdw) solid var(--clr-dv);
 	border-left: var(--bdw) solid var(--clr-dv);
+
+	& > * {
+		border-bottom: var(--bdw) solid var(--clr-dv);
+		&:last-child {
+			border-bottom: none;
+		}
+	}
+
+	/* SECTION ---------------------------------------------- */
+	section {
+		--loc-gap: var(--gap-l);
+		display: flex;
+		flex-direction: column;
+
+		.section-header {
+			height: var(--sp-5);
+			padding: 0 var(--loc-gap);
+			display: flex;
+			align-items: center;
+			gap: calc(var(--loc-gap) / 2);
+			border-bottom: var(--bdw) solid var(--clr-dv);
+
+			.title {
+				font: var(--font--heading--secondary);
+				font-size: var(--fs-4);
+			}
+		}
+	}
+}
+
+/* PRIMITIVES ------------------------------------------- */
+hr {
+	height: 1px;
+	border-style: none;
+	border-top: var(--bdw) solid var(--clr-dv);
 }

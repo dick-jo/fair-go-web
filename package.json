@@ -33,8 +33,10 @@
 		"vite": "^7.0.4"
 	},
 	"dependencies": {
+		"@humanspeak/svelte-markdown": "^0.8.11",
 		"@lucide/svelte": "^0.544.0",
 		"@supabase/supabase-js": "^2.57.4",
+		"marked": "^16.3.0",
 		"postgres": "^3.4.5",
 		"resend": "^6.0.3"
 	}

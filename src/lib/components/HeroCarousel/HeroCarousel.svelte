@@ -129,7 +129,7 @@
 		{/if}
 
 		<div class="secondary">
-			<button onclick={next}>
+			<button onclick={prev}>
 				<ArrowLeftIcon />
 			</button>
 
@@ -146,7 +146,7 @@
 				{/each}
 			</div>
 
-			<button onclick={prev}>
+			<button onclick={next}>
 				<ArrowRightIcon />
 			</button>
 		</div>
@@ -166,7 +166,7 @@
 		flex-direction: column;
 		justify-content: end;
 		background-color: var(--clr-dv);
-		background-image: url('brand/brand-a-mono-dv-heavy-text-subtract-opacity-perc-25.svg');
+		background-image: url('/brand/brand-a-mono-dv-heavy-text-subtract-opacity-perc-25.svg');
 		background-size: 33%;
 		background-repeat: no-repeat;
 		background-position: center center;
@@ -180,14 +180,15 @@
 			right: 0;
 			bottom: 0;
 			left: 0;
-			/* display: flex; */
-			/* justify-content: end; */
 
 			img {
 				width: 100%;
 				height: 100%;
 				object-fit: cover;
 				object-position: top;
+				@media screen and (max-width: 720px) {
+					object-position: center;
+				}
 			}
 
 			.overlay {
@@ -210,6 +211,12 @@
 			justify-content: space-between;
 			align-items: end;
 			z-index: 1;
+			@media screen and (max-width: 720px) {
+				flex-direction: column;
+				gap: var(--loc-gap);
+				justify-content: start;
+				align-items: stretch;
+			}
 
 			/* PRIMARY ---------------------------------------------- */
 			& > .primary {
@@ -220,22 +227,33 @@
 
 				/* TEXT ------------------------------------------------- */
 				& > .label {
+					--loc-font-size: var(--fs-4);
+					@media screen and (max-width: 1200px) {
+						--loc-font-size: var(--fs-3);
+					}
 					max-width: fit-content;
 					padding: var(--gap-min) var(--gap-s);
 					background-color: var(--clr-primary);
 					color: var(--clr-bg);
-					font-size: var(--fs-4);
+					font-size: var(--loc-font-size);
 					font-weight: 400;
 					text-transform: var(--text-case--label);
 				}
 
 				& > .title {
 					--loc-gap: var(--sp-1);
+					--loc-font-size: calc(var(--fs-12) * 1);
+					@media screen and (max-width: 1200px) {
+						--loc-font-size: var(--fs-12);
+					}
+					@media screen and (max-width: 960px) {
+						--loc-font-size: var(--fs-8);
+					}
 					padding-left: var(--loc-gap);
 					display: flex;
 					flex-direction: column;
 					font: var(--font--heading--secondary);
-					font-size: calc(var(--fs-7) * 2);
+					font-size: var(--loc-font-size);
 					text-transform: uppercase;
 
 					& > span {

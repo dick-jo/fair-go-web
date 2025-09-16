@@ -138,18 +138,18 @@
 	--font-size--heading: var(--fs-4);
 	--font-size--heading--s: var(--fs-3);
 	--font-size--heading--l: var(--fs-5);
-	--font-size--heading--secondary: var(--fs-2);
-	--font-size--heading--secondary--s: var(--fs-1);
-	--font-size--heading--secondary--l: var(--fs-3);
+	--font-size--heading--secondary: var(--fs-3);
+	--font-size--heading--secondary--s: var(--fs-2);
+	--font-size--heading--secondary--l: var(--fs-4);
 	--font-size--label: var(--fs-3);
 	--font-size--label--s: var(--fs-2);
 	--font-size--label--l: var(--fs-4);
 	--font-size--label--secondary: var(--fs-3);
 	--font-size--label--secondary--s: var(--fs-2);
 	--font-size--label--secondary--l: var(--fs-4);
-	--font-size--body: var(--fs-2);
-	--font-size--body--s: var(--fs-1);
-	--font-size--body--l: var(--fs-3);
+	--font-size--body: var(--fs-3);
+	--font-size--body--s: var(--fs-2);
+	--font-size--body--l: var(--fs-4);
 	--font-size--body--secondary: var(--fs-2);
 	--font-size--body--secondary: var(--fs-2);
 	--font-size--body--secondary--s: var(--fs-1);
@@ -201,7 +201,10 @@
 	color: var(--clr-ink);
 }
 
-h1,
+h1 {
+	font: var(--font--heading--l);
+}
+
 h2 {
 	font: var(--font--heading);
 }
@@ -223,5 +226,12 @@ p {
 }
 
 a {
+	font: var(--font--body);
 	text-decoration: none;
+}
+
+li,
+ul {
+	font: var(--font--body);
+	list-style-position: inside;
 }

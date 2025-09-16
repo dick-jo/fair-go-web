@@ -20,13 +20,13 @@ export const NAV_ITEMS: NavItem[] = [
 		showInFooter: true,
 		category: 'CONTENT'
 	},
-	{
-		label: 'Resources',
-		href: '/resources',
-		showInTopNav: true,
-		showInFooter: true,
-		category: 'CONTENT'
-	},
+	// {
+	// 	label: 'Resources',
+	// 	href: '/resources',
+	// 	showInTopNav: true,
+	// 	showInFooter: true,
+	// 	category: 'CONTENT'
+	// },
 	{
 		label: 'Our Plan',
 		href: '/our-plan',
@@ -34,13 +34,13 @@ export const NAV_ITEMS: NavItem[] = [
 		showInFooter: true,
 		category: 'OUR PLAN',
 		children: [
+			{ label: 'Policy', href: '/our-plan/policy', showInFooter: true, category: 'OUR PLAN' },
 			{
 				label: 'Philosophy',
 				href: '/our-plan/philosophy',
 				showInFooter: true,
 				category: 'OUR PLAN'
 			},
-			{ label: 'Policy', href: '/our-plan/policy', showInFooter: true, category: 'OUR PLAN' },
 			{ label: 'Campaigns', href: '/our-plan/campaigns', showInFooter: true, category: 'OUR PLAN' }
 		]
 	},
@@ -51,12 +51,12 @@ export const NAV_ITEMS: NavItem[] = [
 		showInFooter: true,
 		category: 'OUR TEAM',
 		children: [
-			{
-				label: 'Federal MPs',
-				href: '/our-team/federal-mps',
-				showInFooter: true,
-				category: 'OUR TEAM'
-			},
+			// {
+			// 	label: 'Federal MPs',
+			// 	href: '/our-team/federal-mps',
+			// 	showInFooter: true,
+			// 	category: 'OUR TEAM'
+			// },
 			{ label: 'State MPs', href: '/our-team/state-mps', showInFooter: true, category: 'OUR TEAM' },
 			{
 				label: 'Candidates',

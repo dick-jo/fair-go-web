@@ -1,15 +1,17 @@
 <script lang="ts">
-	interface Props {
+	import type { HTMLButtonAttributes } from 'svelte/elements';
+
+	interface Props extends Omit<HTMLButtonAttributes, 'class'> {
 		label: string;
 		intent?: 'primary' | 'secondary';
 		colorway?: 'primary' | 'bg' | 'dv' | 'ev';
 	}
 
-	let { label, intent = 'primary', colorway = 'primary' }: Props = $props();
+	let { label, intent = 'primary', colorway = 'primary', ...buttonProps }: Props = $props();
 </script>
 
 <!-- MARKUP -------------------------------------------- -->
-<button class={['host', 'button', `intent--${intent}`, `colorway--${colorway}`]}>
+<button class={['host', 'button', `intent--${intent}`, `colorway--${colorway}`]} {...buttonProps}>
 	<span class="label">
 		{label}
 	</span>
@@ -17,7 +19,7 @@
 
 <!-- CSS ----------------------------------------------- -->
 <style>
-	.host {
+	.host.button {
 		--loc-gap: var(--gap-l);
 		--loc-transition: var(--t-ix-hover);
 		&.intent--primary {
@@ -25,10 +27,8 @@
 				--loc-clr-bg: var(--clr-primary);
 				--loc-clr-ink: var(--clr-bg);
 			}
-
-			&:hover {
-				--loc-clr-bg: var(--clr-ev);
-				--loc-clr-border: var(--clr-primary-tr-light);
+			&.colorway--bg {
+				--loc-clr-bg: var(--clr-bg);
 				--loc-clr-ink: var(--clr-ink);
 			}
 		}
@@ -42,6 +42,14 @@
 				--loc-clr-bg: var(--clr-dv);
 				--loc-clr-border: var(--clr-dv-heavy-tr-light);
 				--loc-clr-ink: var(--clr-ink);
+			}
+		}
+		&.intent--primary,
+		&.intent--secondary {
+			&:disabled {
+				--loc-clr-bg: var(--clr-dv-tr-heavy);
+				--loc-clr-border: var(--clr-dv);
+				--loc-clr-ink: var(--clr-dv-heavy-tr-light);
 			}
 			&:hover {
 				--loc-clr-bg: var(--clr-ev);
@@ -58,6 +66,9 @@
 		border-radius: var(--bdr-s);
 		cursor: pointer;
 		transition: var(--loc-transition);
+		&:disabled {
+			cursor: not-allowed;
+		}
 
 		/* LABEL ------------------------------------------------ */
 		span.label {

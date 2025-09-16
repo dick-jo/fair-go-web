@@ -8,9 +8,9 @@
 <!-- MARKUP -------------------------------------------- -->
 <div id="nav-top" class="host nav-top">
 	<div class="clamp">
-		<div class="brand-container">
+		<a href="/" class="brand-container">
 			<img src="/brand/brand-a-text-ev.svg" alt="" />
-		</div>
+		</a>
 
 		<nav>
 			<ul>
@@ -36,7 +36,7 @@
 <style>
 	.host {
 		--loc-gap: 0;
-		@media screen and (max-width: 1440px) {
+		@media screen and (max-width: 1600px) {
 			--loc-gap: var(--gap-s);
 		}
 		width: 100%;
@@ -56,12 +56,18 @@
 
 		/* BRAND ------------------------------------------------ */
 		.brand-container {
+			--loc-transform-scale: 1;
+			&:hover {
+				--loc-transform-scale: 1.125;
+			}
 			height: 100%;
 			padding: var(--gap-s) 0;
 
 			img {
 				width: auto;
 				height: 100%;
+				transform: scale(var(--loc-transform-scale));
+				transition: var(--t-ix-hover);
 			}
 		}
 
@@ -90,6 +96,11 @@
 							--loc-clr-border: var(--clr-primary);
 						}
 					}
+					:global(&:not(:has(button))) {
+						@media screen and (max-width: 800px) {
+							display: none;
+						}
+					}
 					height: 100%;
 					display: flex;
 					align-items: center;
@@ -98,6 +109,9 @@
 					transition: var(--loc-transition);
 					:global(&:has(button)) {
 						padding: 0 calc(var(--loc-gap) / 2);
+					}
+					&:last-child {
+						padding-right: 0;
 					}
 
 					a {
