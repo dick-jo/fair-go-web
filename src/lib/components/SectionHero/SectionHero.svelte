@@ -1,13 +1,13 @@
 <script lang="ts">
-	import BrandDelin from '../BrandDelin/BrandDelin.svelte';
-	import FormSignUp from '../FormSignUp/FormSignUp.svelte';
-	import HeroCarousel from '../HeroCarousel/HeroCarousel.svelte';
-	import type { HeroCarouselItem } from '../HeroCarousel/types';
+	import BrandDelin from '../BrandDelin/BrandDelin.svelte'
+	import FormSignUp from '../FormSignUp/FormSignUp.svelte'
+	import HeroCarousel from '../HeroCarousel/HeroCarousel.svelte'
+	import type { HeroCarouselItem } from '../HeroCarousel/types'
 
 	interface Props {
-		heroCarouselItems: HeroCarouselItem[];
+		heroCarouselItems: HeroCarouselItem[]
 	}
-	let { heroCarouselItems }: Props = $props();
+	let { heroCarouselItems }: Props = $props()
 </script>
 
 <!-- MARKUP -------------------------------------------- -->
@@ -26,8 +26,8 @@
 			<BrandDelin />
 
 			<p class="text--body">
-				If you — like millions of other Australians failed by the major parties — are looking for a
-				real alternative, Fair Go is for you. Lend us your support by signing up today.
+				If you — like millions of other Australians failed by the major parties — are looking for a real alternative,
+				Fair Go is for you. Lend us your support by signing up today.
 			</p>
 
 			<div class="form-container">
@@ -42,26 +42,17 @@
 	.host {
 		--loc-host-height: 640px;
 		--loc-gap: var(--gap-l);
-		--loc-host-gradient: linear-gradient(
-			to right,
-			var(--clr-bg) 0% 50%,
-			var(--clr-bg-tr-invisible) 100%
-		);
+		--loc-host-gradient: linear-gradient(to right, var(--clr-bg) 0% 50%, var(--clr-bg-tr-invisible) 100%);
 		@media screen and (max-width: 1200px) {
 			--loc-host-height: fit-content;
-			--loc-host-gradient: linear-gradient(
-				to bottom,
-				var(--clr-bg) 0%,
-				var(--clr-bg-tr-invisible) 100%
-			);
+			--loc-host-gradient: linear-gradient(to bottom, var(--clr-bg) 0%, var(--clr-bg-tr-invisible) 100%);
 		}
 		height: var(--loc-host-height);
 		padding: var(--loc-gap);
 		display: grid;
 		grid-template-columns: repeat(12, 1fr);
 		gap: var(--loc-gap);
-		background-image:
-			var(--loc-host-gradient), url('brand/brand-a-pattern-mono-dv-text-subtract.svg');
+		background-image: var(--loc-host-gradient), url('/brand/brand-a-pattern-mono-dv-text-subtract.svg');
 		background-position:
 			top left,
 			top right;
