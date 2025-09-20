@@ -4,7 +4,6 @@
 	import type { PageProps } from './$types';
 
 	import ContentSnippetTile from '$lib/components/ContentSnippetTile/ContentSnippetTile.svelte';
-	import CtaBox from '$lib/components/CtaBox/CtaBox.svelte';
 	import NewsSnippetTile from '$lib/components/NewsSnippetTile/NewsSnippetTile.svelte';
 	import SectionCtaRow from '$lib/components/SectionCtaRow/SectionCtaRow.svelte';
 	import SectionHero from '$lib/components/SectionHero/SectionHero.svelte';
@@ -23,7 +22,7 @@
 	</div>
 
 	<div class="section-body">
-		{#each data.newsArticles as article}
+		{#each data.newsArticles as article (article.slug)}
 			<div class="item">
 				<NewsSnippetTile {article} />
 			</div>
@@ -38,7 +37,7 @@
 		<h2 class="title">OUR POLICY</h2>
 	</div>
 	<div class="section-body">
-		{#each data.policies as policy}
+		{#each data.policies as policy (policy.id)}
 			<div class="item">
 				<ContentSnippetTile
 					title={policy.short_title || policy.title}
@@ -61,7 +60,7 @@
 		<h2 class="title">OUR PHILOSOPHY</h2>
 	</div>
 	<div class="section-body">
-		{#each data.philosophies as philosophy}
+		{#each data.philosophies as philosophy (philosophy.id)}
 			<div class="item">
 				<ContentSnippetTile
 					title={philosophy.short_title || philosophy.title}

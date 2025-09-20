@@ -15,7 +15,7 @@
 
 		<nav>
 			<ul>
-				{#each navItems as item}
+				{#each navItems as item (item.href)}
 					<li>
 						{#if item.isAction}
 							<Button

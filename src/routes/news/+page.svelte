@@ -16,9 +16,9 @@
 	</div>
 
 	<div class="section-body">
-		{#each { length: Math.ceil(data.newsArticles.length / 2) } as _, rowIndex}
+		{#each { length: Math.ceil(data.newsArticles.length / 2) } as _, rowIndex (rowIndex)}
 			<div class="row">
-				{#each data.newsArticles.slice(rowIndex * 2, rowIndex * 2 + 2) as article}
+				{#each data.newsArticles.slice(rowIndex * 2, rowIndex * 2 + 2) as article (article.slug)}
 					<div class="item">
 						<NewsSnippetTile {article} variant="large-image" />
 					</div>

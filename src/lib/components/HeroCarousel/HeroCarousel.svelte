@@ -123,7 +123,7 @@
 					{items[activeItemIndex].label}
 				</h3>
 				<h2 class="title" transition:fly={{ x: -200, duration: HERO_CAROUSEL_T_TRANSITION }}>
-					{#each splitStringToChunks(items[activeItemIndex].title, 2) as chunk}
+					{#each splitStringToChunks(items[activeItemIndex].title, 2) as chunk, i (i)}
 						<span>{chunk}</span>
 					{/each}
 				</h2>
@@ -136,7 +136,7 @@
 			</button>
 
 			<div class="body">
-				{#each items as _, i}
+				{#each items as _, i (i)}
 					<button
 						class="pip--wrapper"
 						aria-label="carousel navigation"

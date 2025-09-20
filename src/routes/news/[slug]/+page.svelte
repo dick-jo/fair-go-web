@@ -20,7 +20,7 @@
 	});
 
 	// Process markdown content
-	const htmlContent = processMarkdown(article.content);
+	const _htmlContent = processMarkdown(article.content);
 </script>
 
 <!-- MARKUP -------------------------------------------- -->
@@ -35,7 +35,7 @@
 		<div class="body">
 			<h2 class="title--secondary">Fair Go News</h2>
 			<h1 class="title">
-				{#each splitStringToChunks(article.title, 3) as chunk}
+				{#each splitStringToChunks(article.title, 3) as chunk, i (i)}
 					<span>{chunk}</span>
 				{/each}
 			</h1>

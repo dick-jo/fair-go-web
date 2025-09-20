@@ -1,14 +1,14 @@
 <script lang="ts">
 	import FormSignUp from '../FormSignUp/FormSignUp.svelte';
 
-	import { NAV_CATEGORIES, NAV_ITEMS, SOCIAL_LINKS } from '$lib/config';
+	import { NAV_CATEGORIES, NAV_ITEMS, type NavItem } from '$lib/config';
 
 	interface Props {}
 	let {}: Props = $props();
 
 	// Group nav items by category, including children
 	const getItemsByCategory = (category: string) => {
-		const items: any[] = [];
+		const items: NavItem[] = [];
 
 		NAV_ITEMS.forEach((item) => {
 			// Add main item if it matches category and should show in footer, but only if it has no children
@@ -46,14 +46,14 @@
 			</div>
 			<FormSignUp variant="email-only" />
 		</div>
-		{#each NAV_CATEGORIES as category}
+		{#each NAV_CATEGORIES as category (category)}
 			{@const categoryItems = getItemsByCategory(category)}
 			{#if categoryItems.length > 0}
 				<div class="col">
 					<a class="category-link" href={getCategoryHref(category)}>
 						<h3>{category}</h3>
 					</a>
-					{#each categoryItems as item}
+					{#each categoryItems as item (item.href)}
 						<a class="link-item" href={item.href}>{item.label}</a>
 					{/each}
 				</div>

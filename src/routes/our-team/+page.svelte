@@ -25,7 +25,7 @@
 				<div class="primary">
 					<h4 class="title--secondary">{member.title}</h4>
 					<h3 class="title">
-						{#each splitStringToChunks(member.name, 1) as chunk}
+						{#each splitStringToChunks(member.name, 1) as chunk, i (i)}
 							<span>{chunk}</span>
 						{/each}
 					</h3>
@@ -47,9 +47,9 @@
 	</div>
 
 	<div class="section-body">
-		{#each { length: Math.ceil(data.teamMembers.length / 2) } as _, rowIndex}
+		{#each { length: Math.ceil(data.teamMembers.length / 2) } as _, rowIndex (rowIndex)}
 			<div class="row">
-				{#each data.teamMembers.slice(rowIndex * 2, rowIndex * 2 + 2) as member}
+				{#each data.teamMembers.slice(rowIndex * 2, rowIndex * 2 + 2) as member (member.slug)}
 					<div class="item">
 						{@render teamMemberTile(member)}
 					</div>

@@ -46,7 +46,7 @@
 			<div class="body">
 				<h2 class="title--secondary">{teamMember.title}</h2>
 				<h1 class="title">
-					{#each splitStringToChunks(teamMember.name, 1) as chunk}
+					{#each splitStringToChunks(teamMember.name, 1) as chunk, i (i)}
 						<span>{chunk}</span>
 					{/each}
 				</h1>
@@ -99,7 +99,7 @@
 			<h2 class="title">{firstName.toUpperCase()}'S PRIORITIES</h2>
 		</div>
 		<div class="section-body">
-			{#each petPolicies as policy}
+			{#each petPolicies as policy (policy.id)}
 				<div class="item">
 					<ContentSnippetTile
 						title={policy.short_title || policy.title}
@@ -117,7 +117,7 @@
 <section id="section--team-member-bio">
 	<div class="section-body">
 		<h2 class="title">Meet {firstName}</h2>
-		{#each teamMember.bio.split('\n\n') as paragraph}
+		{#each teamMember.bio.split('\n\n') as paragraph, i (i)}
 			<p class="content">{paragraph}</p>
 		{/each}
 	</div>
