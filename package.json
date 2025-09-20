@@ -10,7 +10,6 @@
 		"prepare": "svelte-kit sync || echo ''",
 		"check": "prettier --check ./src/ && eslint ./src/ && svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"format": "prettier --write .",
-		"lint": "prettier --check .",
 		"db:start": "docker compose up",
 		"db:push": "drizzle-kit push",
 		"db:generate": "drizzle-kit generate",
