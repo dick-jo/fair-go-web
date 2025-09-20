@@ -1,18 +1,12 @@
 <script lang="ts">
-	import {
-		MapPinIcon,
-		PhoneIcon,
-		MailIcon,
-		InstagramIcon,
-		FacebookIcon,
-		LandPlotIcon,
-		Icon
-	} from '@lucide/svelte';
+	import { FacebookIcon, Icon, InstagramIcon, LandPlotIcon, MailIcon, MapPinIcon, PhoneIcon } from '@lucide/svelte';
+
 	import type { PageProps } from './$types';
-	import { splitStringToChunks, getMediaUrl } from '$lib/utils';
-	import { getPolicyIcon } from '$lib/utils/policyIcons';
+
 	import ContentSnippetTile from '$lib/components/ContentSnippetTile/ContentSnippetTile.svelte';
 	import SectionCtaRow from '$lib/components/SectionCtaRow/SectionCtaRow.svelte';
+	import { getMediaUrl, splitStringToChunks } from '$lib/utils';
+	import { getPolicyIcon } from '$lib/utils/policyIcons';
 
 	let { data }: PageProps = $props();
 
@@ -20,11 +14,7 @@
 	const firstName = teamMember.name.split(' ')[0];
 
 	// Get pet policies that exist
-	const petPolicies = [
-		teamMember.pet_policy_1,
-		teamMember.pet_policy_2,
-		teamMember.pet_policy_3
-	].filter(
+	const petPolicies = [teamMember.pet_policy_1, teamMember.pet_policy_2, teamMember.pet_policy_3].filter(
 		(policy): policy is NonNullable<typeof policy> => policy !== null && policy !== undefined
 	);
 </script>
@@ -48,10 +38,7 @@
 		<div class="container">
 			<div class="media-container">
 				{#if teamMember.profile_image}
-					<img
-						src={getMediaUrl(teamMember.profile_image)}
-						alt={teamMember.profile_image.alt || teamMember.name}
-					/>
+					<img src={getMediaUrl(teamMember.profile_image)} alt={teamMember.profile_image.alt || teamMember.name} />
 				{/if}
 				<div class="overlay"></div>
 			</div>
@@ -59,7 +46,7 @@
 			<div class="body">
 				<h2 class="title--secondary">{teamMember.title}</h2>
 				<h1 class="title">
-					{#each splitStringToChunks(teamMember.name, 1) as chunk}
+					{#each splitStringToChunks(teamMember.name, 1) as chunk, i (i)}
 						<span>{chunk}</span>
 					{/each}
 				</h1>
@@ -112,7 +99,7 @@
 			<h2 class="title">{firstName.toUpperCase()}'S PRIORITIES</h2>
 		</div>
 		<div class="section-body">
-			{#each petPolicies as policy}
+			{#each petPolicies as policy (policy.id)}
 				<div class="item">
 					<ContentSnippetTile
 						title={policy.short_title || policy.title}
@@ -130,7 +117,7 @@
 <section id="section--team-member-bio">
 	<div class="section-body">
 		<h2 class="title">Meet {firstName}</h2>
-		{#each teamMember.bio.split('\n\n') as paragraph}
+		{#each teamMember.bio.split('\n\n') as paragraph, i (i)}
 			<p class="content">{paragraph}</p>
 		{/each}
 	</div>
@@ -142,23 +129,14 @@
 <!-- CSS ----------------------------------------------- -->
 <style>
 	#section--team-member-hero {
-		--loc-host-gradient: linear-gradient(
-			to right,
-			var(--clr-bg) 0% 50%,
-			var(--clr-bg-tr-invisible) 100%
-		);
+		--loc-host-gradient: linear-gradient(to right, var(--clr-bg) 0% 50%, var(--clr-bg-tr-invisible) 100%);
 		@media screen and (max-width: 1200px) {
 			--loc-host-height: fit-content;
-			--loc-host-gradient: linear-gradient(
-				to bottom,
-				var(--clr-bg) 0%,
-				var(--clr-bg-tr-invisible) 100%
-			);
+			--loc-host-gradient: linear-gradient(to bottom, var(--clr-bg) 0%, var(--clr-bg-tr-invisible) 100%);
 		}
 		display: grid;
 		grid-template-columns: repeat(12, 1fr);
-		background-image:
-			var(--loc-host-gradient), url('/brand/brand-a-pattern-mono-dv-text-subtract.svg');
+		background-image: var(--loc-host-gradient), url('/brand/brand-a-pattern-mono-dv-text-subtract.svg');
 		background-position:
 			top left,
 			top right;
@@ -219,11 +197,7 @@
 						right: 0;
 						bottom: 0;
 						left: 0;
-						background-image: linear-gradient(
-							to top,
-							var(--clr-bg-tr-heavy) 0%,
-							var(--clr-bg-tr-invisible) 33% 100%
-						);
+						background-image: linear-gradient(to top, var(--clr-bg-tr-heavy) 0%, var(--clr-bg-tr-invisible) 33% 100%);
 					}
 				}
 

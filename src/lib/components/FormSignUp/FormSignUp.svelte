@@ -1,12 +1,14 @@
 <script lang="ts">
-	import { supabase } from '$lib/supabaseClient';
-	import type { ContactFormData } from '$lib/types';
-	import { validatePostcode } from '$lib/utils/validatePostcode';
 	import { OctagonAlert, SquareCheckBig } from '@lucide/svelte';
+	import { fly } from 'svelte/transition';
+
 	import AlertBox from '../AlertBox/AlertBox.svelte';
 	import Button from '../Button/Button.svelte';
 	import Input from '../Input/Input.svelte';
-	import { fly } from 'svelte/transition';
+
+	import { supabase } from '$lib/supabaseClient';
+	import type { ContactFormData } from '$lib/types';
+	import { validatePostcode } from '$lib/utils/validatePostcode';
 
 	interface Props {
 		variant?: 'full' | 'email-only';
@@ -31,11 +33,7 @@
 	// VALIDATION ------------------------------------------- //
 	function handlePostcodeChange() {
 		// Only show error if they've typed at least 4 characters
-		if (
-			formData.postcode &&
-			formData.postcode.length >= 4 &&
-			!validatePostcode(formData.postcode)
-		) {
+		if (formData.postcode && formData.postcode.length >= 4 && !validatePostcode(formData.postcode)) {
 			postcodeError = 'Please enter a valid Australian postcode';
 		} else {
 			postcodeError = '';
@@ -127,8 +125,7 @@
 		} catch (error) {
 			console.error('Signup error:', error);
 			submitStatus = 'error';
-			errorMessage =
-				error instanceof Error ? error.message : 'Something went wrong. Please try again.';
+			errorMessage = error instanceof Error ? error.message : 'Something went wrong. Please try again.';
 		} finally {
 			isSubmitting = false;
 		}
@@ -210,11 +207,7 @@
 					/>
 				</div>
 			{/if}
-			<Button
-				label={isSubmitting ? 'Signing Up...' : 'Sign Up'}
-				type="submit"
-				disabled={isSubmitting}
-			/>
+			<Button label={isSubmitting ? 'Signing Up...' : 'Sign Up'} type="submit" disabled={isSubmitting} />
 		</div>
 	</form>
 </div>

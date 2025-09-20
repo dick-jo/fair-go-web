@@ -1,8 +1,9 @@
-import { supabase } from '$lib/supabaseClient';
-import { HERO_CAROUSEL_MAX_ITEMS } from '$lib/components/HeroCarousel';
 import type { PageLoad } from './$types';
+
+import { HERO_CAROUSEL_MAX_ITEMS } from '$lib/components/HeroCarousel';
 import type { HeroCarouselItem } from '$lib/components/HeroCarousel/types';
-import type { PolicyContent, NewsArticle } from '$lib/types';
+import { supabase } from '$lib/supabaseClient';
+import type { NewsArticle, PolicyContent } from '$lib/types';
 
 export const load: PageLoad = async () => {
 	// Existing carousel query

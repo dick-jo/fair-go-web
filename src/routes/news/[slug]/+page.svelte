@@ -1,10 +1,12 @@
 <script lang="ts">
-	import AuthorDateRow from '$lib/components/AuthorDateRow/AuthorDateRow.svelte';
-	import { splitStringToChunks, getMediaUrl } from '$lib/utils';
-	import { processMarkdown } from '$lib/utils/markdown';
 	import SvelteMarkdown from '@humanspeak/svelte-markdown';
+
 	import type { PageProps } from './$types';
+
+	import AuthorDateRow from '$lib/components/AuthorDateRow/AuthorDateRow.svelte';
 	import SectionCtaRow from '$lib/components/SectionCtaRow/SectionCtaRow.svelte';
+	import { getMediaUrl, splitStringToChunks } from '$lib/utils';
+	import { processMarkdown } from '$lib/utils/markdown';
 
 	let { data }: PageProps = $props();
 
@@ -18,7 +20,7 @@
 	});
 
 	// Process markdown content
-	const htmlContent = processMarkdown(article.content);
+	const _htmlContent = processMarkdown(article.content);
 </script>
 
 <!-- MARKUP -------------------------------------------- -->
@@ -26,17 +28,14 @@
 	<div id="hero">
 		<div class="media-container">
 			{#if article.featured_image}
-				<img
-					src={getMediaUrl(article.featured_image)}
-					alt={article.featured_image.alt || article.title}
-				/>
+				<img src={getMediaUrl(article.featured_image)} alt={article.featured_image.alt || article.title} />
 			{/if}
 			<div class="overlay"></div>
 		</div>
 		<div class="body">
 			<h2 class="title--secondary">Fair Go News</h2>
 			<h1 class="title">
-				{#each splitStringToChunks(article.title, 3) as chunk}
+				{#each splitStringToChunks(article.title, 3) as chunk, i (i)}
 					<span>{chunk}</span>
 				{/each}
 			</h1>
@@ -45,9 +44,7 @@
 	<div class="section-body">
 		<AuthorDateRow
 			authorName={article.author.name}
-			authorImageUrl={article.author.avatar_media
-				? getMediaUrl(article.author.avatar_media)
-				: undefined}
+			authorImageUrl={article.author.avatar_media ? getMediaUrl(article.author.avatar_media) : undefined}
 			date={formattedDate}
 		/>
 
@@ -99,11 +96,7 @@
 					right: 0;
 					bottom: 0;
 					left: 0;
-					background-image: linear-gradient(
-						to top,
-						var(--clr-bg) 0%,
-						var(--clr-bg-tr-invisible) 33% 100%
-					);
+					background-image: linear-gradient(to top, var(--clr-bg) 0%, var(--clr-bg-tr-invisible) 33% 100%);
 				}
 			}
 

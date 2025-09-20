@@ -1,7 +1,8 @@
 <script lang="ts">
 	import AuthorDateRow from '../AuthorDateRow/AuthorDateRow.svelte';
-	import { getMediaUrl, truncateText } from '$lib/utils';
+
 	import type { NewsArticle } from '$lib/types';
+	import { getMediaUrl, truncateText } from '$lib/utils';
 
 	// Character limit constant
 	const SNIPPET_MAX_LENGTH = 180;
@@ -28,10 +29,7 @@
 <a href="/news/{article.slug}" class={['host', 'news-snippet-tile', `variant--${variant}`]}>
 	<div class="media-container">
 		{#if article.featured_image}
-			<img
-				src={getMediaUrl(article.featured_image)}
-				alt={article.featured_image.alt || article.title}
-			/>
+			<img src={getMediaUrl(article.featured_image)} alt={article.featured_image.alt || article.title} />
 		{/if}
 	</div>
 	<div class="body">
@@ -41,9 +39,7 @@
 		</p>
 		<AuthorDateRow
 			authorName={article.author.name}
-			authorImageUrl={article.author.avatar_media
-				? getMediaUrl(article.author.avatar_media)
-				: undefined}
+			authorImageUrl={article.author.avatar_media ? getMediaUrl(article.author.avatar_media) : undefined}
 			date={formattedDate}
 		/>
 	</div>

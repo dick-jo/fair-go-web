@@ -1,5 +1,6 @@
-import { supabase } from '$lib/supabaseClient';
 import type { PageLoad } from './$types';
+
+import { supabase } from '$lib/supabaseClient';
 import type { NewsArticle } from '$lib/types';
 
 export const load: PageLoad = async () => {

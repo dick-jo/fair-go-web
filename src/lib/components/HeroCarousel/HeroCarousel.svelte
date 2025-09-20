@@ -1,9 +1,11 @@
 <script lang="ts">
 	import { ArrowLeftIcon, ArrowRightIcon } from '@lucide/svelte';
-	import type { HeroCarouselItem } from './types';
-	import { getMediaUrl, splitStringToChunks } from '$lib/utils';
 	import { blur, fly } from 'svelte/transition';
-	import { HERO_CAROUSEL_T_TRANSITION, HERO_CAROUSEL_T_IDLE } from './constants';
+
+	import { HERO_CAROUSEL_T_IDLE, HERO_CAROUSEL_T_TRANSITION } from './constants';
+	import type { HeroCarouselItem } from './types';
+
+	import { getMediaUrl, splitStringToChunks } from '$lib/utils';
 
 	interface Props {
 		items: HeroCarouselItem[];
@@ -121,7 +123,7 @@
 					{items[activeItemIndex].label}
 				</h3>
 				<h2 class="title" transition:fly={{ x: -200, duration: HERO_CAROUSEL_T_TRANSITION }}>
-					{#each splitStringToChunks(items[activeItemIndex].title, 2) as chunk}
+					{#each splitStringToChunks(items[activeItemIndex].title, 2) as chunk, i (i)}
 						<span>{chunk}</span>
 					{/each}
 				</h2>
@@ -134,7 +136,7 @@
 			</button>
 
 			<div class="body">
-				{#each items as _, i}
+				{#each items as _, i (i)}
 					<button
 						class="pip--wrapper"
 						aria-label="carousel navigation"
@@ -197,11 +199,7 @@
 				right: 0;
 				bottom: 0;
 				left: 0;
-				background-image: linear-gradient(
-					to top,
-					var(--clr-bg-tr-heavy) 0%,
-					var(--clr-bg-tr-invisible) 33% 100%
-				);
+				background-image: linear-gradient(to top, var(--clr-bg-tr-heavy) 0%, var(--clr-bg-tr-invisible) 33% 100%);
 			}
 		}
 

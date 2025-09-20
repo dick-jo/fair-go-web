@@ -120,7 +120,7 @@ export const NAV_ITEMS: NavItem[] = [
 export type SocialLink = {
 	label: string;
 	href: string;
-	icon?: any; // Replace 'any' with your icon component type if using one
+	icon?: unknown; // Replace 'unknown' with your icon component type if using one
 };
 
 export const SOCIAL_LINKS: SocialLink[] = [
