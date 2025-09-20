@@ -1,4 +1,4 @@
-import { Zap, Users, Shield, Award, Heart, Scale, type Icon } from '@lucide/svelte';
+import { Award, Heart, type Icon, Scale, Shield, Users, Zap } from '@lucide/svelte';
 
 const POLICY_ICONS: Record<string, typeof Icon> = {
 	energy: Zap,

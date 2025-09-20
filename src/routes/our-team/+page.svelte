@@ -1,9 +1,11 @@
 <script lang="ts">
 	import { UsersRoundIcon } from '@lucide/svelte';
+
 	import type { PageProps } from './$types';
+
 	import Button from '$lib/components/Button/Button.svelte';
-	import { splitStringToChunks, getMediaUrl } from '$lib/utils';
 	import type { TeamMember } from '$lib/types';
+	import { getMediaUrl, splitStringToChunks } from '$lib/utils';
 
 	let { data }: PageProps = $props();
 </script>
@@ -14,10 +16,7 @@
 		<div class="container">
 			<div class="media-container">
 				{#if member.profile_image}
-					<img
-						src={getMediaUrl(member.profile_image)}
-						alt={member.profile_image.alt || member.name}
-					/>
+					<img src={getMediaUrl(member.profile_image)} alt={member.profile_image.alt || member.name} />
 				{/if}
 				<div class="overlay"></div>
 			</div>
@@ -168,11 +167,7 @@
 						right: 0;
 						bottom: 0;
 						left: 0;
-						background-image: linear-gradient(
-							to top,
-							var(--clr-bg-tr-heavy) 0%,
-							var(--clr-bg-tr-invisible) 33% 100%
-						);
+						background-image: linear-gradient(to top, var(--clr-bg-tr-heavy) 0%, var(--clr-bg-tr-invisible) 33% 100%);
 					}
 				}
 

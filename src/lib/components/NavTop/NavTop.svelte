@@ -1,6 +1,7 @@
 <script lang="ts">
-	import { NAV_ITEMS } from '$lib/config';
 	import Button from '../Button/Button.svelte';
+
+	import { NAV_ITEMS } from '$lib/config';
 
 	const navItems = NAV_ITEMS.filter((item) => item.showInTopNav);
 </script>

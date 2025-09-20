@@ -128,11 +128,9 @@
 /* VARS ------------------------------------------------- */
 :root {
 	--font-family--heading: 'Barlow', 'Barlow Fallback 800', Arial, sans-serif;
-	--font-family-heading--secondary:
-		'Barlow Condensed', 'Barlow Condensed Fallback 700', Arial, sans-serif;
+	--font-family-heading--secondary: 'Barlow Condensed', 'Barlow Condensed Fallback 700', Arial, sans-serif;
 	--font-family--label: 'Barlow', 'Barlow Fallback 600', Arial, sans-serif;
-	--font-family--label--secondary:
-		'Barlow Condensed', 'Barlow Condensed Fallback 600', Arial, sans-serif;
+	--font-family--label--secondary: 'Barlow Condensed', 'Barlow Condensed Fallback 600', Arial, sans-serif;
 	--font-family--body: 'Barlow', 'Barlow Fallback 400', Arial, sans-serif;
 	--font-family--body--secondary: 'Barlow', 'Barlow Fallback 500', Arial, sans-serif;
 	--font-size--heading: var(--fs-4);
@@ -166,34 +164,32 @@
 	--text-case--body: none;
 	--text-case--body--secondary: none;
 	--font--heading: var(--font-weight--heading) var(--font-size--heading) var(--font-family--heading);
-	--font--heading--s: var(--font-weight--heading) var(--font-size--heading--s)
-		var(--font-family--heading);
-	--font--heading--l: var(--font-weight--heading) var(--font-size--heading--l)
-		var(--font-family--heading);
-	--font--heading--secondary: var(--font-weight--heading--secondary)
-		var(--font-size--heading--secondary) var(--font-family-heading--secondary);
-	--font--heading--secondary--s: var(--font-weight--heading--secondary)
-		var(--font-size--heading--secondary--s) var(--font-family-heading--secondary);
-	--font--heading--secondary--l: var(--font-weight--heading--secondary)
-		var(--font-size--heading--secondary--l) var(--font-family-heading--secondary);
+	--font--heading--s: var(--font-weight--heading) var(--font-size--heading--s) var(--font-family--heading);
+	--font--heading--l: var(--font-weight--heading) var(--font-size--heading--l) var(--font-family--heading);
+	--font--heading--secondary: var(--font-weight--heading--secondary) var(--font-size--heading--secondary)
+		var(--font-family-heading--secondary);
+	--font--heading--secondary--s: var(--font-weight--heading--secondary) var(--font-size--heading--secondary--s)
+		var(--font-family-heading--secondary);
+	--font--heading--secondary--l: var(--font-weight--heading--secondary) var(--font-size--heading--secondary--l)
+		var(--font-family-heading--secondary);
 	--font--label: var(--font-weight--label) var(--font-size--label) var(--font-family--label);
 	--font--label--s: var(--font-weight--label) var(--font-size--label--s) var(--font-family--label);
 	--font--label--l: var(--font-weight--label) var(--font-size--label--l) var(--font-family--label);
 	--font--label--secondary: var(--font-weight--label--secondary) var(--font-size--label--secondary)
 		var(--font-family--label--secondary);
-	--font--label--secondary--s: var(--font-weight--label--secondary)
-		var(--font-size--label--secondary--s) var(--font-family--label--secondary);
-	--font--label--secondary--l: var(--font-weight--label--secondary)
-		var(--font-size--label--secondary--l) var(--font-family--label--secondary);
+	--font--label--secondary--s: var(--font-weight--label--secondary) var(--font-size--label--secondary--s)
+		var(--font-family--label--secondary);
+	--font--label--secondary--l: var(--font-weight--label--secondary) var(--font-size--label--secondary--l)
+		var(--font-family--label--secondary);
 	--font--body: var(--font-weight--body) var(--font-size--body) var(--font-family--body);
 	--font--body--s: var(--font-weight--body) var(--font-size--body--s) var(--font-family--body);
 	--font--body--l: var(--font-weight--body) var(--font-size--body--l) var(--font-family--body);
 	--font--body--secondary: var(--font-weight--body--secondary) var(--font-size--body--secondary)
 		var(--font-family--body--secondary);
-	--font--body--secondary--s: var(--font-weight--body--secondary)
-		var(--font-size--body--secondary--s) var(--font-family--body--secondary);
-	--font--body--secondary--l: var(--font-weight--body--secondary)
-		var(--font-size--body--secondary--l) var(--font-family--body--secondary);
+	--font--body--secondary--s: var(--font-weight--body--secondary) var(--font-size--body--secondary--s)
+		var(--font-family--body--secondary);
+	--font--body--secondary--l: var(--font-weight--body--secondary) var(--font-size--body--secondary--l)
+		var(--font-family--body--secondary);
 }
 
 /* INIT ------------------------------------------------- */

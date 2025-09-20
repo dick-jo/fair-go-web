@@ -1,6 +1,7 @@
 <script lang="ts">
-	import { NAV_ITEMS, NAV_CATEGORIES, SOCIAL_LINKS } from '$lib/config';
 	import FormSignUp from '../FormSignUp/FormSignUp.svelte';
+
+	import { NAV_CATEGORIES, NAV_ITEMS, SOCIAL_LINKS } from '$lib/config';
 
 	interface Props {}
 	let {}: Props = $props();

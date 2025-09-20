@@ -1,6 +1,8 @@
 import { json } from '@sveltejs/kit';
-import { sendWelcomeEmail } from '$lib/server/email';
+
 import type { RequestHandler } from './$types';
+
+import { sendWelcomeEmail } from '$lib/server/email';
 
 export const POST: RequestHandler = async ({ request }) => {
 	try {

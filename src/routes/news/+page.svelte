@@ -1,7 +1,9 @@
 <script lang="ts">
-	import NewsSnippetTile from '$lib/components/NewsSnippetTile/NewsSnippetTile.svelte';
 	import { NewspaperIcon } from '@lucide/svelte';
+
 	import type { PageProps } from './$types';
+
+	import NewsSnippetTile from '$lib/components/NewsSnippetTile/NewsSnippetTile.svelte';
 
 	let { data }: PageProps = $props();
 </script>

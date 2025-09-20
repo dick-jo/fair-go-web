@@ -1,12 +1,14 @@
 <script lang="ts">
-	import type { PageProps } from './$types';
-	import SectionHero from '$lib/components/SectionHero/SectionHero.svelte';
-	import ContentSnippetTile from '$lib/components/ContentSnippetTile/ContentSnippetTile.svelte';
-	import NewsSnippetTile from '$lib/components/NewsSnippetTile/NewsSnippetTile.svelte';
-	import { getPolicyIcon } from '$lib/utils/policyIcons';
 	import { LandPlotIcon, LightbulbIcon, NewspaperIcon } from '@lucide/svelte';
+
+	import type { PageProps } from './$types';
+
+	import ContentSnippetTile from '$lib/components/ContentSnippetTile/ContentSnippetTile.svelte';
 	import CtaBox from '$lib/components/CtaBox/CtaBox.svelte';
+	import NewsSnippetTile from '$lib/components/NewsSnippetTile/NewsSnippetTile.svelte';
 	import SectionCtaRow from '$lib/components/SectionCtaRow/SectionCtaRow.svelte';
+	import SectionHero from '$lib/components/SectionHero/SectionHero.svelte';
+	import { getPolicyIcon } from '$lib/utils/policyIcons';
 
 	let { data }: PageProps = $props();
 </script>

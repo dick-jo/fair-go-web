@@ -21,15 +21,7 @@
 </script>
 
 <!-- MARKUP -------------------------------------------- -->
-<div
-	class={[
-		'host',
-		'alert-box',
-		`colorway--${colorway}`,
-		isEphemeral && 'ephemeral',
-		useShadow && 'shadow'
-	]}
->
+<div class={['host', 'alert-box', `colorway--${colorway}`, isEphemeral && 'ephemeral', useShadow && 'shadow']}>
 	<div class="wrapper">
 		{#if IconComponent}
 			<div class="icon-container">

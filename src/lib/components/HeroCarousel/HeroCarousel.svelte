@@ -1,9 +1,11 @@
 <script lang="ts">
 	import { ArrowLeftIcon, ArrowRightIcon } from '@lucide/svelte';
-	import type { HeroCarouselItem } from './types';
-	import { getMediaUrl, splitStringToChunks } from '$lib/utils';
 	import { blur, fly } from 'svelte/transition';
-	import { HERO_CAROUSEL_T_TRANSITION, HERO_CAROUSEL_T_IDLE } from './constants';
+
+	import { HERO_CAROUSEL_T_IDLE, HERO_CAROUSEL_T_TRANSITION } from './constants';
+	import type { HeroCarouselItem } from './types';
+
+	import { getMediaUrl, splitStringToChunks } from '$lib/utils';
 
 	interface Props {
 		items: HeroCarouselItem[];
@@ -197,11 +199,7 @@
 				right: 0;
 				bottom: 0;
 				left: 0;
-				background-image: linear-gradient(
-					to top,
-					var(--clr-bg-tr-heavy) 0%,
-					var(--clr-bg-tr-invisible) 33% 100%
-				);
+				background-image: linear-gradient(to top, var(--clr-bg-tr-heavy) 0%, var(--clr-bg-tr-invisible) 33% 100%);
 			}
 		}
 

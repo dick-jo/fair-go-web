@@ -1,13 +1,13 @@
 <script lang="ts">
-	import BrandDelin from '../BrandDelin/BrandDelin.svelte'
-	import FormSignUp from '../FormSignUp/FormSignUp.svelte'
-	import HeroCarousel from '../HeroCarousel/HeroCarousel.svelte'
-	import type { HeroCarouselItem } from '../HeroCarousel/types'
+	import BrandDelin from '../BrandDelin/BrandDelin.svelte';
+	import FormSignUp from '../FormSignUp/FormSignUp.svelte';
+	import HeroCarousel from '../HeroCarousel/HeroCarousel.svelte';
+	import type { HeroCarouselItem } from '../HeroCarousel/types';
 
 	interface Props {
-		heroCarouselItems: HeroCarouselItem[]
+		heroCarouselItems: HeroCarouselItem[];
 	}
-	let { heroCarouselItems }: Props = $props()
+	let { heroCarouselItems }: Props = $props();
 </script>
 
 <!-- MARKUP -------------------------------------------- -->

@@ -1,8 +1,8 @@
 import js from '@eslint/js';
 import tsParser from '@typescript-eslint/parser';
-import importPlugin from "eslint-plugin-import";
+import importPlugin from 'eslint-plugin-import';
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
-import sortClassMembersPlugin from "eslint-plugin-sort-class-members";
+import sortClassMembersPlugin from 'eslint-plugin-sort-class-members';
 import eslintPluginSvelte from 'eslint-plugin-svelte';
 import globals from 'globals';
 import svelteParser from 'svelte-eslint-parser';
@@ -19,7 +19,7 @@ export default [
 		},
 		plugins: {
 			import: importPlugin,
-			"sort-class-members": sortClassMembersPlugin,
+			'sort-class-members': sortClassMembersPlugin
 		},
 		rules: {
 			'svelte/no-navigation-without-resolve': 'off',
