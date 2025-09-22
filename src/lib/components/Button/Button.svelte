@@ -1,13 +1,13 @@
 <script lang="ts">
-	import type { HTMLButtonAttributes } from 'svelte/elements';
+	import type { HTMLButtonAttributes } from 'svelte/elements'
 
 	interface Props extends Omit<HTMLButtonAttributes, 'class'> {
-		label: string;
-		intent?: 'primary' | 'secondary';
-		colorway?: 'primary' | 'bg' | 'dv' | 'ev';
+		label: string
+		intent?: 'primary' | 'secondary'
+		colorway?: 'primary' | 'bg' | 'dv' | 'ev'
 	}
 
-	let { label, intent = 'primary', colorway = 'primary', ...buttonProps }: Props = $props();
+	let { label, intent = 'primary', colorway = 'primary', ...buttonProps }: Props = $props()
 </script>
 
 <!-- MARKUP -------------------------------------------- -->
@@ -20,6 +20,7 @@
 <!-- CSS ----------------------------------------------- -->
 <style>
 	.host.button {
+		--loc-height: var(--sp-6);
 		--loc-gap: var(--gap-l);
 		--loc-transition: var(--t-ix-hover);
 		&.intent--primary {
@@ -58,7 +59,7 @@
 			}
 		}
 
-		height: var(--sp-5);
+		height: var(--sp-6);
 		padding: 0 var(--loc-gap);
 		background-color: var(--loc-clr-bg);
 		border-style: none;

@@ -1,8 +1,7 @@
-import { supabase } from '$lib/supabaseClient';
-import type { PageLoad } from './$types';
-import type { TeamMember } from '$lib/types';
+import type { PageServerLoad } from './$types'
+import type { TeamMember } from '$lib/types'
 
-export const load: PageLoad = async () => {
+export const load: PageServerLoad = async ({ locals: { supabase } }) => {
 	const { data: teamData, error } = await supabase
 		.from('team_members')
 		.select(
@@ -18,7 +17,7 @@ export const load: PageLoad = async () => {
 		`
 		)
 		.eq('status', 'active')
-		.order('order_priority', { ascending: true });
+		.order('order_priority', { ascending: true })
 
 	// Flatten profile_image array to single object
 	const teamMembers: TeamMember[] = (teamData ?? []).map((member) => ({
@@ -26,10 +25,10 @@ export const load: PageLoad = async () => {
 		profile_image: Array.isArray(member.profile_image)
 			? (member.profile_image[0] ?? null)
 			: (member.profile_image ?? null)
-	}));
+	}))
 
 	return {
 		teamMembers,
 		error
-	};
-};
+	}
+}

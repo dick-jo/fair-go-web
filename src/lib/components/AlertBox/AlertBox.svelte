@@ -1,23 +1,25 @@
 <script lang="ts">
-	import type { Icon } from '@lucide/svelte';
+	import type { Icon } from '@lucide/svelte'
 
 	interface Props {
-		label: string;
-		message: string;
-		colorway: 'primary' | 'dv' | 'sentiment-positive' | 'sentiment-negative';
-		icon?: typeof Icon;
-		isEphemeral?: boolean;
-		useShadow?: boolean;
+		label: string
+		message: string
+		fit?: 'intrinsic' | 'extrinsic'
+		colorway: 'primary' | 'dv' | 'sentiment-positive' | 'sentiment-negative'
+		icon?: typeof Icon
+		isEphemeral?: boolean
+		useShadow?: boolean
 	}
 
 	let {
 		label,
 		message,
+		fit = 'intrinsic',
 		colorway = 'dv',
 		icon: IconComponent,
 		isEphemeral = false,
 		useShadow = false
-	}: Props = $props();
+	}: Props = $props()
 </script>
 
 <!-- MARKUP -------------------------------------------- -->
@@ -25,6 +27,7 @@
 	class={[
 		'host',
 		'alert-box',
+		`fit--${fit}`,
 		`colorway--${colorway}`,
 		isEphemeral && 'ephemeral',
 		useShadow && 'shadow'
@@ -48,6 +51,14 @@
 	.host {
 		--loc-gap: var(--gap-s);
 		--loc-clr-background--underlay: var(--clr-ev);
+		&.fit--intrinsic {
+			--loc-width: fit-content;
+			--loc-flex: 0 1 auto;
+		}
+		&.fit--extrinsic {
+			--loc-width: 100%;
+			--loc-flex: 1;
+		}
 		&.colorway--dv {
 			--loc-clr-background: var(--clr-dv-tr-light);
 			--loc-clr-border: var(--clr-dv-tr-heavy);
@@ -77,6 +88,8 @@
 		&.shadow {
 			--loc-shadow: 0 var(--gap-l) var(--gap-l) rgba(0, 0, 0, 0.125);
 		}
+		width: var(--loc-width);
+		flex: var(--loc-flex);
 		border-radius: var(--loc-bdr);
 		background-color: var(--loc-clr-background--underlay);
 		box-shadow: var(--loc-shadow);
@@ -113,11 +126,13 @@
 				/* TEXT ------------------------------------------------- */
 				.label {
 					color: var(--loc-clr-ink);
-					font: var(--font--label--s);
+					font: var(--font--label);
+					/* text-transform: var(--text-case--label); */
 				}
 
 				.message {
 					color: var(--loc-clr-ink--light);
+					font: var(--font--body--s);
 				}
 			}
 		}

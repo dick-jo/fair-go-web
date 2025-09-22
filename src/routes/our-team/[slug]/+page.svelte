@@ -1,32 +1,20 @@
 <script lang="ts">
-	import {
-		MapPinIcon,
-		PhoneIcon,
-		MailIcon,
-		InstagramIcon,
-		FacebookIcon,
-		LandPlotIcon,
-		Icon
-	} from '@lucide/svelte';
-	import type { PageProps } from './$types';
-	import { splitStringToChunks, getMediaUrl } from '$lib/utils';
-	import { getPolicyIcon } from '$lib/utils/policyIcons';
-	import ContentSnippetTile from '$lib/components/ContentSnippetTile/ContentSnippetTile.svelte';
-	import SectionCtaRow from '$lib/components/SectionCtaRow/SectionCtaRow.svelte';
+	import { MapPinIcon, PhoneIcon, MailIcon, InstagramIcon, FacebookIcon, LandPlotIcon, Icon } from '@lucide/svelte'
+	import type { PageData } from './$types'
+	import { splitStringToChunks, getMediaUrl } from '$lib/utils'
+	import { getPolicyIcon } from '$lib/utils/policyIcons'
+	import ContentSnippetTile from '$lib/components/ContentSnippetTile/ContentSnippetTile.svelte'
+	import SectionCtaRow from '$lib/components/SectionCtaRow/SectionCtaRow.svelte'
 
-	let { data }: PageProps = $props();
+	let { data }: { data: PageData } = $props()
 
-	const { teamMember } = data;
-	const firstName = teamMember.name.split(' ')[0];
+	const { teamMember } = data
+	const firstName = teamMember.name.split(' ')[0]
 
 	// Get pet policies that exist
-	const petPolicies = [
-		teamMember.pet_policy_1,
-		teamMember.pet_policy_2,
-		teamMember.pet_policy_3
-	].filter(
+	const petPolicies = [teamMember.pet_policy_1, teamMember.pet_policy_2, teamMember.pet_policy_3].filter(
 		(policy): policy is NonNullable<typeof policy> => policy !== null && policy !== undefined
-	);
+	)
 </script>
 
 <!-- SNIPPETS ------------------------------------------ -->
@@ -48,10 +36,7 @@
 		<div class="container">
 			<div class="media-container">
 				{#if teamMember.profile_image}
-					<img
-						src={getMediaUrl(teamMember.profile_image)}
-						alt={teamMember.profile_image.alt || teamMember.name}
-					/>
+					<img src={getMediaUrl(teamMember.profile_image)} alt={teamMember.profile_image.alt || teamMember.name} />
 				{/if}
 				<div class="overlay"></div>
 			</div>
@@ -142,23 +127,14 @@
 <!-- CSS ----------------------------------------------- -->
 <style>
 	#section--team-member-hero {
-		--loc-host-gradient: linear-gradient(
-			to right,
-			var(--clr-bg) 0% 50%,
-			var(--clr-bg-tr-invisible) 100%
-		);
+		--loc-host-gradient: linear-gradient(to right, var(--clr-bg) 0% 50%, var(--clr-bg-tr-invisible) 100%);
 		@media screen and (max-width: 1200px) {
 			--loc-host-height: fit-content;
-			--loc-host-gradient: linear-gradient(
-				to bottom,
-				var(--clr-bg) 0%,
-				var(--clr-bg-tr-invisible) 100%
-			);
+			--loc-host-gradient: linear-gradient(to bottom, var(--clr-bg) 0%, var(--clr-bg-tr-invisible) 100%);
 		}
 		display: grid;
 		grid-template-columns: repeat(12, 1fr);
-		background-image:
-			var(--loc-host-gradient), url('/brand/brand-a-pattern-mono-dv-text-subtract.svg');
+		background-image: var(--loc-host-gradient), url('/brand/brand-a-pattern-mono-dv-text-subtract.svg');
 		background-position:
 			top left,
 			top right;
@@ -219,11 +195,7 @@
 						right: 0;
 						bottom: 0;
 						left: 0;
-						background-image: linear-gradient(
-							to top,
-							var(--clr-bg-tr-heavy) 0%,
-							var(--clr-bg-tr-invisible) 33% 100%
-						);
+						background-image: linear-gradient(to top, var(--clr-bg-tr-heavy) 0%, var(--clr-bg-tr-invisible) 33% 100%);
 					}
 				}
 
@@ -240,7 +212,7 @@
 						width: fit-content;
 						background-color: var(--clr-primary);
 						color: var(--clr-bg);
-						font: var(--font--heading--secondary);
+						font: var(--font--heading--secondary--s);
 						text-transform: var(--text-case--heading);
 					}
 
@@ -252,9 +224,9 @@
 
 						span {
 							width: fit-content;
-							padding: var(--gap-min) var(--gap-s);
-							font: var(--font--heading);
-							font-size: var(--fs-12);
+							padding: var(--gap-l) var(--gap-l);
+							font: var(--font--heading--secondary--l);
+							font-size: calc(var(--fs-9) * 2);
 							background-color: var(--clr-bg);
 							box-shadow: var(--sp-1) var(--sp-1) 0 var(--clr-primary);
 							&:nth-child(2) {
@@ -293,7 +265,6 @@
 				/* TITLE ------------------------------------------------ */
 				& > .title {
 					font: var(--font--heading--s);
-					font-weight: 600;
 				}
 
 				/* BODY ------------------------------------------------- */

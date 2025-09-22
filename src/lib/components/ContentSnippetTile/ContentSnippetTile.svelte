@@ -1,15 +1,15 @@
 <script lang="ts">
-	import { ArrowRightIcon, type Icon } from '@lucide/svelte';
+	import { ArrowRightIcon, type Icon } from '@lucide/svelte'
 
 	interface Props {
-		title: string;
-		content: string;
-		href?: string;
-		linkText?: string;
-		icon?: typeof Icon;
+		title: string
+		content: string
+		href?: string
+		linkText?: string
+		icon?: typeof Icon
 	}
 
-	let { title, content, href, linkText = 'Read More', icon: IconComponent }: Props = $props();
+	let { title, content, href, linkText = 'Read More', icon: IconComponent }: Props = $props()
 </script>
 
 <!-- MARKUP -------------------------------------------- -->
@@ -71,7 +71,6 @@
 			.title {
 				color: var(--loc-clr-ink);
 				font: var(--font--heading--s);
-				font-weight: 700;
 			}
 
 			/* ICON CONTAINER --------------------------------------- */
@@ -85,7 +84,9 @@
 					--loc-clr-ink: var(--clr-ink);
 				}
 				width: var(--loc-size);
+				min-width: var(--loc-size);
 				height: var(--loc-size);
+				min-height: var(--loc-size);
 				display: flex;
 				justify-content: center;
 				align-items: center;

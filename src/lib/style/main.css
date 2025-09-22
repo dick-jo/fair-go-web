@@ -20,6 +20,7 @@ body {
 
 /* LAYOUT VARS ------------------------------------------ */
 :root {
+	--layout--nav-top--height: var(--sp-9);
 	--clamp--content-width--max: 1600px;
 	--clamp--content-width--s: 1200px;
 	--clamp--content-width--s-x: 800px;
@@ -32,6 +33,7 @@ main {
 	min-height: 80vh;
 	display: flex;
 	flex-direction: column;
+	align-items: center;
 	border-right: var(--bdw) solid var(--clr-dv);
 	border-left: var(--bdw) solid var(--clr-dv);
 
@@ -43,13 +45,15 @@ main {
 	}
 
 	/* SECTION ---------------------------------------------- */
-	section {
+	& > section,
+	& > .page-clamp > section {
 		--loc-gap: var(--gap-l);
+		width: 100%;
 		display: flex;
 		flex-direction: column;
 
 		.section-header {
-			height: var(--sp-5);
+			height: var(--sp-7);
 			padding: 0 var(--loc-gap);
 			display: flex;
 			align-items: center;
@@ -58,7 +62,6 @@ main {
 
 			.title {
 				font: var(--font--heading--secondary);
-				font-size: var(--fs-4);
 			}
 		}
 	}
@@ -66,7 +69,7 @@ main {
 
 /* PRIMITIVES ------------------------------------------- */
 hr {
-	height: 1px;
+	height: var(--sp-min);
 	border-style: none;
-	border-top: var(--bdw) solid var(--clr-dv);
+	border-top: var(--sp-min) solid var(--clr-primary-tr-min);
 }

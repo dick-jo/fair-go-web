@@ -1,9 +1,9 @@
 <script lang="ts">
-	import NewsSnippetTile from '$lib/components/NewsSnippetTile/NewsSnippetTile.svelte';
-	import { NewspaperIcon } from '@lucide/svelte';
-	import type { PageProps } from './$types';
+	import NewsSnippetTile from '$lib/components/NewsSnippetTile/NewsSnippetTile.svelte'
+	import { NewspaperIcon } from '@lucide/svelte'
+	import type { PageData } from './$types'
 
-	let { data }: PageProps = $props();
+	let { data }: { data: PageData } = $props()
 </script>
 
 <!-- MARKUP -------------------------------------------- -->
@@ -12,7 +12,6 @@
 		<NewspaperIcon />
 		<h2 class="title">NEWS & UPDATES</h2>
 	</div>
-
 	<div class="section-body">
 		{#each { length: Math.ceil(data.newsArticles.length / 2) } as _, rowIndex}
 			<div class="row">
@@ -32,13 +31,11 @@
 		.section-body {
 			display: flex;
 			flex-direction: column;
-
 			/* ROW -------------------------------------------------- */
 			.row {
 				display: grid;
 				grid-template-columns: repeat(12, 1fr);
 				border-bottom: var(--bdw) solid var(--clr-dv);
-
 				/* ITEM ------------------------------------------------- */
 				.item {
 					--loc-grid-cols: 6;

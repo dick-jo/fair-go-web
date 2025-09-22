@@ -1,9 +1,8 @@
-import { supabase } from '$lib/supabaseClient';
-import { error } from '@sveltejs/kit';
-import type { PageLoad } from './$types';
-import type { TeamMember } from '$lib/types';
+import { error } from '@sveltejs/kit'
+import type { PageServerLoad } from './$types'
+import type { TeamMember } from '$lib/types'
 
-export const load: PageLoad = async ({ params }) => {
+export const load: PageServerLoad = async ({ params, locals: { supabase } }) => {
 	const { data: teamMemberData, error: teamMemberError } = await supabase
 		.from('team_members')
 		.select(
@@ -41,10 +40,10 @@ export const load: PageLoad = async ({ params }) => {
 		)
 		.eq('slug', params.slug)
 		.eq('status', 'active')
-		.single();
+		.single()
 
 	if (teamMemberError || !teamMemberData) {
-		throw error(404, 'Team member not found');
+		throw error(404, 'Team member not found')
 	}
 
 	// Flatten the joined data
@@ -62,9 +61,9 @@ export const load: PageLoad = async ({ params }) => {
 		pet_policy_3: Array.isArray(teamMemberData.pet_policy_3)
 			? (teamMemberData.pet_policy_3[0] ?? null)
 			: (teamMemberData.pet_policy_3 ?? null)
-	};
+	}
 
 	return {
 		teamMember
-	};
-};
+	}
+}

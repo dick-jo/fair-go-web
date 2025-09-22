@@ -1,32 +1,82 @@
 <script lang="ts">
-	import { NAV_ITEMS } from '$lib/config';
-	import Button from '../Button/Button.svelte';
+	import { NAV_ITEMS } from '$lib/config'
+	import Button from '../Button/Button.svelte'
+	import type { Session, User, SupabaseClient } from '@supabase/supabase-js'
 
-	const navItems = NAV_ITEMS.filter((item) => item.showInTopNav);
+	let {
+		session = null,
+		user = null,
+		supabase
+	}: {
+		session: Session | null
+		user: User | null
+		supabase: SupabaseClient
+	} = $props()
+
+	const navItems = NAV_ITEMS.filter((item) => item.showInTopNav)
+
+	async function handleSignOut() {
+		await supabase.auth.signOut()
+	}
 </script>
 
-<!-- MARKUP -------------------------------------------- -->
 <div id="nav-top" class="host nav-top">
 	<div class="clamp">
 		<a href="/" class="brand-container">
 			<img src="/brand/brand-a-text-ev.svg" alt="" />
 		</a>
-
 		<nav>
 			<ul>
+				<!-- <li class="item"> -->
+				<!-- 	{#if session} -->
+				<!-- 		<span>Welcome, {user?.email}</span> -->
+				<!-- 		<button onclick={handleSignOut}>Sign Out</button> -->
+				<!-- 	{:else} -->
+				<!-- 		<a href="/test">Sign In</a> -->
+				<!-- 	{/if} -->
+				<!-- </li> -->
+
 				{#each navItems as item}
-					<li>
-						{#if item.isAction}
-							<Button
-								label={item.label}
-								intent={item.actionType}
-								colorway={item.actionType === 'primary' ? 'primary' : 'dv'}
-							/>
-						{:else}
-							<a href={item.href}>{item.label}</a>
-						{/if}
+					<li class="item">
+						<a href={item.href}>{item.label}</a>
 					</li>
 				{/each}
+
+				<!-- ACTIONS -->
+
+				<!-- <li class="item--action"> -->
+				<!-- 	<Button -->
+				<!-- 		label={item.label} -->
+				<!-- 		intent={item.actionType} -->
+				<!-- 		colorway={item.actionType === 'primary' ? 'primary' : 'primary'} -->
+				<!-- 	/> -->
+				<!-- </li> -->
+
+				{#if !session}
+					<li class="item--action">
+						<a href="/auth#section--auth--log-in">
+							<Button label="Log in" intent="secondary" colorway="dv" />
+						</a>
+					</li>
+
+					<li class="item--action">
+						<a href="/auth#section--auth--sign-up">
+							<Button label="Sign Up" intent="secondary" colorway="primary" />
+						</a>
+					</li>
+				{:else if session}
+					<li class="item--action">
+						<a href="/private">
+							<Button label="Your Profile" intent="secondary" colorway="primary" />
+						</a>
+					</li>
+				{/if}
+
+				<li class="item--action">
+					<a href="/donate">
+						<Button label="Donate" intent="primary" colorway="primary" />
+					</a>
+				</li>
 			</ul>
 		</nav>
 	</div>
@@ -40,7 +90,7 @@
 			--loc-gap: var(--gap-s);
 		}
 		width: 100%;
-		height: var(--sp-9);
+		height: var(--layout--nav-top--height);
 		padding: 0 var(--loc-gap);
 		display: flex;
 		justify-content: center;
@@ -89,14 +139,17 @@
 					--loc-clr-bg: var(--clr-ev-tr-invisible);
 					--loc-clr-border: var(--clr-primary-tr-invisible);
 					--loc-transition: var(--t-ix-hover);
+					&.item--action {
+						--loc-gap: var(--gap-min);
+					}
 					&:hover {
-						:global(&:not(:has(button))) {
+						&.item {
 							--loc-clr-ink: var(--clr-primary-heavy);
 							--loc-clr-bg: var(--clr-ev);
 							--loc-clr-border: var(--clr-primary);
 						}
 					}
-					:global(&:not(:has(button))) {
+					&:not(.item--action) {
 						@media screen and (max-width: 800px) {
 							display: none;
 						}
@@ -107,12 +160,6 @@
 					background-color: var(--loc-clr-bg);
 					border-bottom: var(--sp-min) solid var(--loc-clr-border);
 					transition: var(--loc-transition);
-					:global(&:has(button)) {
-						padding: 0 calc(var(--loc-gap) / 2);
-					}
-					&:last-child {
-						padding-right: 0;
-					}
 
 					a {
 						height: 100%;

@@ -1,9 +1,8 @@
-import { supabase } from '$lib/supabaseClient';
-import { error } from '@sveltejs/kit';
-import type { PageLoad } from './$types';
-import type { NewsArticle } from '$lib/types';
+import { error } from '@sveltejs/kit'
+import type { PageServerLoad } from './$types'
+import type { NewsArticle } from '$lib/types'
 
-export const load: PageLoad = async ({ params }) => {
+export const load: PageServerLoad = async ({ params, locals: { supabase } }) => {
 	const { data: articleData, error: articleError } = await supabase
 		.from('news_articles')
 		.select(
@@ -36,10 +35,10 @@ export const load: PageLoad = async ({ params }) => {
 		)
 		.eq('slug', params.slug)
 		.eq('status', 'published')
-		.single();
+		.single()
 
 	if (articleError || !articleData) {
-		throw error(404, 'Article not found');
+		throw error(404, 'Article not found')
 	}
 
 	// Flatten the joined data
@@ -54,9 +53,9 @@ export const load: PageLoad = async ({ params }) => {
 		featured_image: Array.isArray(articleData.featured_image)
 			? (articleData.featured_image[0] ?? null)
 			: (articleData.featured_image ?? null)
-	};
+	}
 
 	return {
 		article
-	};
-};
+	}
+}

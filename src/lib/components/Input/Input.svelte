@@ -1,12 +1,12 @@
 <script lang="ts">
-	import type { HTMLInputAttributes } from 'svelte/elements';
+	import type { HTMLInputAttributes } from 'svelte/elements'
 
 	interface Props extends HTMLInputAttributes {
-		label?: string;
-		error?: string;
+		label?: string
+		error?: string
 	}
 
-	let { label, error, value = $bindable(), ...inputProps }: Props = $props();
+	let { label, error, value = $bindable(), ...inputProps }: Props = $props()
 </script>
 
 <!-- MARKUP -------------------------------------------- -->
@@ -38,8 +38,16 @@
 	.host {
 		--loc-gap: var(--sp-min);
 		--loc-clr-bg: var(--clr-dv);
+		--loc-clr-bg--input: var(--clr-ev);
+		--loc-clr-ink: var(--clr-ink);
 		--loc-bdr: var(--bdr-s);
 		--loc-bdr--s: var(--bdr-min);
+		--loc-transition: var(--t-ix-hover);
+		&:has(input:focus) {
+			--loc-clr-bg: var(--clr-primary);
+			--loc-clr-bg--input: var(--clr-bg);
+			--loc-clr-ink: var(--clr-ev);
+		}
 		width: 100%;
 		flex: 1;
 		display: flex;
@@ -60,13 +68,13 @@
 				align-items: center;
 				background-color: var(--loc-clr-bg);
 				border-radius: var(--loc-bdr--s) var(--loc-bdr--s) 0 0;
+				color: var(--loc-clr-ink);
 				font: var(--font--label);
 				font-size: var(--fs-1);
-				font-weight: 600;
 				text-transform: capitalize;
-				transition: var(--t-ix-hover);
+				transition: var(--loc-transition);
 				.host:has(input:focus) & {
-					padding-left: calc(var(--loc-gap) * 4);
+					padding: 0 calc(var(--loc-gap) * 4);
 				}
 			}
 
@@ -115,17 +123,17 @@
 
 		/* BODY ------------------------------------------------- */
 		.body {
-			--loc-height: var(--sp-6);
+			--loc-height: var(--sp-7);
 			width: 100%;
 			height: var(--loc-height);
 			padding: var(--loc-gap);
 			background-color: var(--loc-clr-bg);
 			border-radius: 0 var(--loc-bdr) var(--loc-bdr) var(--loc-bdr);
+			transition: var(--loc-transition);
 
 			/* INPUT ------------------------------------------------ */
 			input {
-				--loc-clr-border: var(--clr-primary-tr-invisible);
-				--loc-clr-ink: var(--clr-ink-tr-heavy-x);
+				--loc-clr-border: var(--clr-primary-tr-light);
 				--loc-clr-ink--placeholder: var(--clr-ink-tr-light);
 				&:focus {
 					--loc-clr-ink: var(--clr-ink);
@@ -134,13 +142,13 @@
 				width: 100%;
 				height: 100%;
 				padding: var(--gap-s);
-				background-color: var(--clr-ev);
+				background-color: var(--loc-clr-bg--input);
 				border: var(--bdw) solid var(--loc-clr-border);
 				border-radius: var(--loc-bdr--s);
 				color: var(--loc-clr-ink);
 				font: var(--font--body--s);
-				font-weight: 600;
-				transition: var(--t-ix-hover);
+				font-weight: bold;
+				transition: var(--loc-transition);
 				&::placeholder {
 					color: var(--loc-clr-ink--placeholder);
 				}

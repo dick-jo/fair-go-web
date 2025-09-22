@@ -127,73 +127,127 @@
 
 /* VARS ------------------------------------------------- */
 :root {
+	/* FAMILY ----------------------------------------------- */
 	--font-family--heading: 'Barlow', 'Barlow Fallback 800', Arial, sans-serif;
-	--font-family-heading--secondary:
-		'Barlow Condensed', 'Barlow Condensed Fallback 700', Arial, sans-serif;
+	--font-family-heading--secondary: 'Barlow Condensed', 'Barlow Condensed Fallback 700', Arial, sans-serif;
+
 	--font-family--label: 'Barlow', 'Barlow Fallback 600', Arial, sans-serif;
-	--font-family--label--secondary:
-		'Barlow Condensed', 'Barlow Condensed Fallback 600', Arial, sans-serif;
+	--font-family--label--secondary: 'Barlow Condensed', 'Barlow Condensed Fallback 600', Arial, sans-serif;
+
 	--font-family--body: 'Barlow', 'Barlow Fallback 400', Arial, sans-serif;
 	--font-family--body--secondary: 'Barlow', 'Barlow Fallback 500', Arial, sans-serif;
-	--font-size--heading: var(--fs-4);
-	--font-size--heading--s: var(--fs-3);
-	--font-size--heading--l: var(--fs-5);
-	--font-size--heading--secondary: var(--fs-3);
-	--font-size--heading--secondary--s: var(--fs-2);
-	--font-size--heading--secondary--l: var(--fs-4);
+
+	/* SIZE ------------------------------------------------- */
+	--font-size--heading: var(--fs-9);
+	--font-size--heading--s: var(--fs-6);
+	--font-size--heading--l: var(--fs-12);
+
+	--font-size--heading--secondary: var(--fs-7);
+	--font-size--heading--secondary--s: var(--fs-4);
+	--font-size--heading--secondary--l: var(--fs-10);
+
 	--font-size--label: var(--fs-3);
 	--font-size--label--s: var(--fs-2);
 	--font-size--label--l: var(--fs-4);
+
 	--font-size--label--secondary: var(--fs-3);
 	--font-size--label--secondary--s: var(--fs-2);
 	--font-size--label--secondary--l: var(--fs-4);
-	--font-size--body: var(--fs-3);
-	--font-size--body--s: var(--fs-2);
-	--font-size--body--l: var(--fs-4);
-	--font-size--body--secondary: var(--fs-2);
-	--font-size--body--secondary: var(--fs-2);
-	--font-size--body--secondary--s: var(--fs-1);
-	--font-size--body--secondary--l: var(--fs-3);
-	--font-weight--heading: 800;
+
+	--font-size--body: var(--fs-4);
+	--font-size--body--s: var(--fs-3);
+	--font-size--body--l: var(--fs-5);
+
+	--font-size--body--secondary: var(--fs-4);
+	--font-size--body--secondary--s: var(--fs-3);
+	--font-size--body--secondary--l: var(--fs-5);
+
+	/* LINE HEIGHT ------------------------------------------ */
+	--line-height--heading: var(--fs-9);
+	--line-height--heading--s: var(--fs-6);
+	--line-height--heading--l: var(--fs-12);
+
+	--line-height--body: var(--fs-8);
+	--line-height--body--s: var(--fs-6);
+	--line-height--body--l: var(--fs-10);
+
+	/* WEIGHT ----------------------------------------------- */
+	--font-weight--heading: 700;
+	--font-weight--heading--s: 600;
+	--font-weight--heading--l: 800;
+
 	--font-weight--heading--secondary: 700;
+	--font-weight--heading--secondary--s: 600;
+	--font-weight--heading--secondary--l: 800;
+
 	--font-weight--label: 600;
 	--font-weight--label--secondary: 700;
-	--font-weight--body: 400;
-	--font-weight--body--secondary: 500;
+
+	--font-weight--body: 500;
+	--font-weight--body--s: 400;
+	--font-weight--body--l: 600;
+
+	--font-weight--body--secondary: 400;
+	--font-weight--body--secondary--s: 300;
+	--font-weight--body--secondary--l: 500;
+
+	/* CASE ------------------------------------------------- */
 	--text-case--heading: uppercase;
 	--text-case--heading--secondary: capitalize;
 	--text-case--label: uppercase;
 	--text-case--body: none;
 	--text-case--body--secondary: none;
-	--font--heading: var(--font-weight--heading) var(--font-size--heading) var(--font-family--heading);
-	--font--heading--s: var(--font-weight--heading) var(--font-size--heading--s)
+
+	/* FONT SHORTHANDS -------------------------------------- */
+	--font--heading: var(--font-weight--heading) var(--font-size--heading) / var(--line-height--heading)
 		var(--font-family--heading);
-	--font--heading--l: var(--font-weight--heading) var(--font-size--heading--l)
+
+	--font--heading--s: var(--font-weight--heading--s) var(--font-size--heading--s) / var(--line-height--heading--s)
 		var(--font-family--heading);
-	--font--heading--secondary: var(--font-weight--heading--secondary)
-		var(--font-size--heading--secondary) var(--font-family-heading--secondary);
-	--font--heading--secondary--s: var(--font-weight--heading--secondary)
-		var(--font-size--heading--secondary--s) var(--font-family-heading--secondary);
-	--font--heading--secondary--l: var(--font-weight--heading--secondary)
-		var(--font-size--heading--secondary--l) var(--font-family-heading--secondary);
+
+	--font--heading--l: var(--font-weight--heading--l) var(--font-size--heading--l) / var(--line-height--heading--l)
+		var(--font-family--heading);
+
+	--font--heading--secondary: var(--font-weight--heading--secondary) var(--font-size--heading--secondary) /
+		var(--line-height--heading) var(--font-family-heading--secondary);
+
+	--font--heading--secondary--s: var(--font-weight--heading--secondary--s) var(--font-size--heading--secondary--s) /
+		var(--line-height--heading--s) var(--font-family-heading--secondary);
+
+	--font--heading--secondary--l: var(--font-weight--heading--secondary--l) var(--font-size--heading--secondary--l) /
+		var(--line-height--heading--l) var(--font-family-heading--secondary);
+
 	--font--label: var(--font-weight--label) var(--font-size--label) var(--font-family--label);
+
 	--font--label--s: var(--font-weight--label) var(--font-size--label--s) var(--font-family--label);
+
 	--font--label--l: var(--font-weight--label) var(--font-size--label--l) var(--font-family--label);
+
 	--font--label--secondary: var(--font-weight--label--secondary) var(--font-size--label--secondary)
 		var(--font-family--label--secondary);
-	--font--label--secondary--s: var(--font-weight--label--secondary)
-		var(--font-size--label--secondary--s) var(--font-family--label--secondary);
-	--font--label--secondary--l: var(--font-weight--label--secondary)
-		var(--font-size--label--secondary--l) var(--font-family--label--secondary);
-	--font--body: var(--font-weight--body) var(--font-size--body) var(--font-family--body);
-	--font--body--s: var(--font-weight--body) var(--font-size--body--s) var(--font-family--body);
-	--font--body--l: var(--font-weight--body) var(--font-size--body--l) var(--font-family--body);
+
+	--font--label--secondary--s: var(--font-weight--label--secondary) var(--font-size--label--secondary--s)
+		var(--font-family--label--secondary);
+
+	--font--label--secondary--l: var(--font-weight--label--secondary) var(--font-size--label--secondary--l)
+		var(--font-family--label--secondary);
+
+	--font--body: var(--font-weight--body) var(--font-size--body) / var(--line-height--body) var(--font-family--body);
+
+	--font--body--s: var(--font-weight--body) var(--font-size--body--s) / var(--line-height--body--s)
+		var(--font-family--body);
+
+	--font--body--l: var(--font-weight--body) var(--font-size--body--l) / var(--line-height--body--l)
+		var(--font-family--body);
+
 	--font--body--secondary: var(--font-weight--body--secondary) var(--font-size--body--secondary)
 		var(--font-family--body--secondary);
-	--font--body--secondary--s: var(--font-weight--body--secondary)
-		var(--font-size--body--secondary--s) var(--font-family--body--secondary);
-	--font--body--secondary--l: var(--font-weight--body--secondary)
-		var(--font-size--body--secondary--l) var(--font-family--body--secondary);
+
+	--font--body--secondary--s: var(--font-weight--body--secondary--s) var(--font-size--body--secondary--s)
+		var(--font-family--body--secondary);
+
+	--font--body--secondary--l: var(--font-weight--body--secondary--l) var(--font-size--body--secondary--l)
+		var(--font-family--body--secondary);
 }
 
 /* INIT ------------------------------------------------- */
@@ -209,11 +263,22 @@ h2 {
 	font: var(--font--heading);
 }
 
-h3,
-h4,
-h5,
+h3 {
+	font: var(--font--heading--s);
+}
+
+h4 {
+	font: var(--font--heading--secondary--s);
+}
+
+h5 {
+	font: var(--font--heading--secondary--s);
+	font-size: var(--fs-4);
+}
+
 h6 {
-	font: var(--font--heading--secondary);
+	font: var(--font--heading--secondary--s);
+	font-size: var(--fs-3);
 }
 
 span,
@@ -230,8 +295,42 @@ a {
 	text-decoration: none;
 }
 
-li,
+ol,
 ul {
 	font: var(--font--body);
+}
+
+ul {
+	padding-inline-start: 0;
+	list-style-type: square;
+	& ul li {
+		padding-left: var(--gap-l);
+	}
+}
+
+ol {
+	padding-inline-start: 0;
+	& ol li {
+		padding-left: var(--gap-l);
+	}
+}
+
+ol li::marker {
+	font-weight: bold;
+}
+
+li {
 	list-style-position: inside;
+}
+
+blockquote {
+	padding: var(--gap-l);
+	background-color: var(--clr-primary-tr-min);
+	/* border: var(--bdw) solid var(--clr-primary-tr-light-x); */
+	border-left: var(--sp-min) solid var(--clr-primary);
+	font: var(--font--body--l);
+	p {
+		font: var(--font--body--l);
+		/* font-weight: var(--font-weight--body--l); */
+	}
 }

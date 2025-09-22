@@ -1,11 +1,11 @@
 <script lang="ts">
-	import { UsersRoundIcon } from '@lucide/svelte';
-	import type { PageProps } from './$types';
-	import Button from '$lib/components/Button/Button.svelte';
-	import { splitStringToChunks, getMediaUrl } from '$lib/utils';
-	import type { TeamMember } from '$lib/types';
+	import { UsersRoundIcon } from '@lucide/svelte'
+	import type { PageData } from './$types'
+	import Button from '$lib/components/Button/Button.svelte'
+	import { splitStringToChunks, getMediaUrl } from '$lib/utils'
+	import type { TeamMember } from '$lib/types'
 
-	let { data }: PageProps = $props();
+	let { data }: { data: PageData } = $props()
 </script>
 
 <!-- SNIPPETS ------------------------------------------ -->
@@ -14,10 +14,7 @@
 		<div class="container">
 			<div class="media-container">
 				{#if member.profile_image}
-					<img
-						src={getMediaUrl(member.profile_image)}
-						alt={member.profile_image.alt || member.name}
-					/>
+					<img src={getMediaUrl(member.profile_image)} alt={member.profile_image.alt || member.name} />
 				{/if}
 				<div class="overlay"></div>
 			</div>
@@ -63,19 +60,19 @@
 <!-- CSS ----------------------------------------------- -->
 <style>
 	#section--our-team {
-		.section-header {
-			height: var(--sp-5);
-			padding: 0 var(--gap-l);
-			display: flex;
-			align-items: center;
-			gap: calc(var(--gap-l) / 2);
-			border-bottom: var(--bdw) solid var(--clr-dv);
-
-			.title {
-				font: var(--font--heading--secondary);
-				font-size: var(--fs-4);
-			}
-		}
+		/* .section-header { */
+		/* 	height: var(--sp-6); */
+		/* 	padding: 0 var(--gap-l); */
+		/* 	display: flex; */
+		/* 	align-items: center; */
+		/* 	gap: calc(var(--gap-l) / 2); */
+		/* 	border-bottom: var(--bdw) solid var(--clr-dv); */
+		/**/
+		/* 	.title { */
+		/* 		font: var(--font--heading--secondary); */
+		/* 		font-size: var(--fs-4); */
+		/* 	} */
+		/* } */
 
 		.section-body {
 			/* ROW -------------------------------------------------- */
@@ -168,11 +165,7 @@
 						right: 0;
 						bottom: 0;
 						left: 0;
-						background-image: linear-gradient(
-							to top,
-							var(--clr-bg-tr-heavy) 0%,
-							var(--clr-bg-tr-invisible) 33% 100%
-						);
+						background-image: linear-gradient(to top, var(--clr-bg-tr-heavy) 0%, var(--clr-bg-tr-invisible) 33% 100%);
 					}
 				}
 
@@ -201,7 +194,7 @@
 						width: fit-content;
 						background-color: var(--clr-primary);
 						color: var(--clr-bg);
-						font: var(--font--heading--secondary);
+						font: var(--font--heading--secondary--s);
 						text-transform: var(--text-case--heading);
 					}
 
@@ -214,8 +207,7 @@
 						span {
 							width: fit-content;
 							padding: var(--gap-min) var(--gap-s);
-							font: var(--font--heading--l);
-							font-size: var(--fs-6);
+							font: var(--font--heading--secondary--l);
 							background-color: var(--clr-bg);
 							box-shadow: var(--sp-1) var(--sp-1) 0 var(--clr-primary);
 							&:nth-child(2) {

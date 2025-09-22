@@ -1,37 +1,34 @@
 <script lang="ts">
-	import AuthorDateRow from '../AuthorDateRow/AuthorDateRow.svelte';
-	import { getMediaUrl, truncateText } from '$lib/utils';
-	import type { NewsArticle } from '$lib/types';
+	import AuthorDateRow from '../AuthorDateRow/AuthorDateRow.svelte'
+	import { getMediaUrl, truncateText } from '$lib/utils'
+	import type { NewsArticle } from '$lib/types'
 
 	// Character limit constant
-	const SNIPPET_MAX_LENGTH = 180;
+	const SNIPPET_MAX_LENGTH = 180
 
 	interface Props {
-		article: NewsArticle;
-		variant?: 'default' | 'large-image';
+		article: NewsArticle
+		variant?: 'default' | 'large-image'
 	}
 
-	let { article, variant = 'default' }: Props = $props();
+	let { article, variant = 'default' }: Props = $props()
 
 	// Format the published date
 	const formattedDate = new Date(article.published_at).toLocaleDateString('en-AU', {
 		year: 'numeric',
 		month: 'short',
 		day: 'numeric'
-	});
+	})
 
 	// Truncate the snippet
-	const displaySnippet = truncateText(article.snippet, SNIPPET_MAX_LENGTH);
+	const displaySnippet = truncateText(article.snippet, SNIPPET_MAX_LENGTH)
 </script>
 
 <!-- MARKUP -------------------------------------------- -->
 <a href="/news/{article.slug}" class={['host', 'news-snippet-tile', `variant--${variant}`]}>
 	<div class="media-container">
 		{#if article.featured_image}
-			<img
-				src={getMediaUrl(article.featured_image)}
-				alt={article.featured_image.alt || article.title}
-			/>
+			<img src={getMediaUrl(article.featured_image)} alt={article.featured_image.alt || article.title} />
 		{/if}
 	</div>
 	<div class="body">
@@ -41,9 +38,7 @@
 		</p>
 		<AuthorDateRow
 			authorName={article.author.name}
-			authorImageUrl={article.author.avatar_media
-				? getMediaUrl(article.author.avatar_media)
-				: undefined}
+			authorImageUrl={article.author.avatar_media ? getMediaUrl(article.author.avatar_media) : undefined}
 			date={formattedDate}
 		/>
 	</div>
@@ -117,8 +112,10 @@
 			.content {
 				flex: 1;
 				color: var(--loc-clr-ink--light);
-				font: var(--font--body);
+				font: var(--font--body--s);
 				font-size: var(--fs-2);
+				line-height: var(--fs-4);
+				/* font-size: var(--fs-2); */
 			}
 		}
 	}

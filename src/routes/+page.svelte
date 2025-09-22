@@ -1,17 +1,17 @@
 <script lang="ts">
-	import type { PageProps } from './$types';
-	import SectionHero from '$lib/components/SectionHero/SectionHero.svelte';
-	import ContentSnippetTile from '$lib/components/ContentSnippetTile/ContentSnippetTile.svelte';
-	import NewsSnippetTile from '$lib/components/NewsSnippetTile/NewsSnippetTile.svelte';
-	import { getPolicyIcon } from '$lib/utils/policyIcons';
-	import { LandPlotIcon, LightbulbIcon, NewspaperIcon } from '@lucide/svelte';
-	import CtaBox from '$lib/components/CtaBox/CtaBox.svelte';
-	import SectionCtaRow from '$lib/components/SectionCtaRow/SectionCtaRow.svelte';
+	import type { PageData } from './$types'
+	import SectionHero from '$lib/components/SectionHero/SectionHero.svelte'
+	import ContentSnippetTile from '$lib/components/ContentSnippetTile/ContentSnippetTile.svelte'
+	import NewsSnippetTile from '$lib/components/NewsSnippetTile/NewsSnippetTile.svelte'
+	import { getPolicyIcon } from '$lib/utils/policyIcons'
+	import { LandPlotIcon, LightbulbIcon, NewspaperIcon } from '@lucide/svelte'
+	import SectionCtaRow from '$lib/components/SectionCtaRow/SectionCtaRow.svelte'
 
-	let { data }: PageProps = $props();
+	let { data }: { data: PageData } = $props()
+	let { session, supabase, user } = $derived(data)
 </script>
 
-<SectionHero heroCarouselItems={data.carouselItems} />
+<SectionHero {supabase} heroCarouselItems={data.carouselItems} />
 
 <!-- NEWS----------------------------------------------- -->
 <section id="section--news-snippets-row">
@@ -19,7 +19,6 @@
 		<NewspaperIcon />
 		<h2 class="title">LATEST UPDATES</h2>
 	</div>
-
 	<div class="section-body">
 		{#each data.newsArticles as article}
 			<div class="item">
@@ -75,13 +74,11 @@
 <style>
 	#section--news-snippets-row {
 		--loc-height: calc(var(--sp-12) * 2);
-
 		.section-body {
 			container-type: inline-size;
 			min-height: var(--loc-height);
 			display: grid;
 			grid-template-columns: repeat(12, 1fr);
-
 			& > .item {
 				--loc-grid-cols: 4;
 				@media screen and (max-width: 1440px) {
@@ -111,13 +108,11 @@
 			}
 		}
 	}
-
 	#section--policy-snippets-row,
 	#section--philosophy-snippets-row {
 		.section-body {
 			display: grid;
 			grid-template-columns: repeat(12, 1fr);
-
 			& > .item {
 				--loc-grid-cols: 4;
 				@media screen and (max-width: 720px) {

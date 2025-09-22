@@ -1,95 +1,95 @@
 <script lang="ts">
-	import { ArrowLeftIcon, ArrowRightIcon } from '@lucide/svelte';
-	import type { HeroCarouselItem } from './types';
-	import { getMediaUrl, splitStringToChunks } from '$lib/utils';
-	import { blur, fly } from 'svelte/transition';
-	import { HERO_CAROUSEL_T_TRANSITION, HERO_CAROUSEL_T_IDLE } from './constants';
+	import { ArrowLeftIcon, ArrowRightIcon } from '@lucide/svelte'
+	import type { HeroCarouselItem } from './types'
+	import { getMediaUrl, splitStringToChunks } from '$lib/utils'
+	import { blur, fly } from 'svelte/transition'
+	import { HERO_CAROUSEL_T_TRANSITION, HERO_CAROUSEL_T_IDLE } from './constants'
 
 	interface Props {
-		items: HeroCarouselItem[];
+		items: HeroCarouselItem[]
 	}
 
-	let { items }: Props = $props();
+	let { items }: Props = $props()
 
 	// STATE ------------------------------------------------ //
-	let activeItemIndex = $state<number>(0);
-	let isTransitioning = $state<boolean>(false);
-	let isPaused = $state<boolean>(false);
-	let pendingItemIndex: number | null = null;
-	let timeoutId: ReturnType<typeof setTimeout> | null = null;
+	let activeItemIndex = $state<number>(0)
+	let isTransitioning = $state<boolean>(false)
+	let isPaused = $state<boolean>(false)
+	let pendingItemIndex: number | null = null
+	let timeoutId: ReturnType<typeof setTimeout> | null = null
 
 	// API -------------------------------------------------- //
 	function next() {
-		if (isTransitioning) return;
-		pendingItemIndex = (activeItemIndex + 1) % items.length;
-		isTransitioning = true;
-		clearAutoAdvance(); // Reset timer on manual navigation
+		if (isTransitioning) return
+		pendingItemIndex = (activeItemIndex + 1) % items.length
+		isTransitioning = true
+		clearAutoAdvance() // Reset timer on manual navigation
 	}
 
 	function prev() {
-		if (isTransitioning) return;
-		pendingItemIndex = (activeItemIndex - 1 + items.length) % items.length;
-		isTransitioning = true;
-		clearAutoAdvance(); // Reset timer on manual navigation
+		if (isTransitioning) return
+		pendingItemIndex = (activeItemIndex - 1 + items.length) % items.length
+		isTransitioning = true
+		clearAutoAdvance() // Reset timer on manual navigation
 	}
 
 	function goto(i: number) {
-		if (isTransitioning || i === activeItemIndex) return;
-		pendingItemIndex = i;
-		isTransitioning = true;
-		clearAutoAdvance(); // Reset timer on manual navigation
+		if (isTransitioning || i === activeItemIndex) return
+		pendingItemIndex = i
+		isTransitioning = true
+		clearAutoAdvance() // Reset timer on manual navigation
 	}
 
 	function handleOutroEnd() {
 		if (pendingItemIndex !== null) {
-			activeItemIndex = pendingItemIndex;
-			pendingItemIndex = null;
+			activeItemIndex = pendingItemIndex
+			pendingItemIndex = null
 		}
-		isTransitioning = false;
+		isTransitioning = false
 	}
 
 	function clearAutoAdvance() {
 		if (timeoutId) {
-			clearTimeout(timeoutId);
-			timeoutId = null;
+			clearTimeout(timeoutId)
+			timeoutId = null
 		}
 	}
 
 	function startAutoAdvance() {
-		clearAutoAdvance();
+		clearAutoAdvance()
 		timeoutId = setTimeout(() => {
 			if (!isPaused && !isTransitioning) {
-				next();
+				next()
 			}
-		}, HERO_CAROUSEL_T_IDLE);
+		}, HERO_CAROUSEL_T_IDLE)
 	}
 
 	function handleVisibilityChange() {
 		if (document.visibilityState === 'hidden') {
-			clearAutoAdvance();
+			clearAutoAdvance()
 		} else if (!isPaused && !isTransitioning) {
-			startAutoAdvance();
+			startAutoAdvance()
 		}
 	}
 
 	$effect(() => {
 		if (!isPaused && !isTransitioning) {
-			startAutoAdvance();
+			startAutoAdvance()
 		}
 		return () => {
-			clearAutoAdvance();
-		};
-	});
+			clearAutoAdvance()
+		}
+	})
 
 	$effect(() => {
-		if (typeof window === 'undefined') return;
+		if (typeof window === 'undefined') return
 
-		window.addEventListener('visibilitychange', handleVisibilityChange);
+		window.addEventListener('visibilitychange', handleVisibilityChange)
 
 		return () => {
-			window.removeEventListener('visibilitychange', handleVisibilityChange);
-		};
-	});
+			window.removeEventListener('visibilitychange', handleVisibilityChange)
+		}
+	})
 </script>
 
 <div
@@ -98,8 +98,8 @@
 	aria-label="Hero carousel"
 	onmouseenter={() => (isPaused = true)}
 	onmouseleave={() => {
-		isPaused = false;
-		if (!isTransitioning) startAutoAdvance();
+		isPaused = false
+		if (!isTransitioning) startAutoAdvance()
 	}}
 >
 	<div class="media-container">
@@ -170,8 +170,8 @@
 		background-size: 33%;
 		background-repeat: no-repeat;
 		background-position: center center;
-		border: var(--bdw) solid var(--clr-dv);
-		border-radius: var(--bdr-l);
+		/* border: var(--bdw) solid var(--clr-dv); */
+		/* border-radius: var(--bdr-l); */
 
 		/* MEDIA ------------------------------------------------ */
 		.media-container {
@@ -197,11 +197,7 @@
 				right: 0;
 				bottom: 0;
 				left: 0;
-				background-image: linear-gradient(
-					to top,
-					var(--clr-bg-tr-heavy) 0%,
-					var(--clr-bg-tr-invisible) 33% 100%
-				);
+				background-image: linear-gradient(to top, var(--clr-bg-tr-heavy) 0%, var(--clr-bg-tr-invisible) 33% 100%);
 			}
 		}
 
@@ -227,37 +223,24 @@
 
 				/* TEXT ------------------------------------------------- */
 				& > .label {
-					--loc-font-size: var(--fs-4);
-					@media screen and (max-width: 1200px) {
-						--loc-font-size: var(--fs-3);
-					}
 					max-width: fit-content;
 					padding: var(--gap-min) var(--gap-s);
 					background-color: var(--clr-primary);
 					color: var(--clr-bg);
-					font-size: var(--loc-font-size);
-					font-weight: 400;
+					font: var(--font--heading--secondary--s);
 					text-transform: var(--text-case--label);
 				}
 
 				& > .title {
 					--loc-gap: var(--sp-1);
-					--loc-font-size: calc(var(--fs-12) * 1);
-					@media screen and (max-width: 1200px) {
-						--loc-font-size: var(--fs-12);
-					}
-					@media screen and (max-width: 960px) {
-						--loc-font-size: var(--fs-8);
-					}
 					padding-left: var(--loc-gap);
 					display: flex;
 					flex-direction: column;
-					font: var(--font--heading--secondary);
-					font-size: var(--loc-font-size);
+					font: var(--font--heading--secondary--l);
 					text-transform: uppercase;
 
 					& > span {
-						padding: 0 var(--gap-s);
+						padding: var(--gap-min) var(--gap-s);
 						max-width: fit-content;
 						background-color: var(--clr-bg);
 						font: inherit;

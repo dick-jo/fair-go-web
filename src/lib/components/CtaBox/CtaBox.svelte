@@ -1,15 +1,15 @@
 <script lang="ts">
-	import Button from '../Button/Button.svelte';
+	import Button from '../Button/Button.svelte'
 
 	interface Props {
-		title: string;
-		label?: string;
-		content: string;
-		buttonLabel: string;
-		intent?: 'primary' | 'secondary';
+		title: string
+		label?: string
+		content: string
+		buttonLabel: string
+		intent?: 'primary' | 'secondary'
 	}
 
-	let { title, label, content, buttonLabel, intent = 'secondary' }: Props = $props();
+	let { title, label, content, buttonLabel, intent = 'secondary' }: Props = $props()
 </script>
 
 <!-- MARKUP -------------------------------------------- -->
@@ -61,13 +61,13 @@
 
 			.label {
 				color: var(--loc-clr-ink--light);
-				font: var(--font--heading--secondary);
+				font: var(--font--heading--secondary--s);
 				text-transform: var(--text-case--heading);
 			}
 
 			.title {
 				color: var(--loc-clr-ink);
-				font: var(--font--heading--l);
+				font: var(--font--heading);
 				font-weight: 700;
 				text-transform: var(--text-case--heading--secondary);
 			}
@@ -77,7 +77,7 @@
 		.content {
 			flex: 1;
 			color: var(--loc-clr-ink--light);
-			font: var(--font--body--secondary);
+			font: var(--font--body--s);
 		}
 	}
 </style>

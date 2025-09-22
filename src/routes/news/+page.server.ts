@@ -1,8 +1,7 @@
-import { supabase } from '$lib/supabaseClient';
-import type { PageLoad } from './$types';
-import type { NewsArticle } from '$lib/types';
+import type { PageServerLoad } from './$types'
+import type { NewsArticle } from '$lib/types'
 
-export const load: PageLoad = async () => {
+export const load: PageServerLoad = async ({ locals: { supabase } }) => {
 	const { data: newsData, error } = await supabase
 		.from('news_articles')
 		.select(
@@ -34,7 +33,7 @@ export const load: PageLoad = async () => {
 		`
 		)
 		.eq('status', 'published')
-		.order('published_at', { ascending: false }); // Latest first
+		.order('published_at', { ascending: false }) // Latest first
 
 	// Flatten media arrays to single objects
 	const newsArticles: NewsArticle[] = (newsData ?? []).map((item) => ({
@@ -48,10 +47,10 @@ export const load: PageLoad = async () => {
 		featured_image: Array.isArray(item.featured_image)
 			? (item.featured_image[0] ?? null)
 			: (item.featured_image ?? null)
-	}));
+	}))
 
 	return {
 		newsArticles,
 		error
-	};
-};
+	}
+}
