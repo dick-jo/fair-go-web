@@ -971,6 +971,7 @@ export type Database = {
           created_at: string | null
           first_name: string | null
           id: string
+          is_volunteer: boolean
           last_name: string | null
           membership_status: string | null
           phone: string | null
@@ -981,6 +982,7 @@ export type Database = {
           created_at?: string | null
           first_name?: string | null
           id: string
+          is_volunteer?: boolean
           last_name?: string | null
           membership_status?: string | null
           phone?: string | null
@@ -991,6 +993,7 @@ export type Database = {
           created_at?: string | null
           first_name?: string | null
           id?: string
+          is_volunteer?: boolean
           last_name?: string | null
           membership_status?: string | null
           phone?: string | null
@@ -1003,6 +1006,7 @@ export type Database = {
         Row: {
           created_at: string
           email: string
+          email_opt_in: boolean
           first_name: string | null
           id: string
           is_subscribed: boolean
@@ -1016,6 +1020,7 @@ export type Database = {
         Insert: {
           created_at?: string
           email: string
+          email_opt_in?: boolean
           first_name?: string | null
           id?: string
           is_subscribed?: boolean
@@ -1029,6 +1034,7 @@ export type Database = {
         Update: {
           created_at?: string
           email?: string
+          email_opt_in?: boolean
           first_name?: string | null
           id?: string
           is_subscribed?: boolean
@@ -1138,7 +1144,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      update_email_opt_in_anonymous: {
+        Args: { new_opt_in: boolean; target_email: string }
+        Returns: boolean
+      }
     }
     Enums: {
       [_ in never]: never

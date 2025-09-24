@@ -298,3 +298,73 @@ export async function updateProfileClient(
 
 	return { success: true }
 }
+
+// Add this interface near your existing ProfileUpdateData interface
+interface VolunteerUpdateData {
+	is_volunteer: boolean
+}
+
+// Add this near your existing updateProfile function
+export async function updateVolunteerProfile(
+	supabase: SupabaseClient,
+	userId: string,
+	data: VolunteerUpdateData
+): Promise<ProfileUpdateResult> {
+	const { error } = await supabase.from('profiles').update(data).eq('id', userId)
+
+	if (error) {
+		return { error: 'Failed to update volunteer status. Please try again.' }
+	}
+
+	return { success: true }
+}
+
+// And the client version too
+export async function updateVolunteerProfileClient(
+	supabase: SupabaseClient,
+	userId: string,
+	data: VolunteerUpdateData
+): Promise<ProfileUpdateResult> {
+	const { error } = await supabase.from('profiles').update(data).eq('id', userId)
+
+	if (error) {
+		return { error: 'Failed to update volunteer status. Please try again.' }
+	}
+
+	return { success: true }
+}
+
+// Communication prefs
+interface CommunicationPreferencesData {
+	email_opt_in: boolean
+}
+
+// Server-side communication preferences update
+export async function updateCommunicationPreferences(
+	supabase: SupabaseClient,
+	userEmail: string,
+	data: CommunicationPreferencesData
+): Promise<ProfileUpdateResult> {
+	const { error } = await supabase.from('subscribers').update(data).eq('email', userEmail)
+
+	if (error) {
+		return { error: 'Failed to update communication preferences. Please try again.' }
+	}
+
+	return { success: true }
+}
+
+// Client-side communication preferences update
+export async function updateCommunicationPreferencesClient(
+	supabase: SupabaseClient,
+	userEmail: string,
+	data: CommunicationPreferencesData
+): Promise<ProfileUpdateResult> {
+	const { error } = await supabase.from('subscribers').update(data).eq('email', userEmail)
+
+	if (error) {
+		return { error: 'Failed to update communication preferences. Please try again.' }
+	}
+
+	return { success: true }
+}

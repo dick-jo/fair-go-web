@@ -1,156 +1,92 @@
 <script lang="ts">
-	import { supabase } from '$lib/supabaseClient';
+	import Button from '$lib/components/Button/Button.svelte'
+	import Input from '$lib/components/Input/Input.svelte'
+	import InputCheckbox from '$lib/components/InputCheckbox/InputCheckbox.svelte'
+	import AlertBox from '$lib/components/AlertBox/AlertBox.svelte'
+	import { OctagonAlertIcon, SquareCheckBig } from '@lucide/svelte'
+	import { enhance } from '$app/forms'
+	import type { ActionData, PageData } from './$types'
 
-	let email = '';
-	let loading = false;
-	let status: 'idle' | 'success' | 'error' | 'not-found' = 'idle';
-	let currentSubscription: boolean | null = null;
-	let errorMessage = '';
+	let { data, form }: { data: PageData; form: ActionData } = $props()
 
-	async function checkEmailStatus() {
-		if (!email || !email.includes('@')) {
-			errorMessage = 'Please enter a valid email address';
-			status = 'error';
-			return;
-		}
+	// STATE ------------------------------------------------ //
+	let isSubmitting = $state(false)
+	let emailInput = $state(data.userEmail || '')
+	let emailOptIn = $state(data.currentPreference ?? true)
 
-		loading = true;
-		status = 'idle';
-
-		try {
-			const { data, error } = await supabase
-				.from('contacts')
-				.select('email_subscribed')
-				.eq('email', email.toLowerCase().trim())
-				.single();
-
-			if (error || !data) {
-				status = 'not-found';
-			} else {
-				currentSubscription = data.email_subscribed;
-				status = 'success';
-			}
-		} catch (error) {
-			console.error('Error checking email:', error);
-			status = 'error';
-			errorMessage = 'Something went wrong. Please try again.';
-		} finally {
-			loading = false;
-		}
-	}
-
-	async function updatePreference(subscribed: boolean) {
-		loading = true;
-
-		try {
-			const { error } = await supabase
-				.from('contacts')
-				.update({ email_subscribed: subscribed })
-				.eq('email', email.toLowerCase().trim());
-
-			if (error) {
-				throw error;
-			}
-
-			currentSubscription = subscribed;
-			status = 'success';
-		} catch (error) {
-			console.error('Error updating preference:', error);
-			status = 'error';
-			errorMessage = 'Failed to update preference. Please try again.';
-		} finally {
-			loading = false;
+	// HANDLERS --------------------------------------------- //
+	function handleSubmit() {
+		isSubmitting = true
+		return async ({ update }: { update: () => Promise<void> }) => {
+			await update()
+			isSubmitting = false
 		}
 	}
 </script>
 
-<div class="container">
-	<h1>Email Preferences</h1>
+<!-- MARKUP -------------------------------------------- -->
+<section id="section--email-preferences">
+	<header>
+		<h1>Email Preferences</h1>
+		<p>Manage your email communication preferences below.</p>
+	</header>
 
-	{#if status === 'idle' || status === 'error' || status === 'not-found'}
-		<div class="form-section">
-			<p>Enter your email address to manage your email preferences:</p>
-
-			<form on:submit|preventDefault={checkEmailStatus}>
-				<input type="email" bind:value={email} placeholder="your.email@example.com" required />
-				<button type="submit" disabled={loading}>
-					{loading ? 'Checking...' : 'Check Status'}
-				</button>
-			</form>
-
-			{#if status === 'not-found'}
-				<p class="message">Email address not found in our system.</p>
-			{/if}
-
-			{#if status === 'error'}
-				<p class="error">{errorMessage}</p>
-			{/if}
-		</div>
-	{/if}
-
-	{#if status === 'success' && currentSubscription !== null}
-		<div class="preference-section">
-			<p><strong>Email:</strong> {email}</p>
-			<p><strong>Current status:</strong> {currentSubscription ? 'Subscribed' : 'Unsubscribed'}</p>
-
-			<div class="actions">
-				{#if currentSubscription}
-					<button on:click={() => updatePreference(false)} disabled={loading}>
-						{loading ? 'Updating...' : 'Unsubscribe'}
-					</button>
-				{:else}
-					<button on:click={() => updatePreference(true)} disabled={loading}>
-						{loading ? 'Updating...' : 'Resubscribe'}
-					</button>
-				{/if}
+	<form method="POST" action="?/updatePreferences" use:enhance={handleSubmit}>
+		{#if !data.isAuthenticated}
+			<Input id="email" name="email" label="Email Address" type="email" required bind:value={emailInput} />
+		{:else}
+			<div class="authenticated-email">
+				<label>Email Address</label>
+				<p>{data.userEmail}</p>
 			</div>
+		{/if}
 
-			<button
-				on:click={() => {
-					status = 'idle';
-					email = '';
-					currentSubscription = null;
-				}}
-			>
-				Check Another Email
-			</button>
-		</div>
+		<InputCheckbox
+			id="emailOptIn"
+			name="emailOptIn"
+			label="I want to receive email updates about campaigns, events, and ways to get involved"
+			bind:checked={emailOptIn}
+		/>
+
+		<Button label={isSubmitting ? 'Updating...' : 'Update Preferences'} type="submit" disabled={isSubmitting} />
+	</form>
+
+	{#if form?.success}
+		<AlertBox
+			label="Preferences Updated"
+			message={form.message}
+			fit="extrinsic"
+			colorway="sentiment-positive"
+			icon={SquareCheckBig}
+			useShadow={false}
+		/>
 	{/if}
-</div>
 
+	{#if form?.error}
+		<AlertBox
+			label="Update Failed"
+			message={form.error}
+			fit="extrinsic"
+			colorway="sentiment-negative"
+			icon={OctagonAlertIcon}
+			useShadow={false}
+		/>
+	{/if}
+</section>
+
+<!-- CSS ----------------------------------------------- -->
 <style>
-	.container {
-		max-width: 500px;
-		margin: 2rem auto;
-		padding: 2rem;
-	}
-
-	.form-section,
-	.preference-section {
-		margin: 1rem 0;
-	}
-
-	input {
+	section#section--email-preferences {
 		width: 100%;
-		padding: 0.5rem;
-		margin: 0.5rem 0;
-	}
+		max-width: var(--clamp--content-width--s-x);
+		padding: var(--loc-gap) 0;
+		gap: var(--loc-gap);
 
-	button {
-		padding: 0.5rem 1rem;
-		margin: 0.5rem;
-		cursor: pointer;
-	}
-
-	.message {
-		color: #666;
-	}
-
-	.error {
-		color: #d32f2f;
-	}
-
-	.actions {
-		margin: 1rem 0;
+		/* FORM ------------------------------------------------- */
+		& > form {
+			display: flex;
+			flex-direction: column;
+			gap: var(--loc-gap);
+		}
 	}
 </style>

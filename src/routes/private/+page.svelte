@@ -3,53 +3,90 @@
 	import Input from '$lib/components/Input/Input.svelte'
 	import AlertBox from '$lib/components/AlertBox/AlertBox.svelte'
 	import type { Database } from '$lib/types/supabase.types'
-	import { ChevronDownIcon, ChevronUpIcon, OctagonAlertIcon } from '@lucide/svelte'
+	import { ChevronDownIcon, ChevronUpIcon, InfoIcon, OctagonAlertIcon } from '@lucide/svelte'
 	import { enhance } from '$app/forms'
 	import type { ActionData } from './$types'
 	import { toaster } from '$lib/services/toaster/service.svelte'
 	import { afterNavigate } from '$app/navigation'
+	import { createFormState } from '$lib/utils'
+	import InputCheckbox from '$lib/components/InputCheckbox/InputCheckbox.svelte'
 
 	interface PrivatePageData {
 		user: any | null
 		profile: Database['public']['Tables']['profiles']['Row'] | null
+		subscriber: Database['public']['Tables']['subscribers']['Row'] | null // Add this line
 	}
 
 	let { data, form }: { data: PrivatePageData; form: ActionData } = $props()
-	let { profile } = $derived(data)
+	let { profile, subscriber } = $derived(data)
 
 	// STATE ------------------------------------------------ //
+	// FORM: Your Details
 	let accordionYourDetailsIsOpen = $state<boolean>(true)
 	let isSubmittingYourDetailsUpdate = $state<boolean>(false)
 
-	// Track current form values for your details section
-	let yourDetailsCurrentValues = $state({
+	let yourDetailsForm = createFormState({
 		firstName: '',
 		lastName: '',
 		postcode: '',
 		phone: ''
 	})
 
-	// Initialize values when profile changes
 	$effect(() => {
-		yourDetailsCurrentValues = {
-			firstName: profile?.first_name || '',
-			lastName: profile?.last_name || '',
-			postcode: profile?.postcode || '',
-			phone: profile?.phone || ''
+		if (profile) {
+			yourDetailsForm.setInitial({
+				firstName: profile.first_name || '',
+				lastName: profile.last_name || '',
+				postcode: profile.postcode || '',
+				phone: profile.phone || ''
+			})
 		}
 	})
 
-	// Track if your details form has changes - guard against undefined profile
-	let yourDetailsHasChanges = $derived(
-		profile
-			? yourDetailsCurrentValues.firstName !== (profile.first_name || '') ||
-					yourDetailsCurrentValues.lastName !== (profile.last_name || '') ||
-					yourDetailsCurrentValues.postcode !== (profile.postcode || '') ||
-					yourDetailsCurrentValues.phone !== (profile.phone || '')
-			: false
+	let yourDetailsButtonsDisabled = $derived(!yourDetailsForm.hasChanges || isSubmittingYourDetailsUpdate)
+
+	// FORM: Volunteer Status
+	let accordionVolunteerStatusIsOpen = $state<boolean>(true)
+	let isSubmittingVolunteerStatusUpdate = $state<boolean>(false)
+
+	let volunteerStatusForm = createFormState({
+		isVolunteer: false
+	})
+
+	$effect(() => {
+		if (profile) {
+			volunteerStatusForm.setInitial({
+				isVolunteer: profile.is_volunteer || false
+			})
+		}
+	})
+
+	let volunteerStatusButtonsDisabled = $derived(!volunteerStatusForm.hasChanges || isSubmittingVolunteerStatusUpdate)
+
+	let showPhoneWarning = $derived(volunteerStatusForm.current.isVolunteer && !profile?.phone)
+
+	// FORM: Communication Preferences
+	let accordionCommunicationPreferencesIsVisible = $state<boolean>(false)
+	let isSubmittingCommunicationPreferencesUpdate = $state<boolean>(false)
+
+	let communicationPreferencesForm = createFormState({
+		emailOptIn: true
+	})
+
+	$effect(() => {
+		if (subscriber) {
+			communicationPreferencesForm.setInitial({
+				emailOptIn: subscriber.email_opt_in ?? true
+			})
+		}
+	})
+
+	let communicationPreferencesButtonsDisabled = $derived(
+		!communicationPreferencesForm.hasChanges || isSubmittingCommunicationPreferencesUpdate
 	)
 
 	// HANDLERS --------------------------------------------- //
+	// Your Details
 	function handleYourDetailsSubmit() {
 		isSubmittingYourDetailsUpdate = true
 		return async ({ update }: { update: () => Promise<void> }) => {
@@ -59,12 +96,33 @@
 	}
 
 	function handleYourDetailsCancel() {
-		yourDetailsCurrentValues = {
-			firstName: profile?.first_name || '',
-			lastName: profile?.last_name || '',
-			postcode: profile?.postcode || '',
-			phone: profile?.phone || ''
+		yourDetailsForm.reset()
+	}
+
+	// Volunteer Status
+	function handleVolunteerStatusSubmit() {
+		isSubmittingVolunteerStatusUpdate = true
+		return async ({ update }: { update: () => Promise<void> }) => {
+			await update()
+			isSubmittingVolunteerStatusUpdate = false
 		}
+	}
+
+	function handleVolunteerStatusCancel() {
+		volunteerStatusForm.reset()
+	}
+
+	// Communication Preferences
+	function handleCommunicationPreferencesSubmit() {
+		isSubmittingCommunicationPreferencesUpdate = true
+		return async ({ update }: { update: () => Promise<void> }) => {
+			await update()
+			isSubmittingCommunicationPreferencesUpdate = false
+		}
+	}
+
+	function handleCommunicationPreferencesCancel() {
+		communicationPreferencesForm.reset()
 	}
 
 	// TOAST ------------------------------------------------ //
@@ -75,10 +133,24 @@
 				duration: 4000
 			})
 		}
+		// Add this new case
+		if (to?.url.searchParams.get('updated') === 'volunteer') {
+			toaster.show('Your volunteer status has been updated successfully', 'Volunteer Status Updated', {
+				type: 'positive',
+				duration: 4000
+			})
+		}
+
+		if (to?.url.searchParams.get('updated') === 'communication') {
+			toaster.show('Your communication preferences have been updated successfully', 'Preferences Updated', {
+				type: 'positive',
+				duration: 4000
+			})
+		}
 	})
 </script>
 
-{#snippet accordionItem(title: string, isOpen: boolean, toggle: () => void)}
+{#snippet accordionHeader(title: string, isOpen: boolean, toggle: () => void)}
 	<button class="accordion--header" onclick={toggle}>
 		<h3 class="title">{title}</h3>
 		{#if isOpen}
@@ -105,8 +177,8 @@
 	</p>
 </section>
 
-<section id="section--user-details" class="accordion--section">
-	{@render accordionItem(
+<section id="section--user-details">
+	{@render accordionHeader(
 		'Your Details',
 		accordionYourDetailsIsOpen,
 		() => (accordionYourDetailsIsOpen = !accordionYourDetailsIsOpen)
@@ -119,8 +191,8 @@
 					name="firstName"
 					label="First Name"
 					type="text"
-					value={yourDetailsCurrentValues.firstName}
-					oninput={(e) => (yourDetailsCurrentValues.firstName = (e.target as HTMLInputElement).value)}
+					value={yourDetailsForm.current.firstName}
+					oninput={(e) => yourDetailsForm.update('firstName', (e.target as HTMLInputElement).value)}
 				/>
 
 				<Input
@@ -128,8 +200,8 @@
 					name="lastName"
 					label="Last Name"
 					type="text"
-					value={yourDetailsCurrentValues.lastName}
-					oninput={(e) => (yourDetailsCurrentValues.lastName = (e.target as HTMLInputElement).value)}
+					value={yourDetailsForm.current.lastName}
+					oninput={(e) => yourDetailsForm.update('lastName', (e.target as HTMLInputElement).value)}
 				/>
 
 				<Input
@@ -139,8 +211,8 @@
 					type="text"
 					maxlength={4}
 					placeholder="e.g. 5000"
-					value={yourDetailsCurrentValues.postcode}
-					oninput={(e) => (yourDetailsCurrentValues.postcode = (e.target as HTMLInputElement).value)}
+					value={yourDetailsForm.current.postcode}
+					oninput={(e) => yourDetailsForm.update('postcode', (e.target as HTMLInputElement).value)}
 				/>
 
 				<Input
@@ -149,8 +221,8 @@
 					label="Phone Number"
 					type="tel"
 					placeholder="e.g. 0412 345 678"
-					value={yourDetailsCurrentValues.phone}
-					oninput={(e) => (yourDetailsCurrentValues.phone = (e.target as HTMLInputElement).value)}
+					value={yourDetailsForm.current.phone}
+					oninput={(e) => yourDetailsForm.update('phone', (e.target as HTMLInputElement).value)}
 				/>
 
 				<div class="action-container">
@@ -159,13 +231,13 @@
 						intent="secondary"
 						colorway="dv"
 						type="button"
-						disabled={!yourDetailsHasChanges || isSubmittingYourDetailsUpdate}
+						disabled={yourDetailsButtonsDisabled}
 						onclick={handleYourDetailsCancel}
 					/>
 					<Button
 						label={isSubmittingYourDetailsUpdate ? 'Saving...' : 'Save Changes'}
 						type="submit"
-						disabled={!yourDetailsHasChanges || isSubmittingYourDetailsUpdate}
+						disabled={yourDetailsButtonsDisabled}
 					/>
 				</div>
 			</form>
@@ -174,6 +246,119 @@
 				<AlertBox
 					label="Update Failed"
 					message={form.yourDetailsError}
+					fit="extrinsic"
+					colorway="sentiment-negative"
+					icon={OctagonAlertIcon}
+					useShadow={false}
+				/>
+			{/if}
+		</div>
+	{/if}
+
+	{@render accordionHeader(
+		'Volunteer Status',
+		accordionVolunteerStatusIsOpen,
+		() => (accordionVolunteerStatusIsOpen = !accordionVolunteerStatusIsOpen)
+	)}
+	{#if accordionVolunteerStatusIsOpen}
+		<div class="accordion--item">
+			<form method="POST" action="?/updateVolunteerStatus" use:enhance={handleVolunteerStatusSubmit}>
+				<p class="supplementary">
+					Setting your volunteer status to 'Yes' lets us know we can reach out to you for volunteer opportunities when
+					needed. It is strongly recommended you provide provide a phone number if you're interested in volunteering.
+				</p>
+				<InputCheckbox
+					id="isVolunteer"
+					name="isVolunteer"
+					label="I want to volunteer with the party"
+					bind:checked={volunteerStatusForm.current.isVolunteer}
+					onchange={(isChecked) => volunteerStatusForm.update('isVolunteer', isChecked)}
+				/>
+
+				{#if showPhoneWarning}
+					<AlertBox
+						label="Phone Number Recommended"
+						message="We recommend adding a phone number to help coordinate volunteer activities. You can add one in 'Your Details' above."
+						fit="extrinsic"
+						colorway="sentiment-negative"
+						icon={InfoIcon}
+						useShadow={false}
+					/>
+				{/if}
+
+				<div class="action-container">
+					<Button
+						label="Cancel"
+						intent="secondary"
+						colorway="dv"
+						type="button"
+						disabled={volunteerStatusButtonsDisabled}
+						onclick={handleVolunteerStatusCancel}
+					/>
+
+					<Button
+						label={isSubmittingVolunteerStatusUpdate ? 'Saving...' : 'Save Changes'}
+						type="submit"
+						disabled={volunteerStatusButtonsDisabled}
+					/>
+				</div>
+			</form>
+
+			{#if form?.volunteerStatusError}
+				<AlertBox
+					label="Update Failed"
+					message={form.volunteerStatusError}
+					fit="extrinsic"
+					colorway="sentiment-negative"
+					icon={OctagonAlertIcon}
+					useShadow={false}
+				/>
+			{/if}
+		</div>
+	{/if}
+
+	{@render accordionHeader(
+		'Communication Preferences',
+		accordionCommunicationPreferencesIsVisible,
+		() => (accordionCommunicationPreferencesIsVisible = !accordionCommunicationPreferencesIsVisible)
+	)}
+	{#if accordionCommunicationPreferencesIsVisible}
+		<div class="accordion--item">
+			<form method="POST" action="?/updateCommunicationPreferences" use:enhance={handleCommunicationPreferencesSubmit}>
+				<p class="supplementary">
+					Choose whether you'd like to receive email updates about campaigns, events, and ways to get involved.
+				</p>
+
+				<InputCheckbox
+					id="emailOptIn"
+					name="emailOptIn"
+					label="I want to receive email updates"
+					bind:checked={communicationPreferencesForm.current.emailOptIn}
+					onchange={(isChecked) => communicationPreferencesForm.update('emailOptIn', isChecked)}
+				/>
+
+				<div class="action-container">
+					<Button
+						label="Cancel"
+						intent="secondary"
+						colorway="dv"
+						type="button"
+						disabled={communicationPreferencesButtonsDisabled}
+						onclick={handleCommunicationPreferencesCancel}
+					/>
+
+					<Button
+						label={isSubmittingCommunicationPreferencesUpdate ? 'Saving...' : 'Save Changes'}
+						type="submit"
+						disabled={communicationPreferencesButtonsDisabled}
+					/>
+				</div>
+			</form>
+
+			{#if form?.communicationPreferencesError}
+				<AlertBox
+					label="Update Failed"
+					message={form.communicationPreferencesError}
 					fit="extrinsic"
 					colorway="sentiment-negative"
 					icon={OctagonAlertIcon}
@@ -198,7 +383,7 @@
 	}
 
 	/* SECTIN: Accordion Sections --------------------------- */
-	section.accordion--section {
+	section#section--user-details {
 		width: 100%;
 		padding: var(--loc-gap);
 		display: flex;
@@ -214,6 +399,12 @@
 			display: flex;
 			flex-direction: column;
 			gap: var(--loc-gap);
+
+			p {
+				&.supplementary {
+					font: var(--font--body--s);
+				}
+			}
 
 			.action-container {
 				display: flex;

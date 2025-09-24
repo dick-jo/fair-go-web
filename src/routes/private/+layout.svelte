@@ -9,6 +9,7 @@
 		user: User | null
 		session: Session | null
 		profile: Database['public']['Tables']['profiles']['Row'] | null
+		subscriber: Database['public']['Tables']['subscribers']['Row'] | null // Add this line
 	}
 
 	let {
