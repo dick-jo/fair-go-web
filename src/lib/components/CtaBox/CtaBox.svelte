@@ -62,14 +62,14 @@
 			.label {
 				color: var(--loc-clr-ink--light);
 				font: var(--font--heading--secondary--s);
-				text-transform: var(--text-case--heading);
+				text-transform: var(--text-case--heading--secondary);
 			}
 
 			.title {
 				color: var(--loc-clr-ink);
 				font: var(--font--heading);
 				font-weight: 700;
-				text-transform: var(--text-case--heading--secondary);
+				text-transform: var(--text-case--heading);
 			}
 		}
 

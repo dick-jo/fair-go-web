@@ -3,6 +3,7 @@ type ToastType = 'neutral' | 'positive' | 'negative'
 interface Toast {
 	id: number
 	title?: string
+	code?: string
 	message: string
 	type: ToastType
 	duration: number
@@ -21,12 +22,12 @@ export const toaster = {
 		return state.toasts
 	},
 
-	show(message: string, title?: string, opts: ToastOptions = {}) {
+	show(title: string, message: string, opts: ToastOptions = {}, code?: string) {
 		const id = nextId++
 		const type = opts.type ?? 'neutral'
 		const duration = opts.duration ?? 8000
 
-		state.toasts = [...state.toasts, { id, message, title, type, duration }]
+		state.toasts = [...state.toasts, { id, title, code, message, type, duration }]
 		setTimeout(() => {
 			state.toasts = state.toasts.filter((t) => t.id !== id)
 		}, duration)

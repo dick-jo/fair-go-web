@@ -968,36 +968,57 @@ export type Database = {
       }
       profiles: {
         Row: {
+          accepted_terms_at: string | null
           created_at: string | null
+          date_of_birth: string | null
           first_name: string | null
           id: string
           is_volunteer: boolean
           last_name: string | null
+          membership_complete_at: string | null
           membership_status: string | null
+          membership_tier: string | null
           phone: string | null
           postcode: string | null
+          state: string | null
+          street_address: string | null
+          suburb: string | null
           updated_at: string | null
         }
         Insert: {
+          accepted_terms_at?: string | null
           created_at?: string | null
+          date_of_birth?: string | null
           first_name?: string | null
           id: string
           is_volunteer?: boolean
           last_name?: string | null
+          membership_complete_at?: string | null
           membership_status?: string | null
+          membership_tier?: string | null
           phone?: string | null
           postcode?: string | null
+          state?: string | null
+          street_address?: string | null
+          suburb?: string | null
           updated_at?: string | null
         }
         Update: {
+          accepted_terms_at?: string | null
           created_at?: string | null
+          date_of_birth?: string | null
           first_name?: string | null
           id?: string
           is_volunteer?: boolean
           last_name?: string | null
+          membership_complete_at?: string | null
           membership_status?: string | null
+          membership_tier?: string | null
           phone?: string | null
           postcode?: string | null
+          state?: string | null
+          street_address?: string | null
+          suburb?: string | null
           updated_at?: string | null
         }
         Relationships: []
@@ -1009,7 +1030,6 @@ export type Database = {
           email_opt_in: boolean
           first_name: string | null
           id: string
-          is_subscribed: boolean
           last_name: string | null
           postcode: string | null
           source: string | null
@@ -1023,7 +1043,6 @@ export type Database = {
           email_opt_in?: boolean
           first_name?: string | null
           id?: string
-          is_subscribed?: boolean
           last_name?: string | null
           postcode?: string | null
           source?: string | null
@@ -1037,7 +1056,6 @@ export type Database = {
           email_opt_in?: boolean
           first_name?: string | null
           id?: string
-          is_subscribed?: boolean
           last_name?: string | null
           postcode?: string | null
           source?: string | null

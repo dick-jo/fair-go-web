@@ -1,73 +1,73 @@
-import type { PageServerLoad, Actions } from './$types'
-import { fail, redirect } from '@sveltejs/kit'
-import { updateCommunicationPreferences, updateProfile, updateVolunteerProfile } from '$lib/utils/auth'
-
-export const load: PageServerLoad = async () => {
-	return {}
-}
+import type { Actions } from './$types'
+import { fail } from '@sveltejs/kit'
+import { updateProfile, updateVolunteerStatus } from '$lib/server/profiles'
+import { updateCommunicationPreferences } from '$lib/server/subscribers'
 
 export const actions: Actions = {
 	updateYourDetails: async ({ request, locals: { supabase, safeGetSession } }) => {
 		const { user } = await safeGetSession()
 
 		if (!user) {
-			return fail(401, { yourDetailsError: 'Not authenticated' })
+			return fail(401, { message: 'Not authenticated' })
 		}
 
 		const formData = await request.formData()
-		const result = await updateProfile(supabase, user.id, {
-			first_name: formData.get('firstName') as string,
-			last_name: formData.get('lastName') as string,
-			postcode: formData.get('postcode') as string,
-			phone: formData.get('phone') as string
-		})
 
-		if (result.error) {
-			return fail(400, { yourDetailsError: result.error })
+		try {
+			const result = await updateProfile(supabase, user.id, {
+				first_name: formData.get('firstName') as string,
+				last_name: formData.get('lastName') as string,
+				postcode: formData.get('postcode') as string,
+				phone: formData.get('phone') as string
+			})
+
+			return { message: result.message }
+		} catch (error) {
+			return fail(400, {
+				message: error instanceof Error ? error.message : 'Update failed'
+			})
 		}
-
-		throw redirect(303, '/private?updated=profile')
 	},
 
 	updateVolunteerStatus: async ({ request, locals: { supabase, safeGetSession } }) => {
 		const { user } = await safeGetSession()
 
 		if (!user) {
-			return fail(401, { volunteerStatusError: 'Not authenticated' })
+			return fail(401, { message: 'Not authenticated' })
 		}
 
 		const formData = await request.formData()
 		const isVolunteer = formData.get('isVolunteer') === 'on'
 
-		const result = await updateVolunteerProfile(supabase, user.id, {
-			is_volunteer: isVolunteer
-		})
+		try {
+			const result = await updateVolunteerStatus(supabase, user.id, isVolunteer)
 
-		if (result.error) {
-			return fail(400, { volunteerStatusError: result.error })
+			return { message: result.message }
+		} catch (error) {
+			return fail(400, {
+				message: error instanceof Error ? error.message : 'Update failed'
+			})
 		}
-
-		throw redirect(303, '/private?updated=volunteer')
 	},
 
 	updateCommunicationPreferences: async ({ request, locals: { supabase, safeGetSession } }) => {
 		const { user } = await safeGetSession()
 
 		if (!user || !user.email) {
-			return fail(401, { communicationPreferencesError: 'Not authenticated' })
+			return fail(401, { message: 'Not authenticated' })
 		}
 
 		const formData = await request.formData()
 		const emailOptIn = formData.get('emailOptIn') === 'on'
 
-		const result = await updateCommunicationPreferences(supabase, user.email, {
-			email_opt_in: emailOptIn
-		})
+		try {
+			const result = await updateCommunicationPreferences(supabase, user.email, emailOptIn, true)
 
-		if (result.error) {
-			return fail(400, { communicationPreferencesError: result.error })
+			return { message: result.message }
+		} catch (error) {
+			return fail(400, {
+				message: error instanceof Error ? error.message : 'Update failed'
+			})
 		}
-
-		throw redirect(303, '/private?updated=communication')
 	}
 }

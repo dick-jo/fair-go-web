@@ -1,51 +1,57 @@
 <script lang="ts">
-	import { NAV_ITEMS, NAV_CATEGORIES, SOCIAL_LINKS } from '$lib/config'
+	import { NAV_ITEMS, NAV_CATEGORIES } from '$lib/config'
 	import Input from '$lib/components/Input/Input.svelte'
 	import Button from '$lib/components/Button/Button.svelte'
-	import AlertBox from '$lib/components/AlertBox/AlertBox.svelte'
-	import { OctagonAlertIcon, SquareCheckBig } from '@lucide/svelte'
-	import { subscribeToNewsletterClient } from '$lib/utils'
-	import type { SupabaseClient } from '@supabase/supabase-js'
 	import { toaster } from '$lib/services/toaster/service.svelte'
 
-	interface Props {
-		supabase: SupabaseClient
-	}
+	// FORM HANDLING ---------------------------------------- //
+	let subscribeFormEmail = $state('')
+	let subscribeFormIsSubmitting = $state(false)
 
-	let { supabase }: Props = $props()
+	async function handleSubscribe(e: Event) {
+		e.preventDefault()
 
-	// Newsletter form state
-	let email = $state('')
-	let isSubmitting = $state(false)
-	let status = $state<'idle' | 'success' | 'error'>('idle')
-	let errorMessage = $state('')
-	let successMessage = $state('')
+		// Guard clause - don't submit if already submitting or email is empty
+		if (!subscribeFormEmail.trim() || subscribeFormIsSubmitting) return
 
-	async function handleSubscribe(event: Event) {
-		event.preventDefault()
+		subscribeFormIsSubmitting = true
 
-		isSubmitting = true
-		status = 'idle'
+		try {
+			const response = await fetch('/api/subscribe', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({
+					email: subscribeFormEmail.trim(),
+					source: 'website_footer'
+				})
+			})
 
-		const result = await subscribeToNewsletterClient(supabase, email, 'footer_newsletter')
+			const data = await response.json()
 
-		if (result.error) {
-			status = 'error'
-			errorMessage = result.error
-			// Add this line:
-			toaster.show(result.error, 'Subscription Error', { type: 'negative' })
-		} else {
-			status = 'success'
-			successMessage = result.message || 'Thank you for subscribing!'
-			// Add this line:
-			toaster.show(successMessage, 'Subscribed!', { type: 'positive' })
-			email = '' // Clear form on success
+			// Check if the request succeeded
+			if (!response.ok) {
+				// Show error toast
+				toaster.show('failure', data.message, { type: 'negative' })
+			} else {
+				// Show success toast
+				toaster.show('success', data.message, { type: 'positive' })
+				// Clear the form on success
+				subscribeFormEmail = ''
+			}
+		} catch (error) {
+			// Handle network errors or other unexpected errors
+			toaster.show('failure', 'Something went wrong. Please try again.', {
+				type: 'negative'
+			})
+		} finally {
+			// Always reset submitting state, whether success or failure
+			subscribeFormIsSubmitting = false
 		}
-
-		isSubmitting = false
 	}
 
-	// Group nav items by category, including children
+	// CONTENT INIT ----------------------------------------- //
 	const getItemsByCategory = (category: string) => {
 		const items: any[] = []
 		NAV_ITEMS.forEach((item) => {
@@ -65,7 +71,7 @@
 		return items
 	}
 
-	// Get the category index page href (convert to lowercase and replace spaces with hyphens)
+	// UTILS ------------------------------------------------ //
 	const getCategoryHref = (category: string) => {
 		return `/${category.toLowerCase().replace(/\s+/g, '-')}`
 	}
@@ -85,17 +91,22 @@
 				<h3>Stay Updated</h3>
 				<p>Get the latest news and updates delivered to your inbox.</p>
 
-				<form onsubmit={handleSubscribe} class="newsletter-form">
+				<form onsubmit={handleSubscribe}>
 					<Input
 						id="footer-email"
 						name="email"
-						label="Email"
 						type="email"
+						label="Stay updated"
+						placeholder="Enter your email"
+						bind:value={subscribeFormEmail}
+						disabled={subscribeFormIsSubmitting}
 						required
-						placeholder="yourname@gmail.com"
-						bind:value={email}
 					/>
-					<Button label={isSubmitting ? 'Subscribing...' : 'Subscribe'} type="submit" disabled={isSubmitting} />
+					<Button
+						type="submit"
+						label={subscribeFormIsSubmitting ? 'Subscribing...' : 'Subscribe'}
+						disabled={subscribeFormIsSubmitting}
+					/>
 				</form>
 			</div>
 		</div>
@@ -198,7 +209,7 @@
 							color: var(--clr-ink-tr-heavy);
 						}
 
-						.newsletter-form {
+						form {
 							display: flex;
 							flex-direction: column;
 							gap: calc(var(--loc-gap) / 2);

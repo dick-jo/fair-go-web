@@ -10,11 +10,7 @@
 	import Toaster from '$lib/services/toaster/Toaster.svelte'
 
 	let { data, children } = $props()
-	let { session, supabase, user } = $derived(data)
-	// $inspect(session)
-	// $inspect(supabase)
-	// $inspect(user)
-	// $inspect({ session, supabase, user })
+	let { session, supabase } = $derived(data)
 
 	onMount(() => {
 		const { data } = supabase.auth.onAuthStateChange((_, newSession) => {
@@ -32,8 +28,8 @@
 
 <Toaster />
 
-<NavTop {session} {user} {supabase} />
+<NavTop {session} />
 <main>
 	{@render children?.()}
 </main>
-<Footer {supabase} />
+<Footer />

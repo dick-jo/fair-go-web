@@ -48,6 +48,7 @@
 			--loc-clr-bg--input: var(--clr-bg);
 			--loc-clr-ink: var(--clr-ev);
 		}
+		max-height: fit-content;
 		width: 100%;
 		flex: 1;
 		display: flex;

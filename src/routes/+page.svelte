@@ -8,10 +8,9 @@
 	import SectionCtaRow from '$lib/components/SectionCtaRow/SectionCtaRow.svelte'
 
 	let { data }: { data: PageData } = $props()
-	let { session, supabase, user } = $derived(data)
 </script>
 
-<SectionHero {supabase} heroCarouselItems={data.carouselItems} />
+<SectionHero heroCarouselItems={data.carouselItems} />
 
 <!-- NEWS----------------------------------------------- -->
 <section id="section--news-snippets-row">

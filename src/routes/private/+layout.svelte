@@ -1,34 +1,21 @@
 <script lang="ts">
 	import type { SupabaseClient, User, Session } from '@supabase/supabase-js'
-	import type { Database } from '$lib/types/supabase.types'
-	import { goto } from '$app/navigation'
+	import type { Database, Tables } from '$lib/types/supabase.types'
 	import Button from '$lib/components/Button/Button.svelte'
+	import { signOut } from '$lib/client/auth'
 
 	interface PrivateLayoutData {
 		supabase: SupabaseClient<Database>
 		user: User | null
 		session: Session | null
-		profile: Database['public']['Tables']['profiles']['Row'] | null
-		subscriber: Database['public']['Tables']['subscribers']['Row'] | null // Add this line
+		profile: Tables<'profiles'> | null
+		subscriber: Tables<'subscribers'> | null
 	}
 
-	let {
-		data,
-		children
-	}: {
-		data: PrivateLayoutData
-		children: any
-	} = $props()
+	let { data, children }: { data: PrivateLayoutData; children: any } = $props()
 
-	let { supabase, user, profile } = $derived(data)
-
-	const logout = async () => {
-		const { error } = await supabase.auth.signOut()
-		if (error) {
-			console.error(error)
-		} else {
-			goto('/')
-		}
+	const handleSignOut = async () => {
+		await signOut(data.supabase, { redirect: true })
 	}
 </script>
 
@@ -38,12 +25,16 @@
 		<div class="title-container">
 			<h2 class="title--secondary">YOUR PROFILE</h2>
 			<h1 class="title">
-				Hello{profile?.first_name ? `, ${profile.first_name}` : user?.email ? `, ${user.email}` : ''}
+				Hello{data.profile?.first_name
+					? `, ${data.profile.first_name}`
+					: data.user?.email
+						? `, ${data.user.email}`
+						: ''}
 			</h1>
 		</div>
 
 		<div class="action-container">
-			<Button label="Sign Out" onclick={logout} />
+			<Button label="Sign Out" onclick={handleSignOut} />
 		</div>
 	</header>
 

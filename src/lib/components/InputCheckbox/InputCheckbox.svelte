@@ -17,14 +17,18 @@
 		...inputProps
 	}: Props = $props()
 
-	function toggleCheckbox() {
-		checked = !checked
-		onchange?.(checked)
+	let checkboxElement: HTMLInputElement
+
+	function handleButtonClick(e: MouseEvent) {
+		// If click wasn't on the checkbox, trigger it
+		if (e.target !== checkboxElement) {
+			checkboxElement?.click()
+		}
 	}
 </script>
 
 <!-- MARKUP -------------------------------------------- -->
-<button class={['host', 'input-checkbox']} type="button" onclick={toggleCheckbox}>
+<button class={['host', 'input-checkbox']} type="button" onclick={handleButtonClick}>
 	<div class="label-container">
 		{#if label}
 			<label class="label" for={inputProps.id}>
@@ -39,7 +43,7 @@
 		<span class="option" data-active={checked}>{trueText}</span>
 	</div>
 
-	<input type="checkbox" bind:checked {...inputProps} />
+	<input type="checkbox" bind:this={checkboxElement} bind:checked {...inputProps} />
 </button>
 
 <style>
@@ -57,6 +61,7 @@
 			--loc-clr-border: var(--clr-primary-tr-heavy);
 		}
 		height: var(--loc-height);
+		min-height: fit-content;
 		padding: var(--loc-gap);
 		width: 100%;
 		display: flex;
@@ -68,6 +73,9 @@
 		border-radius: var(--loc-bdr);
 		cursor: pointer;
 		transition: var(--loc-transition);
+		@media screen and (max-width: 320px) {
+			flex-direction: column;
+		}
 
 		/* LABEL ------------------------------------------------ */
 		.label-container {

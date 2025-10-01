@@ -1,153 +1,117 @@
 <script lang="ts">
 	import Button from '$lib/components/Button/Button.svelte'
 	import Input from '$lib/components/Input/Input.svelte'
-	import AlertBox from '$lib/components/AlertBox/AlertBox.svelte'
+	import InputCheckbox from '$lib/components/InputCheckbox/InputCheckbox.svelte'
 	import type { Database } from '$lib/types/supabase.types'
-	import { ChevronDownIcon, ChevronUpIcon, InfoIcon, OctagonAlertIcon } from '@lucide/svelte'
+	import { ChevronDownIcon, ChevronUpIcon } from '@lucide/svelte'
 	import { enhance } from '$app/forms'
 	import type { ActionData } from './$types'
 	import { toaster } from '$lib/services/toaster/service.svelte'
-	import { afterNavigate } from '$app/navigation'
-	import { createFormState } from '$lib/utils'
-	import InputCheckbox from '$lib/components/InputCheckbox/InputCheckbox.svelte'
+	import type { ActionResult } from '@sveltejs/kit'
 
 	interface PrivatePageData {
 		user: any | null
 		profile: Database['public']['Tables']['profiles']['Row'] | null
-		subscriber: Database['public']['Tables']['subscribers']['Row'] | null // Add this line
+		subscriber: Database['public']['Tables']['subscribers']['Row'] | null
 	}
 
-	let { data, form }: { data: PrivatePageData; form: ActionData } = $props()
-	let { profile, subscriber } = $derived(data)
+	let { data }: { data: PrivatePageData; form: ActionData } = $props()
 
 	// STATE ------------------------------------------------ //
-	// FORM: Your Details
+	type FormStatus = 'idle' | 'pending'
+
+	let formState = $state({
+		yourDetails: {
+			status: 'idle' as FormStatus,
+			hasChanges: false
+		},
+		volunteerStatus: {
+			status: 'idle' as FormStatus,
+			hasChanges: false
+		},
+		communicationPreferences: {
+			status: 'idle' as FormStatus,
+			hasChanges: false
+		}
+	})
+
+	// FORM ACCORDIONS
 	let accordionYourDetailsIsOpen = $state<boolean>(true)
-	let isSubmittingYourDetailsUpdate = $state<boolean>(false)
-
-	let yourDetailsForm = createFormState({
-		firstName: '',
-		lastName: '',
-		postcode: '',
-		phone: ''
-	})
-
-	$effect(() => {
-		if (profile) {
-			yourDetailsForm.setInitial({
-				firstName: profile.first_name || '',
-				lastName: profile.last_name || '',
-				postcode: profile.postcode || '',
-				phone: profile.phone || ''
-			})
-		}
-	})
-
-	let yourDetailsButtonsDisabled = $derived(!yourDetailsForm.hasChanges || isSubmittingYourDetailsUpdate)
-
-	// FORM: Volunteer Status
 	let accordionVolunteerStatusIsOpen = $state<boolean>(true)
-	let isSubmittingVolunteerStatusUpdate = $state<boolean>(false)
-
-	let volunteerStatusForm = createFormState({
-		isVolunteer: false
-	})
-
-	$effect(() => {
-		if (profile) {
-			volunteerStatusForm.setInitial({
-				isVolunteer: profile.is_volunteer || false
-			})
-		}
-	})
-
-	let volunteerStatusButtonsDisabled = $derived(!volunteerStatusForm.hasChanges || isSubmittingVolunteerStatusUpdate)
-
-	let showPhoneWarning = $derived(volunteerStatusForm.current.isVolunteer && !profile?.phone)
-
-	// FORM: Communication Preferences
-	let accordionCommunicationPreferencesIsVisible = $state<boolean>(false)
-	let isSubmittingCommunicationPreferencesUpdate = $state<boolean>(false)
-
-	let communicationPreferencesForm = createFormState({
-		emailOptIn: true
-	})
-
-	$effect(() => {
-		if (subscriber) {
-			communicationPreferencesForm.setInitial({
-				emailOptIn: subscriber.email_opt_in ?? true
-			})
-		}
-	})
-
-	let communicationPreferencesButtonsDisabled = $derived(
-		!communicationPreferencesForm.hasChanges || isSubmittingCommunicationPreferencesUpdate
-	)
+	let accordionCommunicationPreferencesIsOpen = $state<boolean>(false)
 
 	// HANDLERS --------------------------------------------- //
-	// Your Details
+	function handleFormChange(formName: keyof typeof formState) {
+		return () => {
+			formState[formName].hasChanges = true
+		}
+	}
+
 	function handleYourDetailsSubmit() {
-		isSubmittingYourDetailsUpdate = true
-		return async ({ update }: { update: () => Promise<void> }) => {
-			await update()
-			isSubmittingYourDetailsUpdate = false
+		formState.yourDetails.status = 'pending'
+
+		return async ({
+			result,
+			update
+		}: {
+			result: ActionResult
+			update: (options?: { reset?: boolean }) => Promise<void>
+		}) => {
+			await update({ reset: false })
+			formState.yourDetails.status = 'idle'
+
+			if (result.type === 'success' && result.data) {
+				formState.yourDetails.hasChanges = false
+				toaster.show(result.type, result.data.message, { type: 'positive' })
+			} else if (result.type === 'failure' && result.data) {
+				toaster.show(result.type, result.data.message, { type: 'negative' })
+			}
 		}
 	}
 
-	function handleYourDetailsCancel() {
-		yourDetailsForm.reset()
-	}
-
-	// Volunteer Status
 	function handleVolunteerStatusSubmit() {
-		isSubmittingVolunteerStatusUpdate = true
-		return async ({ update }: { update: () => Promise<void> }) => {
-			await update()
-			isSubmittingVolunteerStatusUpdate = false
+		formState.volunteerStatus.status = 'pending'
+
+		return async ({
+			result,
+			update
+		}: {
+			result: ActionResult
+			update: (options?: { reset?: boolean }) => Promise<void>
+		}) => {
+			await update({ reset: false })
+			formState.volunteerStatus.status = 'idle'
+
+			if (result.type === 'success' && result.data) {
+				formState.volunteerStatus.hasChanges = false
+				toaster.show(result.type, result.data.message, { type: 'positive' })
+			} else if (result.type === 'failure' && result.data) {
+				toaster.show(result.type, result.data.message, { type: 'negative' })
+			}
 		}
 	}
 
-	function handleVolunteerStatusCancel() {
-		volunteerStatusForm.reset()
-	}
-
-	// Communication Preferences
 	function handleCommunicationPreferencesSubmit() {
-		isSubmittingCommunicationPreferencesUpdate = true
-		return async ({ update }: { update: () => Promise<void> }) => {
-			await update()
-			isSubmittingCommunicationPreferencesUpdate = false
+		formState.communicationPreferences.status = 'pending'
+
+		return async ({
+			result,
+			update
+		}: {
+			result: ActionResult
+			update: (options?: { reset?: boolean }) => Promise<void>
+		}) => {
+			await update({ reset: false })
+			formState.communicationPreferences.status = 'idle'
+
+			if (result.type === 'success' && result.data) {
+				formState.communicationPreferences.hasChanges = false
+				toaster.show(result.type, result.data.message, { type: 'positive' })
+			} else if (result.type === 'failure' && result.data) {
+				toaster.show(result.type, result.data.message, { type: 'negative' })
+			}
 		}
 	}
-
-	function handleCommunicationPreferencesCancel() {
-		communicationPreferencesForm.reset()
-	}
-
-	// TOAST ------------------------------------------------ //
-	afterNavigate(({ to }) => {
-		if (to?.url.searchParams.get('updated') === 'profile') {
-			toaster.show('Your details have been updated successfully', 'Profile Updated', {
-				type: 'positive',
-				duration: 4000
-			})
-		}
-		// Add this new case
-		if (to?.url.searchParams.get('updated') === 'volunteer') {
-			toaster.show('Your volunteer status has been updated successfully', 'Volunteer Status Updated', {
-				type: 'positive',
-				duration: 4000
-			})
-		}
-
-		if (to?.url.searchParams.get('updated') === 'communication') {
-			toaster.show('Your communication preferences have been updated successfully', 'Preferences Updated', {
-				type: 'positive',
-				duration: 4000
-			})
-		}
-	})
 </script>
 
 {#snippet accordionHeader(title: string, isOpen: boolean, toggle: () => void)}
@@ -185,24 +149,15 @@
 	)}
 	{#if accordionYourDetailsIsOpen}
 		<div class="accordion--item">
-			<form method="POST" action="?/updateYourDetails" use:enhance={handleYourDetailsSubmit}>
-				<Input
-					id="firstName"
-					name="firstName"
-					label="First Name"
-					type="text"
-					value={yourDetailsForm.current.firstName}
-					oninput={(e) => yourDetailsForm.update('firstName', (e.target as HTMLInputElement).value)}
-				/>
+			<form
+				method="POST"
+				action="?/updateYourDetails"
+				use:enhance={handleYourDetailsSubmit}
+				oninput={handleFormChange('yourDetails')}
+			>
+				<Input id="firstName" name="firstName" label="First Name" type="text" value={data.profile?.first_name || ''} />
 
-				<Input
-					id="lastName"
-					name="lastName"
-					label="Last Name"
-					type="text"
-					value={yourDetailsForm.current.lastName}
-					oninput={(e) => yourDetailsForm.update('lastName', (e.target as HTMLInputElement).value)}
-				/>
+				<Input id="lastName" name="lastName" label="Last Name" type="text" value={data.profile?.last_name || ''} />
 
 				<Input
 					id="postcode"
@@ -211,8 +166,7 @@
 					type="text"
 					maxlength={4}
 					placeholder="e.g. 5000"
-					value={yourDetailsForm.current.postcode}
-					oninput={(e) => yourDetailsForm.update('postcode', (e.target as HTMLInputElement).value)}
+					value={data.profile?.postcode || ''}
 				/>
 
 				<Input
@@ -221,37 +175,17 @@
 					label="Phone Number"
 					type="tel"
 					placeholder="e.g. 0412 345 678"
-					value={yourDetailsForm.current.phone}
-					oninput={(e) => yourDetailsForm.update('phone', (e.target as HTMLInputElement).value)}
+					value={data.profile?.phone || ''}
 				/>
 
 				<div class="action-container">
 					<Button
-						label="Cancel"
-						intent="secondary"
-						colorway="dv"
-						type="button"
-						disabled={yourDetailsButtonsDisabled}
-						onclick={handleYourDetailsCancel}
-					/>
-					<Button
-						label={isSubmittingYourDetailsUpdate ? 'Saving...' : 'Save Changes'}
+						label={formState.yourDetails.status === 'idle' ? 'Save Changes' : 'Updating...'}
+						disabled={formState.yourDetails.status === 'pending' || !formState.yourDetails.hasChanges}
 						type="submit"
-						disabled={yourDetailsButtonsDisabled}
 					/>
 				</div>
 			</form>
-
-			{#if form?.yourDetailsError}
-				<AlertBox
-					label="Update Failed"
-					message={form.yourDetailsError}
-					fit="extrinsic"
-					colorway="sentiment-negative"
-					icon={OctagonAlertIcon}
-					useShadow={false}
-				/>
-			{/if}
 		</div>
 	{/if}
 
@@ -262,69 +196,48 @@
 	)}
 	{#if accordionVolunteerStatusIsOpen}
 		<div class="accordion--item">
-			<form method="POST" action="?/updateVolunteerStatus" use:enhance={handleVolunteerStatusSubmit}>
+			<form
+				method="POST"
+				action="?/updateVolunteerStatus"
+				use:enhance={handleVolunteerStatusSubmit}
+				oninput={handleFormChange('volunteerStatus')}
+			>
 				<p class="supplementary">
 					Setting your volunteer status to 'Yes' lets us know we can reach out to you for volunteer opportunities when
-					needed. It is strongly recommended you provide provide a phone number if you're interested in volunteering.
+					needed. It is strongly recommended you provide a phone number if you're interested in volunteering.
 				</p>
+
 				<InputCheckbox
 					id="isVolunteer"
 					name="isVolunteer"
 					label="I want to volunteer with the party"
-					bind:checked={volunteerStatusForm.current.isVolunteer}
-					onchange={(isChecked) => volunteerStatusForm.update('isVolunteer', isChecked)}
+					checked={data.profile?.is_volunteer || false}
 				/>
-
-				{#if showPhoneWarning}
-					<AlertBox
-						label="Phone Number Recommended"
-						message="We recommend adding a phone number to help coordinate volunteer activities. You can add one in 'Your Details' above."
-						fit="extrinsic"
-						colorway="sentiment-negative"
-						icon={InfoIcon}
-						useShadow={false}
-					/>
-				{/if}
 
 				<div class="action-container">
 					<Button
-						label="Cancel"
-						intent="secondary"
-						colorway="dv"
-						type="button"
-						disabled={volunteerStatusButtonsDisabled}
-						onclick={handleVolunteerStatusCancel}
-					/>
-
-					<Button
-						label={isSubmittingVolunteerStatusUpdate ? 'Saving...' : 'Save Changes'}
+						label={formState.volunteerStatus.status === 'idle' ? 'Save Changes' : 'Updating...'}
+						disabled={formState.volunteerStatus.status === 'pending' || !formState.volunteerStatus.hasChanges}
 						type="submit"
-						disabled={volunteerStatusButtonsDisabled}
 					/>
 				</div>
 			</form>
-
-			{#if form?.volunteerStatusError}
-				<AlertBox
-					label="Update Failed"
-					message={form.volunteerStatusError}
-					fit="extrinsic"
-					colorway="sentiment-negative"
-					icon={OctagonAlertIcon}
-					useShadow={false}
-				/>
-			{/if}
 		</div>
 	{/if}
 
 	{@render accordionHeader(
 		'Communication Preferences',
-		accordionCommunicationPreferencesIsVisible,
-		() => (accordionCommunicationPreferencesIsVisible = !accordionCommunicationPreferencesIsVisible)
+		accordionCommunicationPreferencesIsOpen,
+		() => (accordionCommunicationPreferencesIsOpen = !accordionCommunicationPreferencesIsOpen)
 	)}
-	{#if accordionCommunicationPreferencesIsVisible}
+	{#if accordionCommunicationPreferencesIsOpen}
 		<div class="accordion--item">
-			<form method="POST" action="?/updateCommunicationPreferences" use:enhance={handleCommunicationPreferencesSubmit}>
+			<form
+				method="POST"
+				action="?/updateCommunicationPreferences"
+				use:enhance={handleCommunicationPreferencesSubmit}
+				oninput={handleFormChange('communicationPreferences')}
+			>
 				<p class="supplementary">
 					Choose whether you'd like to receive email updates about campaigns, events, and ways to get involved.
 				</p>
@@ -333,38 +246,18 @@
 					id="emailOptIn"
 					name="emailOptIn"
 					label="I want to receive email updates"
-					bind:checked={communicationPreferencesForm.current.emailOptIn}
-					onchange={(isChecked) => communicationPreferencesForm.update('emailOptIn', isChecked)}
+					checked={data.subscriber?.email_opt_in || false}
 				/>
 
 				<div class="action-container">
 					<Button
-						label="Cancel"
-						intent="secondary"
-						colorway="dv"
-						type="button"
-						disabled={communicationPreferencesButtonsDisabled}
-						onclick={handleCommunicationPreferencesCancel}
-					/>
-
-					<Button
-						label={isSubmittingCommunicationPreferencesUpdate ? 'Saving...' : 'Save Changes'}
+						label={formState.communicationPreferences.status === 'idle' ? 'Save Changes' : 'Updating...'}
+						disabled={formState.communicationPreferences.status === 'pending' ||
+							!formState.communicationPreferences.hasChanges}
 						type="submit"
-						disabled={communicationPreferencesButtonsDisabled}
 					/>
 				</div>
 			</form>
-
-			{#if form?.communicationPreferencesError}
-				<AlertBox
-					label="Update Failed"
-					message={form.communicationPreferencesError}
-					fit="extrinsic"
-					colorway="sentiment-negative"
-					icon={OctagonAlertIcon}
-					useShadow={false}
-				/>
-			{/if}
 		</div>
 	{/if}
 </section>

@@ -1,31 +1,53 @@
 <script lang="ts">
-	import AlertBox from '$lib/components/AlertBox/AlertBox.svelte'
 	import Button from '$lib/components/Button/Button.svelte'
 	import Input from '$lib/components/Input/Input.svelte'
-	import { OctagonAlertIcon, SquareCheckBig } from '@lucide/svelte'
+	import { toaster } from '$lib/services/toaster/service.svelte'
+	import type { ActionResult } from '@sveltejs/kit'
 	import { enhance } from '$app/forms'
 	import type { ActionData } from './$types'
 
 	let { form }: { form: ActionData } = $props()
 
 	// STATE ------------------------------------------------ //
-	let isSubmittingLogIn = $state(false)
-	let isSubmittingSignUp = $state(false)
+	type FormStatus = 'idle' | 'pending'
+
+	let formState = $state({
+		login: {
+			status: 'idle' as FormStatus
+		},
+		signup: {
+			status: 'idle' as FormStatus
+		}
+	})
 
 	// HANDLERS --------------------------------------------- //
-	function handleLogInSubmit() {
-		isSubmittingLogIn = true
-		return async ({ update }: { update: () => Promise<void> }) => {
+	function handleLoginSubmit() {
+		formState.login.status = 'pending'
+
+		return async ({ result, update }: { result: ActionResult; update: () => Promise<void> }) => {
 			await update()
-			isSubmittingLogIn = false
+			formState.login.status = 'idle'
+
+			if (result.type === 'success' && result.data) {
+				toaster.show(result.type, result.data.message, { type: 'positive' })
+			} else if (result.type === 'failure' && result.data) {
+				toaster.show(result.type, result.data.error, { type: 'negative' })
+			}
 		}
 	}
 
-	function handleSignUpSubmit() {
-		isSubmittingSignUp = true
-		return async ({ update }: { update: () => Promise<void> }) => {
+	function handleSignupSubmit() {
+		formState.signup.status = 'pending'
+
+		return async ({ result, update }: { result: ActionResult; update: () => Promise<void> }) => {
 			await update()
-			isSubmittingSignUp = false
+			formState.signup.status = 'idle'
+
+			if (result.type === 'success' && result.data) {
+				toaster.show(result.type, result.data.signupMessage, { type: 'positive' })
+			} else if (result.type === 'failure' && result.data) {
+				toaster.show(result.type, result.data.signupError, { type: 'negative' })
+			}
 		}
 	}
 </script>
@@ -42,33 +64,22 @@
 				</p>
 			</div>
 
-			<form method="POST" action="?/magiclink" use:enhance={handleLogInSubmit}>
-				<Input id="email" name="email" label="Email" type="email" required value={form?.email || ''} />
-				<Button label={isSubmittingLogIn ? 'Sending...' : 'Log in'} type="submit" disabled={isSubmittingLogIn} />
+			<form method="POST" action="?/magiclink" use:enhance={handleLoginSubmit}>
+				<Input
+					id="email"
+					name="email"
+					label="Email"
+					type="email"
+					required
+					value={form?.email || ''}
+					disabled={formState.login.status === 'pending'}
+				/>
+				<Button
+					label={formState.login.status === 'idle' ? 'Log in' : 'Sending...'}
+					type="submit"
+					disabled={formState.login.status === 'pending'}
+				/>
 			</form>
-
-			<!-- Display results -->
-			{#if form?.success}
-				<AlertBox
-					label="Magic Link Sent"
-					message="Check your inbox for your magic link."
-					fit="extrinsic"
-					colorway="sentiment-positive"
-					icon={SquareCheckBig}
-					useShadow={false}
-				/>
-			{/if}
-
-			{#if form?.error}
-				<AlertBox
-					label="Error Logging In"
-					message={form.error}
-					fit="extrinsic"
-					colorway="sentiment-negative"
-					icon={OctagonAlertIcon}
-					useShadow={false}
-				/>
-			{/if}
 		</section>
 
 		<!-- DELIN --------------------------------------------- -->
@@ -87,7 +98,7 @@
 				</p>
 			</div>
 
-			<form method="POST" action="?/signup" use:enhance={handleSignUpSubmit}>
+			<form method="POST" action="?/signup" use:enhance={handleSignupSubmit}>
 				<div class="row">
 					<Input
 						id="firstName"
@@ -96,11 +107,28 @@
 						type="text"
 						required
 						value={form?.firstName || ''}
+						disabled={formState.signup.status === 'pending'}
 					/>
-					<Input id="lastName" name="lastName" label="Last Name" type="text" required value={form?.lastName || ''} />
+					<Input
+						id="lastName"
+						name="lastName"
+						label="Last Name"
+						type="text"
+						required
+						value={form?.lastName || ''}
+						disabled={formState.signup.status === 'pending'}
+					/>
 				</div>
 
-				<Input id="signup-email" name="email" label="Email" type="email" required value={form?.email || ''} />
+				<Input
+					id="signup-email"
+					name="email"
+					label="Email"
+					type="email"
+					required
+					value={form?.email || ''}
+					disabled={formState.signup.status === 'pending'}
+				/>
 
 				<Input
 					id="postcode"
@@ -111,37 +139,15 @@
 					maxlength={4}
 					placeholder="e.g. 5000"
 					value={form?.postcode || ''}
+					disabled={formState.signup.status === 'pending'}
 				/>
 
 				<Button
-					label={isSubmittingSignUp ? 'Creating Account...' : 'Sign Up'}
+					label={formState.signup.status === 'idle' ? 'Sign Up' : 'Creating Account...'}
 					type="submit"
-					disabled={isSubmittingSignUp}
+					disabled={formState.signup.status === 'pending'}
 				/>
 			</form>
-
-			<!-- Display signup results -->
-			{#if form?.signupSuccess}
-				<AlertBox
-					label="Account Created"
-					message={form.signupMessage}
-					fit="extrinsic"
-					colorway="sentiment-positive"
-					icon={SquareCheckBig}
-					useShadow={false}
-				/>
-			{/if}
-
-			{#if form?.signupError}
-				<AlertBox
-					label="Error Creating Account"
-					message={form.signupError}
-					fit="extrinsic"
-					colorway="sentiment-negative"
-					icon={OctagonAlertIcon}
-					useShadow={false}
-				/>
-			{/if}
 		</section>
 	</div>
 </section>

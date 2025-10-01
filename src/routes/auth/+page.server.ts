@@ -1,57 +1,52 @@
 import { fail } from '@sveltejs/kit'
-import { signUpWithMagicLink, sendMagicLink } from '$lib/utils/auth'
 import type { Actions } from './$types'
+import { createUserWithMagicLink, sendLoginMagicLink } from '$lib/server/auth'
 
 export const actions: Actions = {
 	magiclink: async ({ request, locals: { supabase }, url }) => {
 		const formData = await request.formData()
 		const email = formData.get('email') as string
 
-		const result = await sendMagicLink(supabase, email, url.origin)
-
-		if (result.error) {
-			const statusCode = result.error.includes('wait a moment') ? 429 : 500
-			return fail(statusCode, {
-				error: result.error,
-				email: result.email
+		try {
+			const result = await sendLoginMagicLink(supabase, email, `${url.origin}/auth/callback`)
+			return {
+				success: true,
+				message: result.message
+			}
+		} catch (error) {
+			return fail(400, {
+				error: error instanceof Error ? error.message : 'Failed to send magic link',
+				email
 			})
-		}
-
-		return {
-			success: true,
-			message: result.message
 		}
 	},
 
 	signup: async ({ request, locals: { supabase }, url }) => {
 		const formData = await request.formData()
 
-		const result = await signUpWithMagicLink(
-			supabase,
-			{
+		try {
+			const result = await createUserWithMagicLink(
+				supabase,
+				formData.get('email') as string,
+				formData.get('firstName') as string,
+				formData.get('lastName') as string,
+				formData.get('postcode') as string,
+				'auth_page',
+				`${url.origin}/auth/callback`
+			)
+
+			return {
+				signupSuccess: true,
+				signupMessage: result.message
+			}
+		} catch (error) {
+			return fail(400, {
+				signupError: error instanceof Error ? error.message : 'Failed to create account',
 				email: formData.get('email') as string,
 				firstName: formData.get('firstName') as string,
 				lastName: formData.get('lastName') as string,
-				postcode: formData.get('postcode') as string,
-				source: 'auth_page'
-			},
-			url.origin
-		)
-
-		if (result.error) {
-			const statusCode = result.error.includes('already registered') ? 409 : 400
-			return fail(statusCode, {
-				signupError: result.error,
-				email: result.email,
-				firstName: result.firstName,
-				lastName: result.lastName,
-				postcode: result.postcode
+				postcode: formData.get('postcode') as string
 			})
-		}
-
-		return {
-			signupSuccess: true,
-			signupMessage: result.message
 		}
 	}
 }

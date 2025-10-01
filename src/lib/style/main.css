@@ -22,7 +22,7 @@ body {
 :root {
 	--layout--nav-top--height: var(--sp-9);
 	--clamp--content-width--max: 1600px;
-	--clamp--content-width--s: 1200px;
+	--clamp--content-width--s: 1080px;
 	--clamp--content-width--s-x: 800px;
 }
 

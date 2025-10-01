@@ -1,23 +1,15 @@
 <script lang="ts">
 	import { NAV_ITEMS } from '$lib/config'
 	import Button from '../Button/Button.svelte'
-	import type { Session, User, SupabaseClient } from '@supabase/supabase-js'
+	import type { Session } from '@supabase/supabase-js'
 
 	let {
-		session = null,
-		user = null,
-		supabase
+		session = null
 	}: {
 		session: Session | null
-		user: User | null
-		supabase: SupabaseClient
 	} = $props()
 
 	const navItems = NAV_ITEMS.filter((item) => item.showInTopNav)
-
-	async function handleSignOut() {
-		await supabase.auth.signOut()
-	}
 </script>
 
 <div id="nav-top" class="host nav-top">
@@ -54,7 +46,7 @@
 
 				{#if !session}
 					<li class="item--action">
-						<a href="/auth#section--auth--log-in">
+						<a href="/auth">
 							<Button label="Log in" intent="secondary" colorway="dv" />
 						</a>
 					</li>

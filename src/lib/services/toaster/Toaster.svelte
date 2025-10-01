@@ -8,7 +8,13 @@
 	{#each toaster.toasts as toast (toast.id)}
 		<div class={['toast', `intent--${toast.type}`]} in:fly={{ y: -100 }} out:fly={{ x: -100 }} animate:flip>
 			{#if toast.title}
-				<span class="title">{toast.title}</span>
+				<div class="title-container">
+					<span class="title">{toast.title}</span>
+
+					{#if toast.code}
+						<span class="code">{toast.code}</span>
+					{/if}
+				</div>
 			{/if}
 			<span class="description">
 				{toast.message}
@@ -64,6 +70,11 @@
 				0 3px 10px rgba(0, 0, 0, 0.1),
 				0 3px 3px rgba(0, 0, 0, 0.05);
 
+			.title-container {
+				display: flex;
+				justify-content: space-between;
+			}
+
 			span {
 				width: fit-content;
 				color: var(--loc-clr-ink);
@@ -71,6 +82,13 @@
 				&.title {
 					font: var(--font--heading--s);
 					font-size: var(--fs-3);
+					text-transform: capitalize;
+				}
+
+				&.code {
+					font: monospace;
+					font-size: var(--fs-1);
+					font-weight: 500;
 				}
 
 				&.description {

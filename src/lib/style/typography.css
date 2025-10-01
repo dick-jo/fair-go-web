@@ -192,8 +192,8 @@
 	--font-weight--body--secondary--l: 500;
 
 	/* CASE ------------------------------------------------- */
-	--text-case--heading: uppercase;
-	--text-case--heading--secondary: capitalize;
+	--text-case--heading: capitalize;
+	--text-case--heading--secondary: uppercase;
 	--text-case--label: uppercase;
 	--text-case--body: none;
 	--text-case--body--secondary: none;
@@ -333,4 +333,8 @@ blockquote {
 		font: var(--font--body--l);
 		/* font-weight: var(--font-weight--body--l); */
 	}
+}
+
+details {
+	font: var(--font--body);
 }
