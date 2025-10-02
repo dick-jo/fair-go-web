@@ -968,56 +968,71 @@ export type Database = {
       }
       profiles: {
         Row: {
-          accepted_terms_at: string | null
+          aec_data_sharing_consent_at: string | null
           created_at: string | null
           date_of_birth: string | null
           first_name: string | null
           id: string
+          is_member: boolean
           is_volunteer: boolean
           last_name: string | null
-          membership_complete_at: string | null
-          membership_status: string | null
+          membership_expires_at: string | null
+          membership_paid_at: string | null
           membership_tier: string | null
+          party_exclusivity_confirmed_at: string | null
           phone: string | null
+          pledge_accepted_at: string | null
           postcode: string | null
           state: string | null
           street_address: string | null
+          stripe_customer_id: string | null
+          stripe_membership_subscription_id: string | null
           suburb: string | null
           updated_at: string | null
         }
         Insert: {
-          accepted_terms_at?: string | null
+          aec_data_sharing_consent_at?: string | null
           created_at?: string | null
           date_of_birth?: string | null
           first_name?: string | null
           id: string
+          is_member: boolean
           is_volunteer?: boolean
           last_name?: string | null
-          membership_complete_at?: string | null
-          membership_status?: string | null
+          membership_expires_at?: string | null
+          membership_paid_at?: string | null
           membership_tier?: string | null
+          party_exclusivity_confirmed_at?: string | null
           phone?: string | null
+          pledge_accepted_at?: string | null
           postcode?: string | null
           state?: string | null
           street_address?: string | null
+          stripe_customer_id?: string | null
+          stripe_membership_subscription_id?: string | null
           suburb?: string | null
           updated_at?: string | null
         }
         Update: {
-          accepted_terms_at?: string | null
+          aec_data_sharing_consent_at?: string | null
           created_at?: string | null
           date_of_birth?: string | null
           first_name?: string | null
           id?: string
+          is_member?: boolean
           is_volunteer?: boolean
           last_name?: string | null
-          membership_complete_at?: string | null
-          membership_status?: string | null
+          membership_expires_at?: string | null
+          membership_paid_at?: string | null
           membership_tier?: string | null
+          party_exclusivity_confirmed_at?: string | null
           phone?: string | null
+          pledge_accepted_at?: string | null
           postcode?: string | null
           state?: string | null
           street_address?: string | null
+          stripe_customer_id?: string | null
+          stripe_membership_subscription_id?: string | null
           suburb?: string | null
           updated_at?: string | null
         }
@@ -1028,10 +1043,7 @@ export type Database = {
           created_at: string
           email: string
           email_opt_in: boolean
-          first_name: string | null
           id: string
-          last_name: string | null
-          postcode: string | null
           source: string | null
           unsubscribed_at: string | null
           upgraded_at: string | null
@@ -1041,10 +1053,7 @@ export type Database = {
           created_at?: string
           email: string
           email_opt_in?: boolean
-          first_name?: string | null
           id?: string
-          last_name?: string | null
-          postcode?: string | null
           source?: string | null
           unsubscribed_at?: string | null
           upgraded_at?: string | null
@@ -1054,10 +1063,7 @@ export type Database = {
           created_at?: string
           email?: string
           email_opt_in?: boolean
-          first_name?: string | null
           id?: string
-          last_name?: string | null
-          postcode?: string | null
           source?: string | null
           unsubscribed_at?: string | null
           upgraded_at?: string | null
@@ -1156,6 +1162,42 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      transactions: {
+        Row: {
+          amount: number
+          created_at: string | null
+          currency: string | null
+          id: string
+          status: string | null
+          stripe_payment_id: string | null
+          stripe_subscription_id: string | null
+          transaction_type: string
+          user_id: string | null
+        }
+        Insert: {
+          amount: number
+          created_at?: string | null
+          currency?: string | null
+          id?: string
+          status?: string | null
+          stripe_payment_id?: string | null
+          stripe_subscription_id?: string | null
+          transaction_type: string
+          user_id?: string | null
+        }
+        Update: {
+          amount?: number
+          created_at?: string | null
+          currency?: string | null
+          id?: string
+          status?: string | null
+          stripe_payment_id?: string | null
+          stripe_subscription_id?: string | null
+          transaction_type?: string
+          user_id?: string | null
+        }
+        Relationships: []
       }
     }
     Views: {

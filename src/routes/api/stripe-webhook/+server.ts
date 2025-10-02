@@ -1,0 +1,172 @@
+import type { RequestHandler } from './$types'
+import Stripe from 'stripe'
+import { createClient } from '@supabase/supabase-js'
+import { PUBLIC_SUPABASE_URL } from '$env/static/public'
+import { STRIPE_SECRET_KEY, SUPABASE_SERVICE_ROLE_KEY, STRIPE_WEBHOOK_SECRET } from '$env/static/private'
+import { error } from '@sveltejs/kit'
+import type { Database } from '$lib/types/supabase.types'
+
+const stripe = new Stripe(STRIPE_SECRET_KEY, {
+	apiVersion: '2025-08-27.basil'
+})
+
+const supabaseAdmin = createClient<Database>(PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
+
+export const POST: RequestHandler = async ({ request }) => {
+	const body = await request.text()
+	const signature = request.headers.get('stripe-signature')
+
+	if (!signature) {
+		throw error(400, 'Missing stripe-signature header')
+	}
+
+	let event: Stripe.Event
+
+	try {
+		// Verify the webhook signature
+		event = stripe.webhooks.constructEvent(body, signature, STRIPE_WEBHOOK_SECRET)
+	} catch (err) {
+		console.error('Webhook signature verification failed:', err)
+		throw error(400, 'Invalid signature')
+	}
+
+	console.log('Received webhook event:', event.type)
+
+	// CHECKOUT: Session Complete
+	if (event.type === 'checkout.session.completed') {
+		const session = event.data.object as Stripe.Checkout.Session
+
+		const userId = session.client_reference_id
+		const tier = session.metadata?.membership_tier
+		const isRecurring = session.metadata?.is_recurring === 'true'
+		const stripeCustomerId = session.customer as string
+		const stripePaymentId = session.payment_intent as string
+		const stripeSubscriptionId = session.subscription as string | null
+
+		console.log('Payment succeeded for user:', userId)
+		console.log('Membership tier:', tier)
+		console.log('Recurring:', isRecurring)
+
+		if (!userId || !tier) {
+			console.error('Missing userId or tier in webhook metadata')
+			return new Response(null, { status: 200 })
+		}
+
+		const now = new Date()
+		const expiresAt = new Date(now.getTime() + 365 * 24 * 60 * 60 * 1000) // 1 year from now
+
+		const { error: profileError } = await supabaseAdmin
+			.from('profiles')
+			.update({
+				is_member: true,
+				membership_tier: tier,
+				membership_paid_at: now.toISOString(),
+				membership_expires_at: expiresAt.toISOString(),
+				stripe_customer_id: stripeCustomerId,
+				...(stripeSubscriptionId && { stripe_membership_subscription_id: stripeSubscriptionId })
+			})
+			.eq('id', userId)
+
+		if (profileError) {
+			console.error('Failed to update profile:', profileError)
+		} else {
+			console.log('Successfully updated profile for user:', userId)
+		}
+
+		// Only insert transaction for one-time payments
+		if (!isRecurring) {
+			const { error: transactionError } = await supabaseAdmin.from('transactions').insert({
+				user_id: userId,
+				stripe_payment_id: stripePaymentId,
+				transaction_type: 'membership',
+				amount: session.amount_total || 0,
+				currency: 'aud',
+				status: 'succeeded'
+			})
+
+			if (transactionError) {
+				console.error('Failed to insert transaction:', transactionError)
+			} else {
+				console.log('Successfully recorded transaction')
+			}
+		}
+	}
+
+	// INVOICE: Payment Succeeded
+	if (event.type === 'invoice.payment_succeeded') {
+		const invoice = event.data.object as Stripe.Invoice
+
+		const subscriptionId = invoice.parent?.subscription_details?.subscription as string
+		const invoiceId = invoice.id as string
+
+		console.log('Invoice paid for subscription:', subscriptionId)
+		console.log('Invoice ID:', invoiceId)
+
+		if (!subscriptionId) {
+			console.error('No subscription ID found in invoice')
+			return new Response(null, { status: 200 })
+		}
+
+		const { data: profile } = await supabaseAdmin
+			.from('profiles')
+			.select('id, membership_tier')
+			.eq('stripe_membership_subscription_id', subscriptionId)
+			.single()
+
+		if (!profile) {
+			console.error('Could not find profile for subscription:', subscriptionId)
+			return new Response(null, { status: 200 })
+		}
+
+		// NEW: Update expiry date for renewal
+		const now = new Date()
+		const expiresAt = new Date(now.getTime() + 365 * 24 * 60 * 60 * 1000)
+
+		await supabaseAdmin
+			.from('profiles')
+			.update({
+				membership_paid_at: now.toISOString(),
+				membership_expires_at: expiresAt.toISOString()
+			})
+			.eq('id', profile.id)
+
+		const { error: transactionError } = await supabaseAdmin.from('transactions').insert({
+			user_id: profile.id,
+			stripe_payment_id: invoiceId,
+			stripe_subscription_id: subscriptionId,
+			transaction_type: 'membership',
+			amount: invoice.amount_paid,
+			currency: invoice.currency,
+			status: 'succeeded'
+		})
+
+		if (transactionError) {
+			console.error('Failed to insert transaction from invoice:', transactionError)
+		} else {
+			console.log('Successfully recorded subscription payment')
+		}
+	}
+
+	// SUBSCRIPTION: Cancelled/Deleted ---------------------- //
+	if (event.type === 'customer.subscription.deleted') {
+		const subscription = event.data.object as Stripe.Subscription
+
+		console.log('Subscription deleted:', subscription.id)
+
+		const { error: updateError } = await supabaseAdmin
+			.from('profiles')
+			.update({
+				is_member: false,
+				stripe_membership_subscription_id: null
+			})
+			.eq('stripe_membership_subscription_id', subscription.id)
+
+		if (updateError) {
+			console.error('Failed to update profile after subscription deletion:', updateError)
+		} else {
+			console.log('Successfully deactivated membership')
+		}
+	}
+
+	return new Response(null, { status: 200 })
+}

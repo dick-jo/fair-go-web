@@ -1,19 +1,20 @@
 <script lang="ts">
+	import type { AuthChangeEvent, Session } from '@supabase/supabase-js'
 	import favicon from '$lib/assets/favicon.svg'
 	import '$lib/style/system.tokens.css'
 	import '$lib/style/main.css'
 	import '$lib/style/typography.css'
 	import NavTop from '$lib/components/NavTop/NavTop.svelte'
-	import Footer from '$lib/components/Footer/Footer.svelte'
+	import Toaster from '$lib/services/toaster/Toaster.svelte'
 	import { onMount } from 'svelte'
 	import { invalidate } from '$app/navigation'
-	import Toaster from '$lib/services/toaster/Toaster.svelte'
+	import Footer from '$lib/components/Footer/Footer.svelte'
 
 	let { data, children } = $props()
 	let { session, supabase } = $derived(data)
 
 	onMount(() => {
-		const { data } = supabase.auth.onAuthStateChange((_, newSession) => {
+		const { data } = supabase.auth.onAuthStateChange((_event: AuthChangeEvent, newSession: Session | null) => {
 			if (newSession?.expires_at !== session?.expires_at) {
 				invalidate('supabase:auth')
 			}
@@ -27,9 +28,6 @@
 </svelte:head>
 
 <Toaster />
-
-<NavTop {session} />
-<main>
-	{@render children?.()}
-</main>
+<NavTop session={data.session} />
+{@render children()}
 <Footer />

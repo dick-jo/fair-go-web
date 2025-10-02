@@ -37,13 +37,6 @@ main {
 	border-right: var(--bdw) solid var(--clr-dv);
 	border-left: var(--bdw) solid var(--clr-dv);
 
-	& > * {
-		border-bottom: var(--bdw) solid var(--clr-dv);
-		&:last-child {
-			border-bottom: none;
-		}
-	}
-
 	/* SECTION ---------------------------------------------- */
 	& > section,
 	& > .page-clamp > section {
@@ -51,6 +44,10 @@ main {
 		width: 100%;
 		display: flex;
 		flex-direction: column;
+		border-bottom: var(--bdw) solid var(--clr-dv);
+		&:last-child {
+			border-bottom: none;
+		}
 
 		.section-header {
 			height: var(--sp-7);

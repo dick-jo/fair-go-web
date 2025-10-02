@@ -114,6 +114,7 @@
 	}
 </script>
 
+<!-- SNIPPETS ------------------------------------------ -->
 {#snippet accordionHeader(title: string, isOpen: boolean, toggle: () => void)}
 	<button class="accordion--header" onclick={toggle}>
 		<h3 class="title">{title}</h3>
@@ -125,6 +126,7 @@
 	</button>
 {/snippet}
 
+<!-- MARKUP -------------------------------------------- -->
 <section id="section--description">
 	<p>
 		Thanks for being part of our movement to fight for a fair go for all Australians. We're working to make your voice
@@ -141,126 +143,158 @@
 	</p>
 </section>
 
-<section id="section--user-details">
-	{@render accordionHeader(
-		'Your Details',
-		accordionYourDetailsIsOpen,
-		() => (accordionYourDetailsIsOpen = !accordionYourDetailsIsOpen)
-	)}
-	{#if accordionYourDetailsIsOpen}
-		<div class="accordion--item">
-			<form
-				method="POST"
-				action="?/updateYourDetails"
-				use:enhance={handleYourDetailsSubmit}
-				oninput={handleFormChange('yourDetails')}
-			>
-				<Input id="firstName" name="firstName" label="First Name" type="text" value={data.profile?.first_name || ''} />
-
-				<Input id="lastName" name="lastName" label="Last Name" type="text" value={data.profile?.last_name || ''} />
-
-				<Input
-					id="postcode"
-					name="postcode"
-					label="Postcode"
-					type="text"
-					maxlength={4}
-					placeholder="e.g. 5000"
-					value={data.profile?.postcode || ''}
-				/>
-
-				<Input
-					id="phone"
-					name="phone"
-					label="Phone Number"
-					type="tel"
-					placeholder="e.g. 0412 345 678"
-					value={data.profile?.phone || ''}
-				/>
-
-				<div class="action-container">
-					<Button
-						label={formState.yourDetails.status === 'idle' ? 'Save Changes' : 'Updating...'}
-						disabled={formState.yourDetails.status === 'pending' || !formState.yourDetails.hasChanges}
-						type="submit"
+<div id="profile--container">
+	<section id="section--your-details">
+		{@render accordionHeader(
+			'Your Details',
+			accordionYourDetailsIsOpen,
+			() => (accordionYourDetailsIsOpen = !accordionYourDetailsIsOpen)
+		)}
+		{#if accordionYourDetailsIsOpen}
+			<div class="accordion--item">
+				<form
+					method="POST"
+					action="?/updateYourDetails"
+					use:enhance={handleYourDetailsSubmit}
+					oninput={handleFormChange('yourDetails')}
+				>
+					<Input
+						id="firstName"
+						name="firstName"
+						label="First Name"
+						type="text"
+						value={data.profile?.first_name || ''}
 					/>
-				</div>
-			</form>
-		</div>
-	{/if}
 
-	{@render accordionHeader(
-		'Volunteer Status',
-		accordionVolunteerStatusIsOpen,
-		() => (accordionVolunteerStatusIsOpen = !accordionVolunteerStatusIsOpen)
-	)}
-	{#if accordionVolunteerStatusIsOpen}
-		<div class="accordion--item">
-			<form
-				method="POST"
-				action="?/updateVolunteerStatus"
-				use:enhance={handleVolunteerStatusSubmit}
-				oninput={handleFormChange('volunteerStatus')}
-			>
-				<p class="supplementary">
-					Setting your volunteer status to 'Yes' lets us know we can reach out to you for volunteer opportunities when
-					needed. It is strongly recommended you provide a phone number if you're interested in volunteering.
-				</p>
+					<Input id="lastName" name="lastName" label="Last Name" type="text" value={data.profile?.last_name || ''} />
 
-				<InputCheckbox
-					id="isVolunteer"
-					name="isVolunteer"
-					label="I want to volunteer with the party"
-					checked={data.profile?.is_volunteer || false}
-				/>
+					<Input id="dob" name="dob" label="Date of Birth" type="date" value={data.profile?.date_of_birth || ''} />
 
-				<div class="action-container">
-					<Button
-						label={formState.volunteerStatus.status === 'idle' ? 'Save Changes' : 'Updating...'}
-						disabled={formState.volunteerStatus.status === 'pending' || !formState.volunteerStatus.hasChanges}
-						type="submit"
+					<Input
+						id="streetAddress"
+						name="streetAddress"
+						label="Street Address"
+						type="text"
+						placeholder="e.g. 72 Fair Street"
+						value={data.profile?.street_address || ''}
 					/>
-				</div>
-			</form>
-		</div>
-	{/if}
 
-	{@render accordionHeader(
-		'Communication Preferences',
-		accordionCommunicationPreferencesIsOpen,
-		() => (accordionCommunicationPreferencesIsOpen = !accordionCommunicationPreferencesIsOpen)
-	)}
-	{#if accordionCommunicationPreferencesIsOpen}
-		<div class="accordion--item">
-			<form
-				method="POST"
-				action="?/updateCommunicationPreferences"
-				use:enhance={handleCommunicationPreferencesSubmit}
-				oninput={handleFormChange('communicationPreferences')}
-			>
-				<p class="supplementary">
-					Choose whether you'd like to receive email updates about campaigns, events, and ways to get involved.
-				</p>
-
-				<InputCheckbox
-					id="emailOptIn"
-					name="emailOptIn"
-					label="I want to receive email updates"
-					checked={data.subscriber?.email_opt_in || false}
-				/>
-
-				<div class="action-container">
-					<Button
-						label={formState.communicationPreferences.status === 'idle' ? 'Save Changes' : 'Updating...'}
-						disabled={formState.communicationPreferences.status === 'pending' ||
-							!formState.communicationPreferences.hasChanges}
-						type="submit"
+					<Input
+						id="suburb"
+						name="suburb"
+						label="Suburb"
+						type="text"
+						placeholder="e.g. Adelaide"
+						value={data.profile?.suburb || ''}
 					/>
-				</div>
-			</form>
-		</div>
-	{/if}
-</section>
+
+					<Input
+						id="postcode"
+						name="postcode"
+						label="Post Code"
+						type="text"
+						maxlength={4}
+						placeholder="e.g. 5000"
+						value={data.profile?.postcode || ''}
+					/>
+
+					<Input
+						id="phone"
+						name="phone"
+						label="Phone Number"
+						type="tel"
+						placeholder="e.g. 0412 345 678"
+						value={data.profile?.phone || ''}
+					/>
+
+					<div class="action-container">
+						<Button
+							label={formState.yourDetails.status === 'idle' ? 'Save Changes' : 'Updating...'}
+							disabled={formState.yourDetails.status === 'pending' || !formState.yourDetails.hasChanges}
+							type="submit"
+						/>
+					</div>
+				</form>
+			</div>
+		{/if}
+	</section>
+
+	<section id="section--volunteer-status">
+		{@render accordionHeader(
+			'Volunteer Status',
+			accordionVolunteerStatusIsOpen,
+			() => (accordionVolunteerStatusIsOpen = !accordionVolunteerStatusIsOpen)
+		)}
+		{#if accordionVolunteerStatusIsOpen}
+			<div class="accordion--item">
+				<form
+					method="POST"
+					action="?/updateVolunteerStatus"
+					use:enhance={handleVolunteerStatusSubmit}
+					oninput={handleFormChange('volunteerStatus')}
+				>
+					<p class="supplementary">
+						Setting your volunteer status to 'Yes' lets us know we can reach out to you for volunteer opportunities when
+						needed. It is strongly recommended you provide a phone number if you're interested in volunteering.
+					</p>
+
+					<InputCheckbox
+						id="isVolunteer"
+						name="isVolunteer"
+						label="I want to volunteer with the party"
+						checked={data.profile?.is_volunteer || false}
+					/>
+
+					<div class="action-container">
+						<Button
+							label={formState.volunteerStatus.status === 'idle' ? 'Save Changes' : 'Updating...'}
+							disabled={formState.volunteerStatus.status === 'pending' || !formState.volunteerStatus.hasChanges}
+							type="submit"
+						/>
+					</div>
+				</form>
+			</div>
+		{/if}
+	</section>
+
+	<section id="section--communication-preferences">
+		{@render accordionHeader(
+			'Communication Preferences',
+			accordionCommunicationPreferencesIsOpen,
+			() => (accordionCommunicationPreferencesIsOpen = !accordionCommunicationPreferencesIsOpen)
+		)}
+		{#if accordionCommunicationPreferencesIsOpen}
+			<div class="accordion--item">
+				<form
+					method="POST"
+					action="?/updateCommunicationPreferences"
+					use:enhance={handleCommunicationPreferencesSubmit}
+					oninput={handleFormChange('communicationPreferences')}
+				>
+					<p class="supplementary">
+						Choose whether you'd like to receive email updates about campaigns, events, and ways to get involved.
+					</p>
+
+					<InputCheckbox
+						id="emailOptIn"
+						name="emailOptIn"
+						label="I want to receive email updates"
+						checked={data.subscriber?.email_opt_in || false}
+					/>
+
+					<div class="action-container">
+						<Button
+							label={formState.communicationPreferences.status === 'idle' ? 'Save Changes' : 'Updating...'}
+							disabled={formState.communicationPreferences.status === 'pending' ||
+								!formState.communicationPreferences.hasChanges}
+							type="submit"
+						/>
+					</div>
+				</form>
+			</div>
+		{/if}
+	</section>
+</div>
 
 <!-- CSS ----------------------------------------------- -->
 <style>
@@ -268,6 +302,8 @@
 	section#section--description {
 		--loc-gap: var(--gap-s);
 		width: 100%;
+		display: flex;
+		flex-direction: column;
 		gap: var(--loc-gap);
 
 		& > p {
@@ -275,8 +311,8 @@
 		}
 	}
 
-	/* SECTIN: Accordion Sections --------------------------- */
-	section#section--user-details {
+	/* PROFILE CONTAINER ------------------------------------ */
+	#profile--container {
 		width: 100%;
 		padding: var(--loc-gap);
 		display: flex;
@@ -286,25 +322,31 @@
 		border: var(--bdw) solid var(--clr-dv);
 		border-radius: var(--bdr-l);
 
-		.accordion--item,
-		form {
-			--loc-gap: var(--gap-s);
+		section {
 			display: flex;
 			flex-direction: column;
-			gap: var(--loc-gap);
+			gap: var(--gap-s);
 
-			p {
-				&.supplementary {
-					font: var(--font--body--s);
-				}
-			}
-
-			.action-container {
+			.accordion--item,
+			form {
+				--loc-gap: var(--gap-s);
 				display: flex;
+				flex-direction: column;
 				gap: var(--loc-gap);
 
-				:global(& > .button) {
-					flex: 1;
+				p {
+					&.supplementary {
+						font: var(--font--body--s);
+					}
+				}
+
+				.action-container {
+					display: flex;
+					gap: var(--loc-gap);
+
+					:global(& > .button) {
+						flex: 1;
+					}
 				}
 			}
 		}

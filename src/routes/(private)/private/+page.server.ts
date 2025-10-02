@@ -17,6 +17,9 @@ export const actions: Actions = {
 			const result = await updateProfile(supabase, user.id, {
 				first_name: formData.get('firstName') as string,
 				last_name: formData.get('lastName') as string,
+				date_of_birth: formData.get('dob') as string,
+				street_address: formData.get('streetAddress') as string,
+				suburb: formData.get('suburb') as string,
 				postcode: formData.get('postcode') as string,
 				phone: formData.get('phone') as string
 			})

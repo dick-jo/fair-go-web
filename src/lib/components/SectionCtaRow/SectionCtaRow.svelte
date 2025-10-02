@@ -1,5 +1,5 @@
 <script lang="ts">
-	import CtaBox from '../CtaBox/CtaBox.svelte';
+	import CtaBox from '../CtaBox/CtaBox.svelte'
 </script>
 
 <!-- MARKUP -->
@@ -11,6 +11,7 @@
 			intent="secondary"
 			content="Join Sarah Game's Fair Go For Australians and stand for a nation where hard work is rewarded, parents protect their kids, and communities are safe and strong. Be part of our movement to cut power bills, uphold parental rights, and deliver tough, fair justice—sign up today to help us build a better future for all Australians!"
 			buttonLabel="Become a Member"
+			href="/membership"
 		/>
 	</div>
 

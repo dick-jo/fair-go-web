@@ -6,6 +6,27 @@ import { validateAustralianPhone } from '$lib/utils/validatePhone'
 type Profile = Tables<'profiles'>
 type ProfileUpdate = Database['public']['Tables']['profiles']['Update']
 
+// Helper function to sanitize profile updates
+function sanitizeProfileUpdate(updates: ProfileUpdate): ProfileUpdate {
+	const sanitized = { ...updates }
+
+	// Convert empty date strings to null (fixes PostgreSQL error)
+	if ('date_of_birth' in sanitized && sanitized.date_of_birth === '') {
+		sanitized.date_of_birth = null
+	}
+
+	// Convert empty strings to null and trim whitespace for text fields
+	const stringFields = ['first_name', 'last_name', 'street_address', 'suburb', 'postcode', 'phone'] as const
+	stringFields.forEach((field) => {
+		if (field in sanitized && typeof sanitized[field] === 'string') {
+			const trimmed = (sanitized[field] as string).trim()
+			sanitized[field] = trimmed === '' ? null : trimmed
+		}
+	})
+
+	return sanitized
+}
+
 // UPDATE PROFILE --------------------------------------- //
 export async function updateProfile(
 	supabase: SupabaseClient<Database>,
@@ -13,11 +34,14 @@ export async function updateProfile(
 	updates: ProfileUpdate,
 	requireChanges: boolean = true
 ): Promise<{ message: string }> {
+	// Sanitize the updates first
+	const sanitizedUpdates = sanitizeProfileUpdate(updates)
+
 	// Validation
-	if (updates.phone && !validateAustralianPhone(updates.phone)) {
+	if (sanitizedUpdates.phone && !validateAustralianPhone(sanitizedUpdates.phone)) {
 		throw new Error('Please enter a valid Australian phone number')
 	}
-	if (updates.postcode && !validatePostcode(updates.postcode)) {
+	if (sanitizedUpdates.postcode && !validatePostcode(sanitizedUpdates.postcode)) {
 		throw new Error('Please enter a valid Australian postcode (4 digits)')
 	}
 
@@ -29,7 +53,7 @@ export async function updateProfile(
 	}
 
 	// Check for changes
-	const hasChanges = Object.entries(updates).some(([key, value]) => {
+	const hasChanges = Object.entries(sanitizedUpdates).some(([key, value]) => {
 		return currentProfile[key as keyof Profile] !== value
 	})
 
@@ -42,7 +66,12 @@ export async function updateProfile(
 	}
 
 	// UPDATE
-	const { error: updateError } = await supabase.from('profiles').update(updates).eq('id', userId).select().single()
+	const { error: updateError } = await supabase
+		.from('profiles')
+		.update(sanitizedUpdates)
+		.eq('id', userId)
+		.select()
+		.single()
 
 	if (updateError) {
 		console.error('Profile update error:', updateError)

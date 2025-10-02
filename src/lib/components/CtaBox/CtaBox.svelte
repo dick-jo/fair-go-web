@@ -7,12 +7,19 @@
 		content: string
 		buttonLabel: string
 		intent?: 'primary' | 'secondary'
+		href?: string
 	}
 
-	let { title, label, content, buttonLabel, intent = 'secondary' }: Props = $props()
+	let { title, label, content, buttonLabel, intent = 'secondary', href }: Props = $props()
 </script>
 
+<!-- SNIPPETS ------------------------------------------ -->
+{#snippet button()}
+	<Button label={buttonLabel} fit="extrinsic" intent="primary" colorway={intent === 'primary' ? 'bg' : 'primary'} />
+{/snippet}
+
 <!-- MARKUP -------------------------------------------- -->
+
 <div class={['host', 'cta-box', `intent--${intent}`]}>
 	<div class="header">
 		{#if label}
@@ -24,7 +31,13 @@
 
 	<p class="content">{content}</p>
 
-	<Button label={buttonLabel} intent="primary" colorway={intent === 'primary' ? 'bg' : 'primary'} />
+	{#if href}
+		<a {href}>
+			{@render button()}
+		</a>
+	{:else}
+		{@render button()}
+	{/if}
 </div>
 
 <!-- CSS ----------------------------------------------- -->

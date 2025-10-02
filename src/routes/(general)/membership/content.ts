@@ -23,27 +23,27 @@ export const FORM_CONTENT: FormStep[] = [
 	},
 	{
 		index: 2,
-		title: 'Confirm Details',
+		title: 'Electoral Roll Details',
 		description: [
-			'Enter your payment information to complete the process.',
-			'All transactions are secure and encrypted.'
+			`We just need a few more details to ensure your membership is valid, according to electoral authority expectations and requirements`,
+			`It's important that, to the best of your abilities, these details match those registered with the Electoral Roll, and that you are eligible and enrolled to vote.`
 		]
 	},
 	{
 		index: 3,
-		title: 'Electoral Address',
+		title: 'Consent & Pledge',
 		description: [
-			'Enter your payment information to complete the process.',
-			'All transactions are secure and encrypted.'
+			`Thanks for taking a stand with us—We can't do this without your support.`,
+			`To affirm your commitment to joining our fight for a fair go, we ask that you agree to the pledge and provide your consent for sharing necessary information with electoral authorities.`
 		]
 	},
 
 	{
 		index: 4,
-		title: 'Consent & Pledge',
+		title: 'Confirm Payment',
 		description: [
-			'Enter your payment information to complete the process.',
-			'All transactions are secure and encrypted.'
+			`You're one step away from becoming an official FairGo Member!`,
+			`Select Proceed To Payment to be redirected to our secure payment partner. All transaction are secure and encrypted.`
 		]
 	}
 ]
@@ -71,4 +71,17 @@ export const HEADER_CONTENT: HeaderContentItem[] = [
 			'Australia thrives with everyday people demanding transparency and results. Together, we can take our country back—are you with us?'
 		]
 	}
+]
+
+export interface MembershipTier {
+	label: string
+	value: number
+}
+
+export const MEMBERSHIP_TIERS: MembershipTier[] = [
+	{ label: 'supporter', value: 50 },
+	{ label: 'advocate', value: 100 },
+	{ label: 'partisan', value: 150 },
+	{ label: 'champion', value: 200 },
+	{ label: 'visionary', value: 250 }
 ]

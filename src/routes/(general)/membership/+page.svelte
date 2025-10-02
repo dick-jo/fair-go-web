@@ -3,14 +3,16 @@
 	import Button from '$lib/components/Button/Button.svelte'
 	import Input from '$lib/components/Input/Input.svelte'
 	import type { Database } from '$lib/types/supabase.types'
-	import { fade } from 'svelte/transition'
+	import { fade, fly, scale, slide } from 'svelte/transition'
 	import type { PageData } from '../$types'
-	import { FORM_CONTENT, HEADER_CONTENT } from './content'
+	import { FORM_CONTENT, HEADER_CONTENT, MEMBERSHIP_TIERS } from './content'
 	import type { ActionResult } from '@sveltejs/kit'
 	import { toaster } from '$lib/services/toaster/service.svelte'
 	import { enhance } from '$app/forms'
 	import AlertBox from '$lib/components/AlertBox/AlertBox.svelte'
-	import { OctagonAlertIcon } from '@lucide/svelte'
+	import { ArrowRightIcon, CheckIcon, OctagonAlertIcon } from '@lucide/svelte'
+	import InputCheckbox from '$lib/components/InputCheckbox/InputCheckbox.svelte'
+	import { elasticOut } from 'svelte/easing'
 
 	interface MembershipPageData extends PageData {
 		profile: Database['public']['Tables']['profiles']['Row'] | null
@@ -24,13 +26,17 @@
 	// TS --------------------------------------------------- //
 	type StepConfig = {
 		hasFooter: boolean
-		formAction?: string
 		action?: () => void
 	}
 
 	type FormStatus = 'idle' | 'pending'
 
 	// CONFIG ----------------------------------------------- //
+	const ANIM_CONFIG = {
+		duration: 300,
+		delay: 150
+	}
+
 	const MEMBERSHIP_FORM_STEP_CONFIG: Record<number, StepConfig> = {
 		0: {
 			hasFooter: false
@@ -41,26 +47,30 @@
 		},
 		2: {
 			hasFooter: true,
-			formAction: '?/updateMembershipDetails',
 			action: () => formEltElectoralRollDetails?.requestSubmit()
 		},
 		3: {
 			hasFooter: true,
-			action: () => next()
+			action: () => formEltConsent?.requestSubmit()
+		},
+		4: {
+			hasFooter: false
 		}
 	}
 
-	// MEMBERSHIP FORM ELEMENT BINDINGS --------------------- //
+	// MEMBERSHIP FORM: Element Bindings -------------------- //
 	let formEltElectoralRollDetails = $state<HTMLFormElement>()
+	let formEltConsent = $state<HTMLFormElement>()
 
 	// MEMBERSHIP FORM: State ------------------------------- //
-	let membershipFormStep = $state<number>(0)
+	let membershipFormStep = $state<number>(4)
 
 	let formLoginStatus = $state<FormStatus>('idle')
 	let formSignUpStatus = $state<FormStatus>('idle')
 	let formElectoralRollDetailsStatus = $state<FormStatus>('idle')
+	let formConsentStatus = $state<FormStatus>('idle')
 
-	let isNextButtonDisabled = $derived(formElectoralRollDetailsStatus === 'pending')
+	let isNextButtonDisabled = $derived(formElectoralRollDetailsStatus === 'pending' || formConsentStatus === 'pending')
 
 	// MEMBERSHIP FORM: Steps API --------------------------- //
 	function next() {
@@ -115,7 +125,7 @@
 	}
 
 	// MEMBERSHIP FORM: Handlers ---------------------------- //
-	// Step 0: Login (no auto-advance, different key)
+	// LOGIN
 	const handleLoginSubmit = createStepFormHandler(
 		{
 			get value() {
@@ -128,7 +138,7 @@
 		{ successKey: 'message', errorKey: 'error', autoAdvance: false, resetForm: true }
 	)
 
-	// Step 0: Sign Up (no auto-advance, different keys)
+	// SIGN UP
 	const handleSignUpSubmit = createStepFormHandler(
 		{
 			get value() {
@@ -141,7 +151,7 @@
 		{ successKey: 'message', errorKey: 'error', autoAdvance: false, resetForm: true }
 	)
 
-	// Step 2: Electoral Roll Details (auto-advance, standard keys)
+	// ELECTORAL ROLL DETAILS
 	const handleElectoralRollDetailsSubmit = createStepFormHandler({
 		get value() {
 			return formElectoralRollDetailsStatus
@@ -150,6 +160,71 @@
 			formElectoralRollDetailsStatus = v
 		}
 	})
+
+	const handleConsentSubmit = createStepFormHandler({
+		get value() {
+			return formConsentStatus
+		},
+		set value(v) {
+			formConsentStatus = v
+		}
+	})
+
+	// FEE SELECTOR: State ---------------------------------- //
+	let feeSelectorIndex = $state<number>(0)
+	let feeSelectorIndexUserSelection = $state<number>(0)
+	let feeSelectorValue = $derived(MEMBERSHIP_TIERS[feeSelectorIndex].value)
+	let feeSelectorLabel = $derived(MEMBERSHIP_TIERS[feeSelectorIndex].label)
+	let feeSelectorMeterPerc = $derived((feeSelectorIndex / (MEMBERSHIP_TIERS.length - 1)) * 100)
+
+	// FEE SELECTOR: Handlers ------------------------------- //
+	function handleFeeSelectorMouseOver(i: number) {
+		feeSelectorIndex = i
+	}
+
+	function handleFeeSelectorMouseOut() {
+		if (feeSelectorIndexUserSelection) {
+			feeSelectorIndex = feeSelectorIndexUserSelection
+		}
+	}
+
+	function handleFeeSelectorSelect(i: number) {
+		feeSelectorIndex = i
+		feeSelectorIndexUserSelection = i
+	}
+
+	// PAYMENT: State --------------------------------------- //
+	let paymentLoading = $state<boolean>(false)
+	let paymentRecurringEnabled = $state<boolean>(true)
+
+	// PAYMENT: Handlers ------------------------------------ //
+	async function handleProceedToPayment() {
+		paymentLoading = true
+
+		try {
+			const response = await fetch('/api/create-membership-checkout', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({
+					tier: feeSelectorLabel,
+					amount: feeSelectorValue * 100,
+					recurring: paymentRecurringEnabled
+				})
+			})
+
+			if (!response.ok) {
+				const errorData = await response.json()
+				throw new Error(errorData.message || 'Payment setup failed')
+			}
+
+			const { url } = await response.json()
+			window.location.href = url
+		} catch (e) {
+			const message = e instanceof Error ? e.message : 'Payment setup failed. Please try again.'
+			toaster.show('error', message, { type: 'negative' })
+			paymentLoading = false
+		}
+	}
 
 	// UTILS ------------------------------------------------ //
 	const handleSignOut = async () => {
@@ -173,7 +248,13 @@
 		data-complete={index < membershipFormStep}
 		onclick={() => toStep(index)}
 	>
-		<span>{index + 1}</span>
+		{#if index >= membershipFormStep}
+			<span>{index + 1}</span>
+		{:else}
+			<div class="wrapper" in:scale={{ duration: ANIM_CONFIG.duration * 4, easing: elasticOut }}>
+				<CheckIcon />
+			</div>
+		{/if}
 	</button>
 
 	{#if withDelin}
@@ -194,7 +275,7 @@
 
 <!-- EXISTING USER OVERLAY -->
 {#snippet existingUserOverlay()}
-	<div id="existing-user-overlay" out:fade={{ duration: 300 }}>
+	<div id="existing-user-overlay" out:fade={{ duration: ANIM_CONFIG.duration }}>
 		<div class="body">
 			<h4 class="text--heading">
 				Welcome back{data.profile?.first_name
@@ -207,6 +288,85 @@
 			<span class="text--aux">Not you? Click <button onclick={handleSignOut}>here to sign out</button>.</span>
 		</div>
 		<Button label="Let's begin" onclick={() => toStep(1)} />
+	</div>
+{/snippet}
+
+<!-- NO-AUTH FALLBACK -->
+{#snippet fallbackUnauthorized()}
+	<div class="fallback--unauthorized">
+		<AlertBox
+			label="Error"
+			message="You must be logged in to complete this step."
+			colorway="sentiment-negative"
+			icon={OctagonAlertIcon}
+		/>
+	</div>
+{/snippet}
+
+<!-- FEE SELECTOR -->
+{#snippet feeSelector()}
+	<div id="fee-selector" style="--loc-meter--perc: {feeSelectorMeterPerc}%">
+		<header in:fade={{ duration: ANIM_CONFIG.duration }}>
+			<div class="wrapper">
+				<span class="text--label">${MEMBERSHIP_TIERS[0].value}</span>
+			</div>
+
+			<div class="wrapper">
+				<ArrowRightIcon style="opacity: 0.25;" />
+			</div>
+
+			<div class="wrapper">
+				<ArrowRightIcon style="opacity: 0.5;" />
+			</div>
+
+			<div class="wrapper">
+				<ArrowRightIcon style="opacity: 0.75;" />
+			</div>
+
+			<div class="wrapper">
+				<span class="text--label">${MEMBERSHIP_TIERS[MEMBERSHIP_TIERS.length - 1].value}</span>
+			</div>
+		</header>
+
+		<div class="body">
+			<div class="meter">
+				<div class="fill"></div>
+			</div>
+
+			<div class="pip-container">
+				{#each MEMBERSHIP_TIERS as _, i}
+					<div
+						class="wrapper"
+						role="presentation"
+						onmouseover={() => handleFeeSelectorMouseOver(i)}
+						onfocus={() => handleFeeSelectorMouseOver(i)}
+						onmouseout={handleFeeSelectorMouseOut}
+						onblur={handleFeeSelectorMouseOut}
+					>
+						<button
+							class="pip"
+							aria-label={MEMBERSHIP_TIERS[i].label}
+							onclick={() => handleFeeSelectorSelect(i)}
+							data-active={feeSelectorIndexUserSelection === i}
+						>
+						</button>
+					</div>
+				{/each}
+			</div>
+		</div>
+
+		<footer in:fade={{ duration: ANIM_CONFIG.duration, delay: ANIM_CONFIG.delay }}>
+			{@render formDelin('Become A')}
+			<div class="title-container">
+				<h4 class="text--title">FairGo {MEMBERSHIP_TIERS[feeSelectorIndex].label}</h4>
+			</div>
+
+			<div class="fee-container">
+				<span class="text text--secondary">Annual Fee:</span>
+				<div class="line"></div>
+				<span class="text text--primary">${MEMBERSHIP_TIERS[feeSelectorIndex].value}</span>
+			</div>
+		</footer>
 	</div>
 {/snippet}
 
@@ -229,14 +389,20 @@
 
 		<!-- FORM CONTAINER ------------------------------------ -->
 		<div id="membership--form-container">
-			{#if data.user && data.profile && membershipFormStep === 0}
+			{#if !data.user && data.profile && membershipFormStep === 0}
 				{@render existingUserOverlay()}
 			{/if}
 			<!-- HEADER -------------------------------------------- -->
 			<header>
 				<div class="title-container">
-					<h4 class="title title--secondary">Step {membershipFormStep + 1}</h4>
-					<h3 class="title title--primary">{FORM_CONTENT[membershipFormStep].title}</h3>
+					{#key membershipFormStep}
+						<h4 class="title title--secondary" in:fly={{ x: 50, duration: ANIM_CONFIG.duration }}>
+							Step {membershipFormStep + 1}
+						</h4>
+						<h3 class="title title--primary" in:fly={{ x: 50, duration: ANIM_CONFIG.duration * 2 }}>
+							{FORM_CONTENT[membershipFormStep].title}
+						</h3>
+					{/key}
 				</div>
 
 				<div class="body">
@@ -250,22 +416,29 @@
 			<div class="body">
 				<div class="secondary">
 					{#each FORM_CONTENT[membershipFormStep].description as p, i}
-						<p>
-							{p}
-						</p>
-						{#if i < FORM_CONTENT[membershipFormStep].description.length - 1}
-							<br />
-						{/if}
+						{#key membershipFormStep}
+							<p in:fly={{ x: 12.5, duration: ANIM_CONFIG.duration * 3, delay: ANIM_CONFIG.delay * (i + 1) }}>
+								{p}
+							</p>
+							{#if i < FORM_CONTENT[membershipFormStep].description.length - 1}
+								<br />
+							{/if}
+						{/key}
 					{/each}
 				</div>
 
 				<div class="primary">
 					<!-- FORM ---------------------------------------------- -->
 					<div id="membership--form-body">
-						<!-- STEP 0--------------------------------------------- -->
+						<!-- STEP 0 -------------------------------------------- -->
 						{#if membershipFormStep === 0}
 							<div class="form--section clamp--s">
-								<form method="POST" action="?/login" use:enhance={handleLoginSubmit}>
+								<form
+									method="POST"
+									action="?/login"
+									use:enhance={handleLoginSubmit}
+									in:fade={{ duration: ANIM_CONFIG.duration }}
+								>
 									<h4 class="form--text form--text--heading">Log In</h4>
 									<p class="form--text form--text--annotation">
 										For existing FairGo website users who have previously Signed Up.
@@ -280,7 +453,12 @@
 
 								{@render formDelin('OR')}
 
-								<form method="POST" action="?/signup" use:enhance={handleSignUpSubmit}>
+								<form
+									method="POST"
+									action="?/signup"
+									use:enhance={handleSignUpSubmit}
+									in:fade={{ duration: ANIM_CONFIG.duration, delay: ANIM_CONFIG.delay }}
+								>
 									<h4 class="form--text form--text--heading">New User</h4>
 									<p class="form--text form--text--annotation">We just need a few details to get started.</p>
 
@@ -307,7 +485,7 @@
 									/>
 
 									<Button
-										label={formSignUpStatus === 'idle' ? 'Log In' : 'Sending...'}
+										label={formSignUpStatus === 'idle' ? 'Sign Up' : 'Sending...'}
 										type="submit"
 										disabled={formSignUpStatus === 'pending'}
 									/>
@@ -315,9 +493,14 @@
 							</div>
 						{/if}
 
-						<!-- STEP 2--------------------------------------------- -->
-						{#if membershipFormStep === 2}
-							{#if data.session && data.user}
+						<!-- STEP 1 -------------------------------------------- -->
+						{#if membershipFormStep === 1}
+							{@render feeSelector()}
+						{/if}
+
+						<!-- STEP 2 -------------------------------------------- -->
+						{#if data.session && data.user}
+							{#if membershipFormStep === 2}
 								<div class="form--section clamp--s">
 									<form
 										bind:this={formEltElectoralRollDetails}
@@ -325,7 +508,7 @@
 										action="?/updateElectoralRollDetails"
 										use:enhance={handleElectoralRollDetailsSubmit}
 									>
-										<div class="row">
+										<div class="row" in:fade={{ duration: ANIM_CONFIG.duration }}>
 											<Input
 												id="membershipDob"
 												name="membershipDob"
@@ -345,17 +528,19 @@
 											/>
 										</div>
 
-										<Input
-											id="membershipStreetAddress"
-											name="membershipStreetAddress"
-											label="Street Address"
-											type="text"
-											placeholder="e.g. 72 Fair Street"
-											value={data.profile?.street_address || ''}
-											required
-										/>
+										<div class="row" in:fade={{ duration: ANIM_CONFIG.duration, delay: ANIM_CONFIG.delay }}>
+											<Input
+												id="membershipStreetAddress"
+												name="membershipStreetAddress"
+												label="Street Address"
+												type="text"
+												placeholder="e.g. 72 Fair Street"
+												value={data.profile?.street_address || ''}
+												required
+											/>
+										</div>
 
-										<div class="row">
+										<div class="row" in:fade={{ duration: ANIM_CONFIG.duration, delay: ANIM_CONFIG.delay * 2 }}>
 											<Input
 												id="membershipSuburb"
 												name="membershipSuburb"
@@ -379,38 +564,136 @@
 										</div>
 									</form>
 								</div>
-							{:else}
-								<div class="form--section fallback">
-									<AlertBox
-										label="Error"
-										message="You must be logged in to complete this step."
-										colorway="sentiment-negative"
-										icon={OctagonAlertIcon}
-									/>
-								</div>
 							{/if}
+						{:else}
+							{@render fallbackUnauthorized()}
 						{/if}
 
 						<!-- STEP 3--------------------------------------------- -->
-						{#if membershipFormStep === 3}
-							<div class="form--section clamp--s">
-								<form>
-									<Input
-										id="streetAddress"
-										name="streetAddress"
-										label="Street Address"
-										type="text"
-										placeholder="e.g. 72 Fair Street"
-										required
-									/>
+						{#if data.session && data.user}
+							{#if membershipFormStep === 3}
+								<div class="form--section clamp--s">
+									<form
+										bind:this={formEltConsent}
+										method="POST"
+										action="?/updateConsent"
+										use:enhance={handleConsentSubmit}
+									>
+										<h4 class="form--text form--text--heading" in:fade={{ duration: ANIM_CONFIG.duration }}>
+											Your Pledge:
+										</h4>
+										<p class="form--text form--text--annotation" in:fade={{ duration: ANIM_CONFIG.duration }}>
+											I hereby join FairGo For Australians, committing to its Objectives and Rules, and agreeing to
+											follow decisions of the Party as per these Rules. I confirm my details are true and I'm enrolled
+											at the address provided with the Australian Electoral Commission. I'm here to back FairGo and no
+											other party, bringing my full focus to the fight for a fair go for all Australians.
+										</p>
 
-									<div class="row">
-										<Input id="suburb" name="suburb" label="Suburb" type="text" required />
-										<Input id="addressPostcode" name="addressPostode" label="Postcode" type="text" required />
-									</div>
-								</form>
-							</div>
+										<div class="row" in:fade={{ duration: ANIM_CONFIG.duration, delay: ANIM_CONFIG.delay }}>
+											<InputCheckbox
+												id="consentPledge"
+												name="consentPledge"
+												label="I agree to the pledge"
+												checked={!!(data.profile?.pledge_accepted_at && data.profile?.party_exclusivity_confirmed_at)}
+												required
+											/>
+										</div>
+
+										<div class="row" in:fade={{ duration: ANIM_CONFIG.duration, delay: ANIM_CONFIG.delay * 2 }}>
+											{@render formDelin('and')}
+										</div>
+
+										<h4
+											class="form--text form--text--heading"
+											in:fade={{ duration: ANIM_CONFIG.duration, delay: ANIM_CONFIG.delay * 3 }}
+										>
+											Your Consent:
+										</h4>
+										<p
+											class="form--text form--text--annotation"
+											in:fade={{ duration: ANIM_CONFIG.duration, delay: ANIM_CONFIG.delay * 3 }}
+										>
+											I confirm I am enrolled to vote and consent to the sharing of my personal information with
+											electoral authorities for verification and compliance purposes, as required by law.
+										</p>
+
+										<div class="row" in:fade={{ duration: ANIM_CONFIG.duration, delay: ANIM_CONFIG.delay * 4 }}>
+											<InputCheckbox
+												id="consentElectoral"
+												name="consentElectoral"
+												label="I give my consent"
+												checked={!!data.profile?.aec_data_sharing_consent_at}
+												required
+											/>
+										</div>
+									</form>
+								</div>
+							{/if}
+						{:else}
+							{@render fallbackUnauthorized()}
 						{/if}
+
+						<!-- STEP 4 -------------------------------------------- -->
+						<!-- {#if !data.profile?.is_member} -->
+						<!-- 	youre already a member! -->
+						<!-- {:else} -->
+						{#if data.session && data.user}
+							{#if membershipFormStep === 4 && data.profile?.is_member}
+								<div class="form--section clamp--s">
+									<h4 class="form--text form--text--heading" in:fade={{ duration: ANIM_CONFIG.duration }}>
+										Payment Summary
+									</h4>
+
+									<div class="list-container">
+										<div class="item" in:fade={{ duration: ANIM_CONFIG.duration, delay: ANIM_CONFIG.delay }}>
+											<span class="text text--label">Membership Tier:</span>
+											<span class="text text--value">{feeSelectorLabel}</span>
+										</div>
+
+										<div class="item" in:fade={{ duration: ANIM_CONFIG.duration, delay: ANIM_CONFIG.delay * 2 }}>
+											<span class="text text--label">Annual Fee:</span>
+											<span class="text text--value">${feeSelectorValue}</span>
+										</div>
+									</div>
+
+									<p
+										class="form--text form--text--annotation"
+										in:fade={{ duration: ANIM_CONFIG.duration, delay: ANIM_CONFIG.delay * 3 }}
+									>
+										Membership fees are due annually. You can choose to automatically renew your membership, or manage
+										your renewals manually.
+									</p>
+
+									<div class="row" in:fade={{ duration: ANIM_CONFIG.duration, delay: ANIM_CONFIG.delay * 4 }}>
+										<InputCheckbox
+											id="recurringMembership"
+											name="recurringMembership"
+											label="Renew membership automatically each year"
+											bind:checked={paymentRecurringEnabled}
+										/>
+									</div>
+
+									<div class="row" in:fade={{ duration: ANIM_CONFIG.duration, delay: ANIM_CONFIG.delay * 5 }}>
+										<Button
+											fit="extrinsic"
+											label={paymentLoading ? 'Redirecting...' : 'Proceed to Payment'}
+											onclick={handleProceedToPayment}
+											disabled={paymentLoading}
+										/>
+									</div>
+								</div>
+							{:else if membershipFormStep === 4 && data.profile?.is_member}
+								<AlertBox
+									label="Error"
+									message="You already have an active FairGo membership!"
+									colorway="sentiment-negative"
+									icon={OctagonAlertIcon}
+								/>
+							{/if}
+						{/if}
+						<!-- {:else} -->
+						<!-- 	{@render fallbackUnauthorized()} -->
+						<!-- {/if} -->
 					</div>
 
 					<!-- FOOTER: Form Nav Controller ----------------------- -->
@@ -425,7 +708,7 @@
 								intent="primary"
 								colorway="primary"
 								onclick={handleNext}
-								disabled={isNextButtonDisabled}
+								disabled={!data.session || !data.user || isNextButtonDisabled}
 							/>
 						</footer>
 					{/if}
@@ -495,9 +778,9 @@
 
 				/* HEADER ----------------------------------------------- */
 				& > header {
-					height: fit-content;
+					height: var(--sp-10);
 					min-height: var(--sp-10);
-					padding: var(--loc-gap);
+					padding: 0 var(--loc-gap);
 					position: sticky;
 					top: 0;
 					display: grid;
@@ -512,6 +795,7 @@
 						grid-column: span var(--loc-grid-cols);
 						display: flex;
 						flex-direction: column;
+						justify-content: center;
 
 						.title {
 							&.title--secondary {
@@ -582,9 +866,6 @@
 								display: flex;
 								flex-direction: column;
 								gap: var(--gap-l);
-								&.fallback {
-									align-items: center;
-								}
 
 								/* FORM ------------------------------------------------- */
 								form {
@@ -600,16 +881,41 @@
 										display: flex;
 										gap: var(--loc-gap);
 									}
+								}
 
-									/* FORM: Text ------------------------------------------- */
-									.form--text {
-										text-align: center;
-										&.form--text--heading {
-											font: var(--font--heading--s);
-										}
-										&.form--text--annotation {
-											color: var(--clr-ink-tr-heavy-x);
-											font: var(--font--body--s);
+								/* FORM SECTION: Text ----------------------------------- */
+								.form--text {
+									text-align: center;
+									&.form--text--heading {
+										font: var(--font--heading--s);
+									}
+									&.form--text--annotation {
+										color: var(--clr-ink-tr-heavy-x);
+										font: var(--font--body--s);
+									}
+								}
+
+								/* FORM SECTION: List ----------------------------------- */
+								.list-container {
+									--loca-gap: var(--gap-s);
+									display: flex;
+									flex-direction: column;
+
+									& > .item {
+										height: var(--sp-5);
+										display: flex;
+										justify-content: space-between;
+										align-items: center;
+										border-top: var(--bdw) solid var(--clr-primary-tr-light);
+
+										& > .text {
+											&.text--label {
+												font: var(--font--label);
+											}
+											&.text--value {
+												font: var(--font--label--secondary--l);
+												text-transform: var(--text-case--label);
+											}
 										}
 									}
 								}
@@ -739,6 +1045,7 @@
 		.label {
 			color: var(--clr-ink-tr-heavy-x);
 			font: var(--font--heading--secondary--s);
+			text-transform: var(--text-case--heading--secondary);
 		}
 	}
 
@@ -783,6 +1090,179 @@
 					font: var(--loc-font);
 					text-decoration: underline;
 					cursor: pointer;
+				}
+			}
+		}
+	}
+
+	/* FEE SELECTOR ----------------------------------------- */
+	#fee-selector {
+		--loc-gap: var(--gap-max);
+		--loc-transition: var(--t-2);
+		display: flex;
+		flex-direction: column;
+		gap: var(--loc-gap);
+		width: 100%;
+
+		/* HEADER ----------------------------------------------- */
+		header {
+			/* height: var(--sp-9); */
+			display: flex;
+			justify-content: space-between;
+
+			.wrapper {
+				--loc-flex: 2;
+				--loc-justify-content: center;
+				&:first-child {
+					--loc-flex: 1;
+					--loc-justify-content: start;
+				}
+				&:last-child {
+					--loc-flex: 1;
+					--loc-justify-content: end;
+				}
+				flex: var(--loc-flex);
+				display: flex;
+				justify-content: var(--loc-justify-content);
+
+				.text--label {
+					font: var(--font--heading--secondary--l);
+					font-size: var(--fs-12);
+				}
+			}
+		}
+
+		/* BODY ------------------------------------------------- */
+		& > .body {
+			--loc-container--height: var(--sp-4);
+			height: var(--loc-container--height);
+			position: relative;
+			display: flex;
+			align-items: center;
+			/* background-color: gainsboro; */
+
+			/* METER ------------------------------------------------ */
+			.meter {
+				height: var(--sp-2);
+				width: 100%;
+				overflow: hidden;
+				background-color: var(--clr-dv-tr-light);
+				border: var(--bdw) solid var(--clr-dv);
+				border-radius: var(--bdr-s);
+
+				.fill {
+					width: var(--loc-meter--perc);
+					height: 100%;
+					background-color: var(--clr-primary);
+					border-radius: 0 var(--bdr-s) var(--bdr-s) 0;
+					transition: calc(var(--loc-transition) * 2);
+				}
+			}
+
+			/* PIP CONTAINER ---------------------------------------- */
+			.pip-container {
+				position: absolute;
+				top: 0;
+				right: 0;
+				bottom: 0;
+				left: 0;
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+
+				.wrapper {
+					--loc-flex: 2;
+					--loc-justify-content: center;
+					&:first-child {
+						--loc-flex: 1;
+						--loc-justify-content: start;
+					}
+					&:last-child {
+						--loc-flex: 1;
+						--loc-justify-content: end;
+					}
+					flex: var(--loc-flex);
+					display: flex;
+					justify-content: var(--loc-justify-content);
+					align-items: center;
+
+					.pip {
+						--loc-size: var(--loc-container--height);
+						--loc-clr-bg: var(--clr-dv-tr-heavy);
+						--loc-clr-border: var(--clr-dv-heavy-tr-light);
+						--loc-transform--scale: 1;
+						--loc-transform--rot: 0deg;
+						--loc-blur: var(--sp-min);
+						&[data-active='true'] {
+							--loc-clr-bg: var(--clr-primary-tr-light);
+							--loc-clr-border: var(--clr-ev);
+							--loc-transform--scale: 1.5;
+							--loc-transform--rot: 45deg;
+							--loc-blur: var(--sp-1);
+						}
+						&:hover {
+							--loc-transform--scale: 1.5;
+						}
+						&:active {
+							--loc-transform--scale: 0.875;
+						}
+						width: var(--loc-size);
+						height: var(--loc-size);
+						background-color: var(--loc-clr-bg);
+						backdrop-filter: blur(var(--loc-blur));
+						border: var(--bdw) solid var(--loc-clr-border);
+						border-radius: var(--bdr-s);
+						cursor: pointer;
+						transform: scale(var(--loc-transform--scale)) rotate(var(--loc-transform--rot));
+						transition: var(--loc-transition);
+					}
+				}
+			}
+		}
+
+		/* FOOTER ----------------------------------------------- */
+		footer {
+			--loc-gap: var(--gap-l);
+			width: 100%;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: var(--loc-gap);
+
+			.title-container {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+
+				.text--title {
+					color: var(--clr-ink);
+					font: var(--font--heading--secondary--l);
+					text-transform: var(--text-case--heading--secondary);
+				}
+			}
+
+			.fee-container {
+				--loc-gap: var(--gap-s);
+				width: 100%;
+				max-width: calc(var(--sp-12) * 3);
+				padding: var(--loc-gap) calc(var(--loc-gap) * 2);
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				/* gap: var(--gap-max); */
+				background-color: var(--clr-dv-tr-light);
+				border: var(--bdw) solid var(--clr-dv);
+				border-radius: var(--bdr-s);
+
+				.text {
+					&.text--primary {
+						font: var(--font--label--secondary--l);
+						font-size: var(--fs-8);
+					}
+					&.text--secondary {
+						font: var(--font--body--s);
+						font-weight: var(--font-weight--body--l);
+					}
 				}
 			}
 		}

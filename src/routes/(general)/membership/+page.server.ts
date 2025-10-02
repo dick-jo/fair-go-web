@@ -105,5 +105,42 @@ export const actions: Actions = {
 		} catch (error) {
 			return fail(400, { message: error instanceof Error ? error.message : 'Update failed' })
 		}
+	},
+
+	// UPDATE CONSENT (Profile) ----------------------------- //
+	updateConsent: async ({ request, locals: { supabase, safeGetSession } }) => {
+		const { user } = await safeGetSession()
+		if (!user) return fail(401, { message: 'Not authenticated' })
+
+		const formData = await request.formData()
+
+		// Extract checkbox values
+		const pledgeAccepted = formData.get('consentPledge') === 'on'
+		const electoralConsent = formData.get('consentElectoral') === 'on'
+
+		// Server-side validation - both must be checked
+		if (!pledgeAccepted || !electoralConsent) {
+			return fail(400, {
+				message: 'You must accept both the pledge and consent to continue'
+			})
+		}
+
+		try {
+			const now = new Date().toISOString()
+
+			const result = await updateProfile(
+				supabase,
+				user.id,
+				{
+					pledge_accepted_at: now,
+					party_exclusivity_confirmed_at: now,
+					aec_data_sharing_consent_at: now
+				},
+				false
+			)
+			return { message: result.message }
+		} catch (error) {
+			return fail(400, { message: error instanceof Error ? error.message : 'Update failed' })
+		}
 	}
 }
