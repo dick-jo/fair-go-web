@@ -769,7 +769,8 @@ export type Database = {
     Tables: {
       authors: {
         Row: {
-          avatar_media_id: string | null
+          avatar_alt: string | null
+          avatar_path: string | null
           bio: string | null
           created_at: string | null
           email: string | null
@@ -778,7 +779,8 @@ export type Database = {
           status: string | null
         }
         Insert: {
-          avatar_media_id?: string | null
+          avatar_alt?: string | null
+          avatar_path?: string | null
           bio?: string | null
           created_at?: string | null
           email?: string | null
@@ -787,7 +789,8 @@ export type Database = {
           status?: string | null
         }
         Update: {
-          avatar_media_id?: string | null
+          avatar_alt?: string | null
+          avatar_path?: string | null
           bio?: string | null
           created_at?: string | null
           email?: string | null
@@ -795,173 +798,136 @@ export type Database = {
           name?: string
           status?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "authors_avatar_media_id_fkey"
-            columns: ["avatar_media_id"]
-            isOneToOne: false
-            referencedRelation: "media"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       carousel_items: {
         Row: {
           href: string
           id: string
+          image_alt: string | null
+          image_path: string | null
           label: string
-          media_id: string | null
           order: number | null
           title: string
         }
         Insert: {
           href: string
           id?: string
+          image_alt?: string | null
+          image_path?: string | null
           label: string
-          media_id?: string | null
           order?: number | null
           title: string
         }
         Update: {
           href?: string
           id?: string
+          image_alt?: string | null
+          image_path?: string | null
           label?: string
-          media_id?: string | null
           order?: number | null
           title?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "carousel_items_media_id_fkey"
-            columns: ["media_id"]
-            isOneToOne: false
-            referencedRelation: "media"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      media: {
-        Row: {
-          alt: string
-          bucket: string
-          created_at: string | null
-          id: string
-          mime: string | null
-          path: string
-        }
-        Insert: {
-          alt?: string
-          bucket?: string
-          created_at?: string | null
-          id?: string
-          mime?: string | null
-          path: string
-        }
-        Update: {
-          alt?: string
-          bucket?: string
-          created_at?: string | null
-          id?: string
-          mime?: string | null
-          path?: string
         }
         Relationships: []
       }
       news_articles: {
         Row: {
-          author_id: string
+          category: string[] | null
           content: string
           created_at: string | null
-          featured_image_id: string | null
+          featured_image_alt: string | null
+          featured_image_path: string | null
           id: string
-          order_priority: number | null
           published_at: string | null
-          slug: string | null
+          short_title: string | null
+          slug: string
           snippet: string
           status: string | null
           title: string
+          type: string
         }
         Insert: {
-          author_id: string
+          category?: string[] | null
           content: string
           created_at?: string | null
-          featured_image_id?: string | null
+          featured_image_alt?: string | null
+          featured_image_path?: string | null
           id?: string
-          order_priority?: number | null
           published_at?: string | null
-          slug?: string | null
+          short_title?: string | null
+          slug: string
           snippet: string
           status?: string | null
           title: string
+          type?: string
         }
         Update: {
-          author_id?: string
+          category?: string[] | null
           content?: string
           created_at?: string | null
-          featured_image_id?: string | null
+          featured_image_alt?: string | null
+          featured_image_path?: string | null
           id?: string
-          order_priority?: number | null
           published_at?: string | null
-          slug?: string | null
-          snippet?: string
-          status?: string | null
-          title?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "news_articles_author_id_fkey"
-            columns: ["author_id"]
-            isOneToOne: false
-            referencedRelation: "authors"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "news_articles_featured_image_id_fkey"
-            columns: ["featured_image_id"]
-            isOneToOne: false
-            referencedRelation: "media"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      policy_content: {
-        Row: {
-          category: string | null
-          content: string | null
-          created_at: string | null
-          id: string
-          order_priority: number | null
-          short_title: string | null
-          snippet: string
-          status: string | null
-          title: string
-          type: string
-          updated_at: string | null
-        }
-        Insert: {
-          category?: string | null
-          content?: string | null
-          created_at?: string | null
-          id?: string
-          order_priority?: number | null
           short_title?: string | null
-          snippet: string
-          status?: string | null
-          title: string
-          type: string
-          updated_at?: string | null
-        }
-        Update: {
-          category?: string | null
-          content?: string | null
-          created_at?: string | null
-          id?: string
-          order_priority?: number | null
-          short_title?: string | null
+          slug?: string
           snippet?: string
           status?: string | null
           title?: string
           type?: string
+        }
+        Relationships: []
+      }
+      policy_content: {
+        Row: {
+          category: string[] | null
+          created_at: string | null
+          id: string
+          introduction: string | null
+          order_priority: number | null
+          outcomes: string | null
+          problem: string | null
+          short_title: string | null
+          slug: string | null
+          snippet: string
+          solution: string | null
+          solution_rationale: string | null
+          status: string | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          category?: string[] | null
+          created_at?: string | null
+          id?: string
+          introduction?: string | null
+          order_priority?: number | null
+          outcomes?: string | null
+          problem?: string | null
+          short_title?: string | null
+          slug?: string | null
+          snippet: string
+          solution?: string | null
+          solution_rationale?: string | null
+          status?: string | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          category?: string[] | null
+          created_at?: string | null
+          id?: string
+          introduction?: string | null
+          order_priority?: number | null
+          outcomes?: string | null
+          problem?: string | null
+          short_title?: string | null
+          slug?: string | null
+          snippet?: string
+          solution?: string | null
+          solution_rationale?: string | null
+          status?: string | null
+          title?: string
           updated_at?: string | null
         }
         Relationships: []
@@ -996,7 +962,7 @@ export type Database = {
           date_of_birth?: string | null
           first_name?: string | null
           id: string
-          is_member: boolean
+          is_member?: boolean
           is_volunteer?: boolean
           last_name?: string | null
           membership_expires_at?: string | null
@@ -1152,13 +1118,6 @@ export type Database = {
             columns: ["pet_policy_3_id"]
             isOneToOne: false
             referencedRelation: "policy_content"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "team_members_profile_image_id_fkey"
-            columns: ["profile_image_id"]
-            isOneToOne: false
-            referencedRelation: "media"
             referencedColumns: ["id"]
           },
         ]
@@ -1504,6 +1463,10 @@ export type Database = {
         Args: { bucketid: string; metadata: Json; name: string; owner: string }
         Returns: undefined
       }
+      delete_leaf_prefixes: {
+        Args: { bucket_ids: string[]; names: string[] }
+        Returns: undefined
+      }
       delete_prefix: {
         Args: { _bucket_id: string; _name: string }
         Returns: boolean
@@ -1569,6 +1532,10 @@ export type Database = {
           name: string
           updated_at: string
         }[]
+      }
+      lock_top_prefixes: {
+        Args: { bucket_ids: string[]; names: string[] }
+        Returns: undefined
       }
       operation: {
         Args: Record<PropertyKey, never>
@@ -1640,12 +1607,16 @@ export type Database = {
           levels?: number
           limits?: number
           prefix: string
+          sort_column?: string
+          sort_column_after?: string
+          sort_order?: string
           start_after?: string
         }
         Returns: {
           created_at: string
           id: string
           key: string
+          last_accessed_at: string
           metadata: Json
           name: string
           updated_at: string

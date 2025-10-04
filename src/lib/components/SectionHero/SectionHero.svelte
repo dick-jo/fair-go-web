@@ -1,13 +1,13 @@
 <script lang="ts">
 	import BrandDelin from '../BrandDelin/BrandDelin.svelte'
 	import HeroCarousel from '../HeroCarousel/HeroCarousel.svelte'
-	import type { HeroCarouselItem } from '../HeroCarousel/types'
 	import Button from '$lib/components/Button/Button.svelte'
 	import Input from '$lib/components/Input/Input.svelte'
 	import { toaster } from '$lib/services/toaster/service.svelte'
+	import type { Tables } from '$lib/types/supabase.types'
 
 	interface Props {
-		heroCarouselItems: HeroCarouselItem[]
+		heroCarouselItems: Tables<'carousel_items'>[]
 	}
 
 	let { heroCarouselItems }: Props = $props()
@@ -68,9 +68,12 @@
 
 <!-- MARKUP -------------------------------------------- -->
 <section id="section--hero" class="host section-hero">
+	<!-- PRIMARY ------------------------------------------- -->
 	<div class="primary">
 		<HeroCarousel items={heroCarouselItems} />
 	</div>
+
+	<!-- SECONDARY ----------------------------------------- -->
 	<div class="secondary">
 		<div class="wrapper">
 			<div class="title-container">
@@ -171,6 +174,7 @@
 			@media screen and (max-width: 1080px) {
 				--loc-grid-cols: 12;
 			}
+			position: relative;
 			grid-column: span var(--loc-grid-cols);
 
 			/* WRAPPER ---------------------------------------------- */
@@ -184,8 +188,6 @@
 				align-items: center;
 				gap: var(--loc-gap);
 				background-color: var(--loc-clr-bg);
-				/* border: var(--bdw) solid var(--clr-dv-tr-heavy); */
-				/* border-radius: var(--bdr-l); */
 				text-align: center;
 
 				/* TITLES ----------------------------------------------- */
@@ -194,7 +196,6 @@
 					flex-direction: column;
 
 					.title--sub {
-						/* color: var(--clr-ink-tr-heavy-x); */
 						font: var(--font--heading--secondary);
 						font-weight: bold;
 						text-transform: var(--text-case--heading);
@@ -204,7 +205,6 @@
 						display: none;
 						color: var(--clr-ink);
 						font: var(--font--heading--s);
-						/* font-weight: 800; */
 					}
 				}
 
@@ -217,7 +217,6 @@
 				/* FORM ------------------------------------------------- */
 				form {
 					--loc-gap: var(--gap-s);
-					/* background-color: red; */
 					width: 100%;
 					flex: 1;
 					display: flex;

@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { ArrowRightIcon, type Icon } from '@lucide/svelte'
+	import type { ChipProps } from '../Chip/types'
+	import Chip from '../Chip/Chip.svelte'
 
 	interface Props {
 		title: string
@@ -7,13 +9,18 @@
 		href?: string
 		linkText?: string
 		icon?: typeof Icon
+		chips?: ChipProps[]
 	}
 
-	let { title, content, href, linkText = 'Read More', icon: IconComponent }: Props = $props()
+	let { title, content, href, linkText = 'Read More', icon: IconComponent, chips = [] }: Props = $props()
+
+	// Determine the tag and props
+	let tag = $derived(href ? 'a' : 'div')
+	let tagProps = $derived(href ? { href } : {})
 </script>
 
 <!-- MARKUP -------------------------------------------- -->
-<div class={['host', 'content-snippet-tile', href && 'as--link']}>
+<svelte:element this={tag} {...tagProps} class={['host', 'content-snippet-tile', href && 'as--link']}>
 	<div class="header">
 		<h3 class="title">{title}</h3>
 		<div class="icon-container">
@@ -25,13 +32,21 @@
 		{content}
 	</p>
 
+	{#if chips.length > 0}
+		<div class="chips-container">
+			{#each chips as chip}
+				<Chip label={chip.label} href={chip.href} />
+			{/each}
+		</div>
+	{/if}
+
 	{#if href}
-		<a class="link" {href}>
+		<div class="hint">
 			<span>{linkText}</span>
 			<ArrowRightIcon />
-		</a>
+		</div>
 	{/if}
-</div>
+</svelte:element>
 
 <!-- CSS ----------------------------------------------- -->
 <style>
@@ -109,8 +124,14 @@
 			font: var(--font--body--s);
 		}
 
-		/* LINK ------------------------------------------------- */
-		.link {
+		/* CHIPS CONTAINER -------------------------------------- */
+		.chips-container {
+			display: flex;
+			gap: var(--gap-s);
+		}
+
+		/* HINT ------------------------------------------------- */
+		.hint {
 			--loc-height: var(--sp-3);
 			--loc-clr-bg: var(--clr-dv-tr-heavy);
 			--loc-clr-border: var(--clr-dv);

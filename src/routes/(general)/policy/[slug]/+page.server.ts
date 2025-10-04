@@ -2,18 +2,18 @@ import { error } from '@sveltejs/kit'
 import type { PageServerLoad } from './$types'
 
 export const load: PageServerLoad = async ({ params, locals: { supabase } }) => {
-	const { data: articleData, error: articleError } = await supabase
-		.from('news_articles')
+	const { data: policyData, error: policyError } = await supabase
+		.from('policy_content')
 		.select('*')
 		.eq('slug', params.slug)
 		.eq('status', 'published')
 		.single()
 
-	if (articleError || !articleData) {
-		throw error(404, 'Article not found')
+	if (policyError || !policyData) {
+		throw error(404, 'Policy not found')
 	}
 
 	return {
-		article: articleData
+		policy: policyData
 	}
 }

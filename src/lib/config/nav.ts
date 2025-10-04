@@ -1,4 +1,4 @@
-export type NavCategory = 'CONTENT' | 'OUR PLAN' | 'OUR TEAM' | 'TAKE ACTION'
+export type NavCategory = 'CONTENT' | 'OUR PLAN' | 'OUR TEAM' | 'TAKE ACTION' | 'GET INVOLVED'
 
 export type NavItem = {
 	label: string
@@ -20,16 +20,9 @@ export const NAV_ITEMS: NavItem[] = [
 		showInFooter: true,
 		category: 'CONTENT'
 	},
-	// {
-	// 	label: 'Resources',
-	// 	href: '/resources',
-	// 	showInTopNav: true,
-	// 	showInFooter: true,
-	// 	category: 'CONTENT'
-	// },
 	{
 		label: 'Our Plan',
-		href: '/our-plan',
+		href: '/policy',
 		showInTopNav: true,
 		showInFooter: true,
 		category: 'OUR PLAN',
@@ -67,38 +60,51 @@ export const NAV_ITEMS: NavItem[] = [
 		]
 	},
 	{
-		label: 'Take Action',
-		href: '/take-action',
+		label: 'Get Involved',
+		href: '/get-involved',
 		showInTopNav: true,
 		showInFooter: true,
-		category: 'TAKE ACTION',
+		category: 'GET INVOLVED',
 		children: [
-			{
-				label: 'Petitions',
-				href: '/take-action/petitions',
-				showInFooter: true,
-				category: 'TAKE ACTION'
-			},
-			{
-				label: 'Donate',
-				href: '/donate',
-				showInFooter: true,
-				category: 'TAKE ACTION'
-			},
-			{
-				label: 'Surveys',
-				href: '/take-action/surveys',
-				showInFooter: true,
-				category: 'TAKE ACTION'
-			},
-			{
-				label: 'Volunteer',
-				href: '/take-action/volunteer',
-				showInFooter: true,
-				category: 'TAKE ACTION'
-			}
+			{ label: 'Become a Member', href: '/membership', showInFooter: true, category: 'GET INVOLVED' },
+			{ label: 'Donate', href: '/donate', showInFooter: true, category: 'GET INVOLVED' },
+			{ label: 'Volunter', href: '/volunteer', showInFooter: true, category: 'GET INVOLVED' }
 		]
 	}
+
+	// {
+	// 	label: 'Take Action',
+	// 	href: '/take-action',
+	// 	showInTopNav: true,
+	// 	showInFooter: true,
+	// 	category: 'TAKE ACTION',
+	// 	children: [
+	// 		{
+	// 			label: 'Petitions',
+	// 			href: '/take-action/petitions',
+	// 			showInFooter: true,
+	// 			category: 'TAKE ACTION'
+	// 		},
+	// 		{
+	// 			label: 'Donate',
+	// 			href: '/donate',
+	// 			showInFooter: true,
+	// 			category: 'TAKE ACTION'
+	// 		},
+	// 		{
+	// 			label: 'Surveys',
+	// 			href: '/take-action/surveys',
+	// 			showInFooter: true,
+	// 			category: 'TAKE ACTION'
+	// 		},
+	// 		{
+	// 			label: 'Volunteer',
+	// 			href: '/take-action/volunteer',
+	// 			showInFooter: true,
+	// 			category: 'TAKE ACTION'
+	// 		}
+	// 	]
+	// }
 ]
 
 export type SocialLink = {
@@ -113,4 +119,4 @@ export const SOCIAL_LINKS: SocialLink[] = [
 	{ label: 'Instagram', href: 'https://instagram.com/your-handle' }
 ]
 
-export const NAV_CATEGORIES: NavCategory[] = ['CONTENT', 'OUR PLAN', 'OUR TEAM', 'TAKE ACTION']
+export const NAV_CATEGORIES: NavCategory[] = ['CONTENT', 'OUR PLAN', 'OUR TEAM', 'GET INVOLVED']

@@ -1,18 +1,19 @@
 <script lang="ts">
 	import type { PageData } from './$types'
 	import SectionHero from '$lib/components/SectionHero/SectionHero.svelte'
-	import ContentSnippetTile from '$lib/components/ContentSnippetTile/ContentSnippetTile.svelte'
 	import NewsSnippetTile from '$lib/components/NewsSnippetTile/NewsSnippetTile.svelte'
-	import { getPolicyIcon } from '$lib/utils/policyIcons'
-	import { LandPlotIcon, LightbulbIcon, NewspaperIcon } from '@lucide/svelte'
+	import { LandPlotIcon, NewspaperIcon } from '@lucide/svelte'
 	import SectionCtaRow from '$lib/components/SectionCtaRow/SectionCtaRow.svelte'
+	import ContentSnippetTile from '$lib/components/ContentSnippetTile/ContentSnippetTile.svelte'
+	import { getPolicyIcon } from '$lib/utils'
 
 	let { data }: { data: PageData } = $props()
+	$inspect(data)
 </script>
 
 <SectionHero heroCarouselItems={data.carouselItems} />
 
-<!-- NEWS----------------------------------------------- -->
+<!-- NEWS ---------------------------------------------- -->
 <section id="section--news-snippets-row">
 	<div class="section-header">
 		<NewspaperIcon />
@@ -31,7 +32,7 @@
 <section id="section--policy-snippets-row">
 	<div class="section-header">
 		<LandPlotIcon />
-		<h2 class="title">OUR POLICY</h2>
+		<h2 class="title">OUR POLICIES</h2>
 	</div>
 	<div class="section-body">
 		{#each data.policies as policy}
@@ -39,7 +40,7 @@
 				<ContentSnippetTile
 					title={policy.short_title || policy.title}
 					content={policy.snippet}
-					href={`#policy-${policy.id}`}
+					href={`/policy/${policy.slug}`}
 					icon={getPolicyIcon(policy.category)}
 				/>
 			</div>
@@ -50,26 +51,7 @@
 <!-- CTA------------------------------------------------ -->
 <SectionCtaRow />
 
-<!-- PHILOSOPHY----------------------------------------- -->
-<section id="section--philosophy-snippets-row">
-	<div class="section-header">
-		<LightbulbIcon />
-		<h2 class="title">OUR PHILOSOPHY</h2>
-	</div>
-	<div class="section-body">
-		{#each data.philosophies as philosophy}
-			<div class="item">
-				<ContentSnippetTile
-					title={philosophy.short_title || philosophy.title}
-					content={philosophy.snippet}
-					href={`#philosophy-${philosophy.id}`}
-					icon={getPolicyIcon(philosophy.category)}
-				/>
-			</div>
-		{/each}
-	</div>
-</section>
-
+<!-- CSS ----------------------------------------------- -->
 <style>
 	#section--news-snippets-row {
 		--loc-height: calc(var(--sp-12) * 2);

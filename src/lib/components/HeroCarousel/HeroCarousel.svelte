@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { ArrowLeftIcon, ArrowRightIcon } from '@lucide/svelte'
-	import type { HeroCarouselItem } from './types'
 	import { getMediaUrl, splitStringToChunks } from '$lib/utils'
 	import { blur, fly } from 'svelte/transition'
 	import { HERO_CAROUSEL_T_TRANSITION, HERO_CAROUSEL_T_IDLE } from './constants'
+	import type { Tables } from '$lib/types/supabase.types'
 
 	interface Props {
-		items: HeroCarouselItem[]
+		items: Tables<'carousel_items'>[]
 	}
 
 	let { items }: Props = $props()
@@ -105,8 +105,8 @@
 	<div class="media-container">
 		{#if !isTransitioning}
 			<img
-				src={getMediaUrl(items[activeItemIndex].media)}
-				alt={items[activeItemIndex].media?.alt ?? items[activeItemIndex].label}
+				src={getMediaUrl(items[activeItemIndex].image_path)}
+				alt={items[activeItemIndex].image_alt ?? items[activeItemIndex].label}
 				transition:blur={{ duration: HERO_CAROUSEL_T_TRANSITION }}
 				onoutroend={handleOutroEnd}
 			/>

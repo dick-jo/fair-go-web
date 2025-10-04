@@ -99,6 +99,13 @@ export async function sendLoginMagicLink(
 		if (error.code === 'over_email_send_rate_limit') {
 			throw new Error('Please wait a moment before requesting another magic link')
 		}
+
+		if (error.code === 'otp_disabled' || error.message.includes('Signups not allowed')) {
+			throw new Error(
+				'No account found with this email. Please sign up first or check that you provided the correct email address.'
+			)
+		}
+
 		console.error('Magic link send error:', error)
 		throw new Error('Failed to send magic link. Please try again.')
 	}

@@ -1,53 +1,60 @@
 <script lang="ts">
-	import AuthorDateRow from '../AuthorDateRow/AuthorDateRow.svelte'
 	import { getMediaUrl, truncateText } from '$lib/utils'
-	import type { NewsArticle } from '$lib/types'
+	import DateLabel from '$lib/components/DateLabel/DateLabel.svelte'
+	import Chip from '$lib/components/Chip/Chip.svelte'
+	import type { Tables } from '$lib/types/supabase.types'
 
-	// Character limit constant
 	const SNIPPET_MAX_LENGTH = 180
+
+	type NewsArticle = Tables<'news_articles'>
 
 	interface Props {
 		article: NewsArticle
-		variant?: 'default' | 'large-image'
+		presentation?: 'column' | 'row'
 	}
 
-	let { article, variant = 'default' }: Props = $props()
+	let { article, presentation = 'column' }: Props = $props()
 
-	// Format the published date
-	const formattedDate = new Date(article.published_at).toLocaleDateString('en-AU', {
-		year: 'numeric',
-		month: 'short',
-		day: 'numeric'
-	})
-
-	// Truncate the snippet
 	const displaySnippet = truncateText(article.snippet, SNIPPET_MAX_LENGTH)
 </script>
 
-<!-- MARKUP -------------------------------------------- -->
-<a href="/news/{article.slug}" class={['host', 'news-snippet-tile', `variant--${variant}`]}>
+<!-- HTML----------------------------------------------- -->
+<a href="/news/{article.slug}" class={['host', 'news-snippet-tile', `presentation--${presentation}`]}>
+	<!-- MEDIA --------------------------------------------- -->
 	<div class="media-container">
-		{#if article.featured_image}
-			<img src={getMediaUrl(article.featured_image)} alt={article.featured_image.alt || article.title} />
+		{#if article.featured_image_path}
+			<img src={getMediaUrl(article.featured_image_path)} alt={article.featured_image_alt || article.title} />
 		{/if}
 	</div>
+
+	<!-- BODY----------------------------------------------- -->
 	<div class="body">
-		<h3 class="title">{article.title}</h3>
-		<p class="content">
-			{displaySnippet}
-		</p>
-		<AuthorDateRow
-			authorName={article.author.name}
-			authorImageUrl={article.author.avatar_media ? getMediaUrl(article.author.avatar_media) : undefined}
-			date={formattedDate}
-		/>
+		<div class="primary">
+			<div class="title-container">
+				<h4 class="text text--sub">{article.type}</h4>
+				<h3 class="text text--title">{article.title}</h3>
+			</div>
+			<p class="text text--body">{displaySnippet}</p>
+		</div>
+
+		<div class="secondary">
+			{#if article.category && article.category.length > 0}
+				<div class="chips-container">
+					{#each article.category as cat}
+						<Chip href="/categories/{cat}" label={cat} />
+					{/each}
+				</div>
+			{/if}
+
+			<DateLabel date={article.published_at} />
+		</div>
 	</div>
 </a>
 
 <!-- CSS ----------------------------------------------- -->
 <style>
 	.host {
-		--loc-gap: var(--gap-s);
+		--loc-gap: var(--gap-l);
 		--loc-clr-bg: var(--clr-ev-tr-invisible);
 		--loc-clr-ink: var(--clr-ink);
 		--loc-clr-ink--light: var(--clr-ink-tr-heavy-x);
@@ -60,6 +67,7 @@
 		padding: var(--loc-gap);
 		flex: 1;
 		display: flex;
+		flex-direction: column;
 		gap: var(--loc-gap);
 		background-color: var(--loc-clr-bg);
 		transition: var(--loc-transition);
@@ -69,16 +77,10 @@
 
 		/* MEDIA CONTAINER -------------------------------------- */
 		.media-container {
-			--loc-flex: 2;
-			.host.variant--large-image & {
-				--loc-flex: 1;
-			}
-			flex: var(--loc-flex);
-			height: 100%;
+			width: 100%;
+			aspect-ratio: 16/9;
 			overflow: hidden;
 			background-color: var(--clr-dv);
-			border: var(--bdw) solid var(--clr-dv-heavy-tr-light);
-			border-radius: var(--bdr-s);
 			@container (max-width: 400px) {
 				min-height: calc(var(--sp-12) * 2);
 			}
@@ -96,26 +98,50 @@
 
 		/* BODY ------------------------------------------------- */
 		.body {
-			--loc-flex: 3;
-			.host.variant--large-image & {
-				--loc-flex: 1;
-			}
-			flex: var(--loc-flex);
+			flex: 1;
 			display: flex;
 			flex-direction: column;
 			gap: var(--loc-gap);
 
-			.title {
-				font: var(--font--heading--s);
+			/* PRIMARY ---------------------------------------------- */
+			& > .primary {
+				flex: 1;
+				display: flex;
+				flex-direction: column;
+				gap: var(--loc-gap);
+
+				& .text {
+					&.text--title {
+						font: var(--font--heading--s);
+					}
+					&.text--body {
+						color: var(--loc-clr-ink--light);
+						font: var(--font--body--s);
+					}
+					&.text--sub {
+						font: var(--font--label--secondary--s);
+						text-transform: var(--text-case--label);
+					}
+				}
+				.title-container {
+					display: flex;
+					flex-direction: column;
+					gap: var(--gap-min);
+				}
 			}
 
-			.content {
-				flex: 1;
-				color: var(--loc-clr-ink--light);
-				font: var(--font--body--s);
-				font-size: var(--fs-2);
-				line-height: var(--fs-4);
-				/* font-size: var(--fs-2); */
+			/* SECONDARY -------------------------------------------- */
+			& > .secondary {
+				display: flex;
+				/* flex-direction: column; */
+				justify-content: space-between;
+				gap: var(--loc-gap);
+
+				.chips-container {
+					display: flex;
+					flex-wrap: wrap;
+					gap: var(--gap-s);
+				}
 			}
 		}
 	}

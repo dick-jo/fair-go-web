@@ -170,6 +170,7 @@
 	--line-height--body: var(--fs-8);
 	--line-height--body--s: var(--fs-6);
 	--line-height--body--l: var(--fs-10);
+	--line-height--body--max: var(--fs-12);
 
 	/* WEIGHT ----------------------------------------------- */
 	--font-weight--heading: 700;

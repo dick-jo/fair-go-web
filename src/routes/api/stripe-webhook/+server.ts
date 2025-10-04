@@ -98,27 +98,38 @@ export const POST: RequestHandler = async ({ request }) => {
 
 		const subscriptionId = invoice.parent?.subscription_details?.subscription as string
 		const invoiceId = invoice.id as string
+		const customerId = invoice.customer as string
 
 		console.log('Invoice paid for subscription:', subscriptionId)
-		console.log('Invoice ID:', invoiceId)
+		console.log('Customer ID:', customerId)
 
 		if (!subscriptionId) {
 			console.error('No subscription ID found in invoice')
 			return new Response(null, { status: 200 })
 		}
 
-		const { data: profile } = await supabaseAdmin
+		// Try finding by subscription_id first
+		let profile = await supabaseAdmin
 			.from('profiles')
 			.select('id, membership_tier')
 			.eq('stripe_membership_subscription_id', subscriptionId)
 			.single()
 
-		if (!profile) {
+		// If not found, try by customer_id (handles first payment race condition)
+		if (!profile.data) {
+			profile = await supabaseAdmin
+				.from('profiles')
+				.select('id, membership_tier')
+				.eq('stripe_customer_id', customerId)
+				.single()
+		}
+
+		if (!profile.data) {
 			console.error('Could not find profile for subscription:', subscriptionId)
 			return new Response(null, { status: 200 })
 		}
 
-		// NEW: Update expiry date for renewal
+		// Rest of the handler (update expiry, insert transaction)
 		const now = new Date()
 		const expiresAt = new Date(now.getTime() + 365 * 24 * 60 * 60 * 1000)
 
@@ -128,10 +139,10 @@ export const POST: RequestHandler = async ({ request }) => {
 				membership_paid_at: now.toISOString(),
 				membership_expires_at: expiresAt.toISOString()
 			})
-			.eq('id', profile.id)
+			.eq('id', profile.data.id)
 
 		const { error: transactionError } = await supabaseAdmin.from('transactions').insert({
-			user_id: profile.id,
+			user_id: profile.data.id,
 			stripe_payment_id: invoiceId,
 			stripe_subscription_id: subscriptionId,
 			transaction_type: 'membership',

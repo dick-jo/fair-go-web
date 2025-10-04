@@ -132,8 +132,10 @@
 	.host {
 		--loc-gap: var(--gap-l);
 		width: 100%;
+		flex: 1;
 		display: flex;
 		justify-content: center;
+		align-items: end;
 		border-top: var(--bdw) solid var(--clr-dv);
 		@media screen and (max-width: 1600px) {
 			padding: 0 var(--loc-gap);

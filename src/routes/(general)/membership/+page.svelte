@@ -63,7 +63,7 @@
 	let formEltConsent = $state<HTMLFormElement>()
 
 	// MEMBERSHIP FORM: State ------------------------------- //
-	let membershipFormStep = $state<number>(4)
+	let membershipFormStep = $state<number>(0)
 
 	let formLoginStatus = $state<FormStatus>('idle')
 	let formSignUpStatus = $state<FormStatus>('idle')
@@ -389,7 +389,7 @@
 
 		<!-- FORM CONTAINER ------------------------------------ -->
 		<div id="membership--form-container">
-			{#if !data.user && data.profile && membershipFormStep === 0}
+			{#if data.user && data.profile && membershipFormStep === 0}
 				{@render existingUserOverlay()}
 			{/if}
 			<!-- HEADER -------------------------------------------- -->
@@ -499,8 +499,8 @@
 						{/if}
 
 						<!-- STEP 2 -------------------------------------------- -->
-						{#if data.session && data.user}
-							{#if membershipFormStep === 2}
+						{#if membershipFormStep === 2}
+							{#if data.session && data.user}
 								<div class="form--section clamp--s">
 									<form
 										bind:this={formEltElectoralRollDetails}
@@ -564,14 +564,14 @@
 										</div>
 									</form>
 								</div>
+							{:else}
+								{@render fallbackUnauthorized()}
 							{/if}
-						{:else}
-							{@render fallbackUnauthorized()}
 						{/if}
 
 						<!-- STEP 3--------------------------------------------- -->
-						{#if data.session && data.user}
-							{#if membershipFormStep === 3}
+						{#if membershipFormStep === 3}
+							{#if data.session && data.user}
 								<div class="form--section clamp--s">
 									<form
 										bind:this={formEltConsent}
@@ -628,72 +628,72 @@
 										</div>
 									</form>
 								</div>
+							{:else}
+								{@render fallbackUnauthorized()}
 							{/if}
-						{:else}
-							{@render fallbackUnauthorized()}
 						{/if}
 
 						<!-- STEP 4 -------------------------------------------- -->
-						<!-- {#if !data.profile?.is_member} -->
-						<!-- 	youre already a member! -->
-						<!-- {:else} -->
-						{#if data.session && data.user}
-							{#if membershipFormStep === 4 && data.profile?.is_member}
-								<div class="form--section clamp--s">
-									<h4 class="form--text form--text--heading" in:fade={{ duration: ANIM_CONFIG.duration }}>
-										Payment Summary
-									</h4>
+						{#if membershipFormStep === 4}
+							{#if data.session && data.user}
+								{#if !data.profile?.is_member}
+									<!-- Payment form for non-members -->
+									<div class="form--section clamp--s">
+										<h4 class="form--text form--text--heading" in:fade={{ duration: ANIM_CONFIG.duration }}>
+											Payment Summary
+										</h4>
 
-									<div class="list-container">
-										<div class="item" in:fade={{ duration: ANIM_CONFIG.duration, delay: ANIM_CONFIG.delay }}>
-											<span class="text text--label">Membership Tier:</span>
-											<span class="text text--value">{feeSelectorLabel}</span>
+										<div class="list-container">
+											<div class="item" in:fade={{ duration: ANIM_CONFIG.duration, delay: ANIM_CONFIG.delay }}>
+												<span class="text text--label">Membership Tier:</span>
+												<span class="text text--value">{feeSelectorLabel}</span>
+											</div>
+
+											<div class="item" in:fade={{ duration: ANIM_CONFIG.duration, delay: ANIM_CONFIG.delay * 2 }}>
+												<span class="text text--label">Annual Fee:</span>
+												<span class="text text--value">${feeSelectorValue}</span>
+											</div>
 										</div>
 
-										<div class="item" in:fade={{ duration: ANIM_CONFIG.duration, delay: ANIM_CONFIG.delay * 2 }}>
-											<span class="text text--label">Annual Fee:</span>
-											<span class="text text--value">${feeSelectorValue}</span>
+										<p
+											class="form--text form--text--annotation"
+											in:fade={{ duration: ANIM_CONFIG.duration, delay: ANIM_CONFIG.delay * 3 }}
+										>
+											Membership fees are due annually. You can choose to automatically renew your membership, or manage
+											your renewals manually.
+										</p>
+
+										<div class="row" in:fade={{ duration: ANIM_CONFIG.duration, delay: ANIM_CONFIG.delay * 4 }}>
+											<InputCheckbox
+												id="recurringMembership"
+												name="recurringMembership"
+												label="Renew membership automatically each year"
+												bind:checked={paymentRecurringEnabled}
+											/>
+										</div>
+
+										<div class="row" in:fade={{ duration: ANIM_CONFIG.duration, delay: ANIM_CONFIG.delay * 5 }}>
+											<Button
+												fit="extrinsic"
+												label={paymentLoading ? 'Redirecting...' : 'Proceed to Payment'}
+												onclick={handleProceedToPayment}
+												disabled={paymentLoading}
+											/>
 										</div>
 									</div>
-
-									<p
-										class="form--text form--text--annotation"
-										in:fade={{ duration: ANIM_CONFIG.duration, delay: ANIM_CONFIG.delay * 3 }}
-									>
-										Membership fees are due annually. You can choose to automatically renew your membership, or manage
-										your renewals manually.
-									</p>
-
-									<div class="row" in:fade={{ duration: ANIM_CONFIG.duration, delay: ANIM_CONFIG.delay * 4 }}>
-										<InputCheckbox
-											id="recurringMembership"
-											name="recurringMembership"
-											label="Renew membership automatically each year"
-											bind:checked={paymentRecurringEnabled}
-										/>
-									</div>
-
-									<div class="row" in:fade={{ duration: ANIM_CONFIG.duration, delay: ANIM_CONFIG.delay * 5 }}>
-										<Button
-											fit="extrinsic"
-											label={paymentLoading ? 'Redirecting...' : 'Proceed to Payment'}
-											onclick={handleProceedToPayment}
-											disabled={paymentLoading}
-										/>
-									</div>
-								</div>
-							{:else if membershipFormStep === 4 && data.profile?.is_member}
-								<AlertBox
-									label="Error"
-									message="You already have an active FairGo membership!"
-									colorway="sentiment-negative"
-									icon={OctagonAlertIcon}
-								/>
+								{:else}
+									<!-- Already a member warning -->
+									<AlertBox
+										label="Error"
+										message="You already have an active FairGo membership!"
+										colorway="sentiment-negative"
+										icon={OctagonAlertIcon}
+									/>
+								{/if}
+							{:else}
+								{@render fallbackUnauthorized()}
 							{/if}
 						{/if}
-						<!-- {:else} -->
-						<!-- 	{@render fallbackUnauthorized()} -->
-						<!-- {/if} -->
 					</div>
 
 					<!-- FOOTER: Form Nav Controller ----------------------- -->

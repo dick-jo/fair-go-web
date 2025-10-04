@@ -17,32 +17,14 @@
 		<a href="/" class="brand-container">
 			<img src="/brand/brand-a-text-ev.svg" alt="" />
 		</a>
+
 		<nav>
 			<ul>
-				<!-- <li class="item"> -->
-				<!-- 	{#if session} -->
-				<!-- 		<span>Welcome, {user?.email}</span> -->
-				<!-- 		<button onclick={handleSignOut}>Sign Out</button> -->
-				<!-- 	{:else} -->
-				<!-- 		<a href="/test">Sign In</a> -->
-				<!-- 	{/if} -->
-				<!-- </li> -->
-
 				{#each navItems as item}
 					<li class="item">
 						<a href={item.href}>{item.label}</a>
 					</li>
 				{/each}
-
-				<!-- ACTIONS -->
-
-				<!-- <li class="item--action"> -->
-				<!-- 	<Button -->
-				<!-- 		label={item.label} -->
-				<!-- 		intent={item.actionType} -->
-				<!-- 		colorway={item.actionType === 'primary' ? 'primary' : 'primary'} -->
-				<!-- 	/> -->
-				<!-- </li> -->
 
 				{#if !session}
 					<li class="item--action">
@@ -65,6 +47,12 @@
 				{/if}
 
 				<li class="item--action">
+					<a href="/membership">
+						<Button label="Membership" intent="primary" colorway="primary" />
+					</a>
+				</li>
+
+				<li class="item--action">
 					<a href="/donate">
 						<Button label="Donate" intent="primary" colorway="primary" />
 					</a>
@@ -83,10 +71,14 @@
 		}
 		width: 100%;
 		height: var(--layout--nav-top--height);
+		position: sticky;
+		top: 0;
 		padding: 0 var(--loc-gap);
 		display: flex;
 		justify-content: center;
+		background-color: var(--clr-bg);
 		border-bottom: var(--bdw) solid var(--clr-dv);
+		z-index: 8;
 
 		/* CLAMP ------------------------------------------------ */
 		.clamp {

@@ -6,7 +6,6 @@
 	let { data }: { data: PageData } = $props()
 </script>
 
-<!-- MARKUP -------------------------------------------- -->
 <section id="section--news">
 	<div class="section-header">
 		<NewspaperIcon />
@@ -25,18 +24,17 @@
 	</div>
 </section>
 
-<!-- STYLE --------------------------------------------- -->
 <style>
 	#section--news {
 		.section-body {
 			display: flex;
 			flex-direction: column;
-			/* ROW -------------------------------------------------- */
+
 			.row {
 				display: grid;
 				grid-template-columns: repeat(12, 1fr);
 				border-bottom: var(--bdw) solid var(--clr-dv);
-				/* ITEM ------------------------------------------------- */
+
 				.item {
 					--loc-grid-cols: 6;
 					grid-column: span var(--loc-grid-cols);
