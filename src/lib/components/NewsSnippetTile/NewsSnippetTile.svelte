@@ -3,17 +3,19 @@
 	import DateLabel from '$lib/components/DateLabel/DateLabel.svelte'
 	import Chip from '$lib/components/Chip/Chip.svelte'
 	import type { Tables } from '$lib/types/supabase.types'
+	import type { ChipProps } from '../Chip/types'
 
-	const SNIPPET_MAX_LENGTH = 180
+	const SNIPPET_MAX_LENGTH = 256
 
 	type NewsArticle = Tables<'news_articles'>
 
 	interface Props {
 		article: NewsArticle
 		presentation?: 'column' | 'row'
+		chips?: ChipProps[]
 	}
 
-	let { article, presentation = 'column' }: Props = $props()
+	let { article, presentation = 'column', chips = [] }: Props = $props()
 
 	const displaySnippet = truncateText(article.snippet, SNIPPET_MAX_LENGTH)
 </script>
@@ -38,10 +40,10 @@
 		</div>
 
 		<div class="secondary">
-			{#if article.category && article.category.length > 0}
+			{#if chips.length > 0}
 				<div class="chips-container">
-					{#each article.category as cat}
-						<Chip href="/categories/{cat}" label={cat} />
+					{#each chips as chip}
+						<Chip label={chip.label} href={chip.href} />
 					{/each}
 				</div>
 			{/if}
@@ -59,6 +61,12 @@
 		--loc-clr-ink: var(--clr-ink);
 		--loc-clr-ink--light: var(--clr-ink-tr-heavy-x);
 		--loc-transition: var(--t-ix-hover);
+		&.presentation--column {
+			--loc-flex-direction: column;
+		}
+		&.presentation--row {
+			--loc-flex-direction: row;
+		}
 		&:hover {
 			--loc-clr-bg: var(--clr-ev);
 		}
@@ -67,7 +75,7 @@
 		padding: var(--loc-gap);
 		flex: 1;
 		display: flex;
-		flex-direction: column;
+		flex-direction: var(--loc-flex-direction);
 		gap: var(--loc-gap);
 		background-color: var(--loc-clr-bg);
 		transition: var(--loc-transition);
@@ -77,8 +85,19 @@
 
 		/* MEDIA CONTAINER -------------------------------------- */
 		.media-container {
-			width: 100%;
-			aspect-ratio: 16/9;
+			.host.presentation--column & {
+				--loc-width: 100%;
+				--loc-height: auto;
+				--loc-ratio: 16/9;
+			}
+			.host.presentation--row & {
+				--loc-width: auto;
+				--loc-height: 100%;
+				--loc-ratio: 16/9;
+			}
+			width: var(--loc-width);
+			height: var(--loc-height);
+			aspect-ratio: var(--loc-ratio);
 			overflow: hidden;
 			background-color: var(--clr-dv);
 			@container (max-width: 400px) {

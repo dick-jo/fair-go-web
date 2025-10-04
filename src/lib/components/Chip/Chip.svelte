@@ -27,6 +27,8 @@
 			--loc-clr-ink: var(--clr-ev);
 			--loc-offset--shadow: 0;
 		}
+		width: fit-content;
+		max-width: fit-content;
 		padding: 0 var(--gap-s);
 		height: var(--sp-3);
 		display: flex;

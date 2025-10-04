@@ -3,7 +3,7 @@
 
 	interface Props {
 		fontSize?: 'default' | 's' | 'l'
-		children: Snippet
+		children?: Snippet
 	}
 
 	let { fontSize = 'default', children }: Props = $props()
@@ -17,9 +17,10 @@
 		<div class="text-wrapper">
 			{@render children()}
 		</div>
-		<!-- <span class="text--label"> -->
-		<!-- 	{label} -->
-		<!-- </span> -->
+	{:else}
+		<div class="media-container">
+			<img src="/brand/brand-a-text-ev.svg" alt="" />
+		</div>
 	{/if}
 
 	<div class="line"></div>
@@ -50,6 +51,15 @@
 			& > :global(*) {
 				font: var(--loc-font);
 				text-transform: var(--text-case--heading--secondary);
+			}
+		}
+
+		/* MEDIA CONTAINER -------------------------------------- */
+		.media-container {
+			height: var(--loc-height);
+
+			img {
+				height: 100%;
 			}
 		}
 

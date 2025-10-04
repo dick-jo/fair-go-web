@@ -1,37 +1,37 @@
 <script lang="ts">
-	import NewsSnippetTile from '$lib/components/NewsSnippetTile/NewsSnippetTile.svelte'
+	import ContentSnippetTile from '$lib/components/ContentSnippetTile/ContentSnippetTile.svelte'
 	import Chip from '$lib/components/Chip/Chip.svelte'
-	import { NewspaperIcon } from '@lucide/svelte'
+	import { getPolicyIcon } from '$lib/utils/policyIcons'
+	import { LandPlotIcon } from '@lucide/svelte'
 	import type { PageData } from './$types'
 
 	let { data }: { data: PageData } = $props()
 
 	const titleText = data.selectedCategory
-		? `${data.selectedCategory.charAt(0).toUpperCase() + data.selectedCategory.slice(1)} News`
-		: 'News & Updates'
+		? `${data.selectedCategory.charAt(0).toUpperCase() + data.selectedCategory.slice(1)} Policies`
+		: 'Our Policies'
 </script>
 
-<!-- HTML ---------------------------------------------- -->
-<section id="section--news" class="host">
+<section id="section--our-policies" class="host">
 	<div class="section-header">
-		<NewspaperIcon />
+		<LandPlotIcon />
 		<h1 class="title">{titleText}</h1>
 	</div>
-
-	<!-- BODY ---------------------------------------------- -->
 	<div class="body">
-		{#each data.articles as article}
+		{#each { length: Math.ceil(data.policies.length / 2) } as _, rowIndex}
 			<div class="row">
-				<div class="item">
-					<NewsSnippetTile
-						{article}
-						presentation="row"
-						chips={article.category?.map((cat) => ({
+				{#each data.policies.slice(rowIndex * 2, rowIndex * 2 + 2) as policy}
+					<ContentSnippetTile
+						title={policy.short_title || policy.title}
+						content={policy.snippet}
+						href={`/our-plan/policy/${policy.slug}`}
+						icon={getPolicyIcon(policy.category)}
+						chips={policy.category?.map((cat) => ({
 							label: cat,
-							href: `/news?category=${cat}`
+							href: `/our-plan/policy?category=${cat}`
 						})) ?? []}
 					/>
-				</div>
+				{/each}
 			</div>
 		{/each}
 	</div>
@@ -43,7 +43,7 @@
 				<h4 class="text--title">Browse by Category:</h4>
 				<div class="chips-container">
 					{#each data.allCategories as cat}
-						<Chip label={cat} href="/news?category={cat}" />
+						<Chip label={cat} href="/our-plan/policy?category={cat}" />
 					{/each}
 				</div>
 			</div>
@@ -51,47 +51,39 @@
 	{/if}
 </section>
 
-<!-- CSS ----------------------------------------------- -->
 <style>
-	#section--news.host {
+	#section--our-policies.host {
 		/* BODY ------------------------------------------------- */
 		& > .body {
 			display: flex;
 			flex-direction: column;
-
 			/* ROW -------------------------------------------------- */
 			& > .row {
-				display: flex;
-				justify-content: center;
+				display: grid;
+				grid-template-columns: repeat(2, 1fr);
 				border-bottom: var(--bdw) solid var(--clr-dv);
-
-				/* ITEM ------------------------------------------------- */
-				& > .item {
-					width: 100%;
-					max-width: var(--clamp--content-width--s);
-					max-height: calc(var(--sp-12) * 3);
+				& > :global(*) {
+					&:first-child {
+						border-right: var(--bdw) solid var(--clr-dv);
+					}
 				}
 			}
 		}
-
 		/* FOOTER ----------------------------------------------- */
 		footer {
 			padding: var(--sp-9);
 			width: 100%;
 			display: flex;
 			justify-content: center;
-
 			& > .clamp {
 				max-width: var(--clamp--content-width--s);
 				display: flex;
 				flex-direction: column;
 				align-items: center;
-				gap: var(--loc-gap);
-
+				gap: var(--gap-l);
 				.text--title {
 					text-transform: var(--text-case--heading--secondary);
 				}
-
 				.chips-container {
 					display: flex;
 					flex-wrap: wrap;

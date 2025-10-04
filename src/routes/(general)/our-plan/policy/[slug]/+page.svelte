@@ -21,12 +21,13 @@
 			<Breadcrumbs
 				items={[
 					{ label: 'Home', href: '/' },
-					{ label: 'Policy', href: '/policy' },
+					{ label: 'Our Plan', href: '/our-plan' },
+					{ label: 'Policy', href: '/our-plan/policy' },
 					...(policy.category?.[0]
 						? [
 								{
 									label: policy.category[0],
-									href: `/categories/${policy.category[0]}`
+									href: `/our-plan/policy?category=${policy.category[0]}`
 								}
 							]
 						: []),
@@ -39,10 +40,9 @@
 			<ArticleMetaRow>
 				{#snippet categories()}
 					{#each policy.category || [] as cat}
-						<Chip href="/categories/{cat}" label={cat} />
+						<Chip href="/our-plan/policy?category={cat}" label={cat} />
 					{/each}
 				{/snippet}
-
 				{#snippet dates()}
 					<DateLabel label="published" date={policy.created_at} />
 					<DateLabel label="updated" date={policy.updated_at} />
@@ -153,7 +153,7 @@
 				/* TITLE WRAPPER ---------------------------------------- */
 				.title-wrapper {
 					position: sticky;
-					top: 0;
+					top: var(--layout--nav-top--height);
 					background-color: var(--clr-bg);
 					&::after {
 						content: '';

@@ -8,7 +8,6 @@
 	import { getPolicyIcon } from '$lib/utils'
 
 	let { data }: { data: PageData } = $props()
-	$inspect(data)
 </script>
 
 <SectionHero heroCarouselItems={data.carouselItems} />
@@ -22,7 +21,13 @@
 	<div class="section-body">
 		{#each data.newsArticles as article}
 			<div class="item">
-				<NewsSnippetTile {article} />
+				<NewsSnippetTile
+					{article}
+					chips={article.category?.map((cat) => ({
+						label: cat,
+						href: `/news?category=${cat}`
+					})) ?? []}
+				/>
 			</div>
 		{/each}
 	</div>
@@ -40,7 +45,7 @@
 				<ContentSnippetTile
 					title={policy.short_title || policy.title}
 					content={policy.snippet}
-					href={`/policy/${policy.slug}`}
+					href={`/our-plan/policy/${policy.slug}`}
 					icon={getPolicyIcon(policy.category)}
 				/>
 			</div>
