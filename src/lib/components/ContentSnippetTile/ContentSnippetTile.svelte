@@ -23,9 +23,11 @@
 <svelte:element this={tag} {...tagProps} class={['host', 'content-snippet-tile', href && 'as--link']}>
 	<div class="header">
 		<h3 class="title">{title}</h3>
-		<div class="icon-container">
-			<IconComponent />
-		</div>
+		{#if IconComponent}
+			<div class="icon-container">
+				<IconComponent />
+			</div>
+		{/if}
 	</div>
 
 	<p>

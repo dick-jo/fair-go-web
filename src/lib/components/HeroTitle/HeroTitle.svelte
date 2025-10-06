@@ -7,9 +7,10 @@
 		title: string
 		label?: string
 		colorway?: Colorway
+		chunkSize?: number
 	}
 
-	let { title, label, colorway = 'ev' }: Props = $props()
+	let { title, label, colorway = 'ev', chunkSize = 3 }: Props = $props()
 </script>
 
 <!-- MARKUP -------------------------------------------- -->
@@ -19,7 +20,7 @@
 	{/if}
 
 	<h1 class="text text--title">
-		{#each splitStringToChunks(title, 3) as chunk, i}
+		{#each splitStringToChunks(title, chunkSize) as chunk, i}
 			<span class="text text--sub" style="--loc-index: {i}">{chunk}</span>
 		{/each}
 	</h1>

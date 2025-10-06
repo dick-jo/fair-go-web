@@ -1,4 +1,4 @@
-export type NavCategory = 'CONTENT' | 'OUR PLAN' | 'OUR TEAM' | 'TAKE ACTION' | 'GET INVOLVED'
+export type NavCategory = 'CONTENT' | 'OUR PLAN' | 'OUR TEAM' | 'GET INVOLVED'
 
 export type NavItem = {
 	label: string
@@ -22,19 +22,13 @@ export const NAV_ITEMS: NavItem[] = [
 	},
 	{
 		label: 'Our Plan',
-		href: '/policy',
+		href: '/our-plan',
 		showInTopNav: true,
 		showInFooter: true,
 		category: 'OUR PLAN',
 		children: [
 			{ label: 'Policy', href: '/our-plan/policy', showInFooter: true, category: 'OUR PLAN' },
-			{
-				label: 'Philosophy',
-				href: '/our-plan/philosophy',
-				showInFooter: true,
-				category: 'OUR PLAN'
-			},
-			{ label: 'Campaigns', href: '/our-plan/campaigns', showInFooter: true, category: 'OUR PLAN' }
+			{ label: 'Philosophy', href: '/our-plan/philosophy', showInFooter: true, category: 'OUR PLAN' }
 		]
 	},
 	{
@@ -43,68 +37,19 @@ export const NAV_ITEMS: NavItem[] = [
 		showInTopNav: true,
 		showInFooter: true,
 		category: 'OUR TEAM',
-		children: [
-			// {
-			// 	label: 'Federal MPs',
-			// 	href: '/our-team/federal-mps',
-			// 	showInFooter: true,
-			// 	category: 'OUR TEAM'
-			// },
-			{ label: 'State MPs', href: '/our-team/state-mps', showInFooter: true, category: 'OUR TEAM' },
-			{
-				label: 'Candidates',
-				href: '/our-team/candidates',
-				showInFooter: true,
-				category: 'OUR TEAM'
-			}
-		]
+		children: [{ label: 'Candidates', href: '/our-team', showInFooter: true, category: 'OUR TEAM' }]
 	},
 	{
 		label: 'Get Involved',
-		href: '/get-involved',
-		showInTopNav: true,
+		href: '/membership',
+		showInTopNav: false,
 		showInFooter: true,
 		category: 'GET INVOLVED',
 		children: [
 			{ label: 'Become a Member', href: '/membership', showInFooter: true, category: 'GET INVOLVED' },
-			{ label: 'Donate', href: '/donate', showInFooter: true, category: 'GET INVOLVED' },
-			{ label: 'Volunter', href: '/volunteer', showInFooter: true, category: 'GET INVOLVED' }
+			{ label: 'Donate', href: '/donate', showInFooter: true, category: 'GET INVOLVED' }
 		]
 	}
-
-	// {
-	// 	label: 'Take Action',
-	// 	href: '/take-action',
-	// 	showInTopNav: true,
-	// 	showInFooter: true,
-	// 	category: 'TAKE ACTION',
-	// 	children: [
-	// 		{
-	// 			label: 'Petitions',
-	// 			href: '/take-action/petitions',
-	// 			showInFooter: true,
-	// 			category: 'TAKE ACTION'
-	// 		},
-	// 		{
-	// 			label: 'Donate',
-	// 			href: '/donate',
-	// 			showInFooter: true,
-	// 			category: 'TAKE ACTION'
-	// 		},
-	// 		{
-	// 			label: 'Surveys',
-	// 			href: '/take-action/surveys',
-	// 			showInFooter: true,
-	// 			category: 'TAKE ACTION'
-	// 		},
-	// 		{
-	// 			label: 'Volunteer',
-	// 			href: '/take-action/volunteer',
-	// 			showInFooter: true,
-	// 			category: 'TAKE ACTION'
-	// 		}
-	// 	]
-	// }
 ]
 
 export type SocialLink = {
@@ -118,5 +63,13 @@ export const SOCIAL_LINKS: SocialLink[] = [
 	{ label: 'Twitter', href: 'https://twitter.com/your-handle' },
 	{ label: 'Instagram', href: 'https://instagram.com/your-handle' }
 ]
+
+// Category configuration with proper URLs and display names
+export const CATEGORY_CONFIG = {
+	CONTENT: { label: 'Content', href: '/news' },
+	'OUR PLAN': { label: 'Our Plan', href: '/our-plan' },
+	'OUR TEAM': { label: 'Our Team', href: '/our-team' },
+	'GET INVOLVED': { label: 'Get Involved', href: '/membership' }
+} as const
 
 export const NAV_CATEGORIES: NavCategory[] = ['CONTENT', 'OUR PLAN', 'OUR TEAM', 'GET INVOLVED']

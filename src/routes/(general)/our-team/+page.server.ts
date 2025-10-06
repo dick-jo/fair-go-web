@@ -1,34 +1,15 @@
 import type { PageServerLoad } from './$types'
-import type { TeamMember } from '$lib/types'
 
 export const load: PageServerLoad = async ({ locals: { supabase } }) => {
 	const { data: teamData, error } = await supabase
 		.from('team_members')
-		.select(
-			`
-			*,
-			profile_image:profile_image_id (
-				id,
-				bucket,
-				path,
-				alt,
-				mime
-			)
-		`
-		)
+		.select('*')
 		.eq('status', 'active')
 		.order('order_priority', { ascending: true })
 
-	// Flatten profile_image array to single object
-	const teamMembers: TeamMember[] = (teamData ?? []).map((member) => ({
-		...member,
-		profile_image: Array.isArray(member.profile_image)
-			? (member.profile_image[0] ?? null)
-			: (member.profile_image ?? null)
-	}))
+	if (error) console.error('Error loading team:', error)
 
 	return {
-		teamMembers,
-		error
+		teamMembers: teamData ?? []
 	}
 }

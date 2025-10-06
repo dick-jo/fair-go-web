@@ -92,8 +92,12 @@
 		/* NAV -------------------------------------------------- */
 		nav {
 			--loc-grid-cols: 3;
+			@media screen and (max-width: 720px) {
+				--loc-grid-cols: 12;
+			}
 			padding: var(--loc-gap);
 			grid-column: span var(--loc-grid-cols);
+			border-bottom: var(--bdw) solid var(--clr-dv);
 
 			ul {
 				--loc-gap: var(--gap-s);
@@ -103,6 +107,9 @@
 				flex-direction: column;
 				gap: var(--loc-gap);
 				list-style: none;
+				@media screen and (max-width: 720px) {
+					position: static;
+				}
 
 				li {
 					--loc-height: var(--sp-4);
@@ -157,6 +164,9 @@
 		/* MAIN ------------------------------------------------- */
 		main {
 			--loc-grid-cols: 9;
+			@media screen and (max-width: 720px) {
+				--loc-grid-cols: 12;
+			}
 			padding: var(--loc-gap);
 			grid-column: span var(--loc-grid-cols);
 

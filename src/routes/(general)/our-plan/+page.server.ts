@@ -1,27 +1,7 @@
-import { HERO_CAROUSEL_MAX_ITEMS } from '$lib/components/HeroCarousel'
 import type { PageServerLoad } from './$types'
 
 export const load: PageServerLoad = async ({ locals: { supabase } }) => {
-	// CAROUSEL
-	const { data: carouselData, error: carouselError } = await supabase
-		.from('carousel_items')
-		.select('*')
-		.order('order', { ascending: true })
-		.limit(HERO_CAROUSEL_MAX_ITEMS)
-
-	if (carouselError) console.error('Error loading carousel:', carouselError)
-
-	// NEWS - simplified, no author join
-	const { data: newsData, error: newsError } = await supabase
-		.from('news_articles')
-		.select('*')
-		.eq('status', 'published')
-		.order('published_at', { ascending: false })
-		.limit(3)
-
-	if (newsError) console.error('Error loading news:', newsError)
-
-	// POLICY
+	// Policies (3)
 	const { data: policiesData, error: policiesError } = await supabase
 		.from('policy_content')
 		.select('id, title, short_title, slug, snippet, category')
@@ -31,14 +11,13 @@ export const load: PageServerLoad = async ({ locals: { supabase } }) => {
 
 	if (policiesError) console.error('Error loading policies:', policiesError)
 
-	// PHILOSOPHY
 	// Random philosophy values (3)
 	const { data: valuesData } = await supabase
 		.from('philosophy_content')
 		.select('*')
 		.eq('status', 'published')
 		.eq('type', 'value')
-		.limit(100) // Get all, then randomize client-side
+		.limit(100)
 
 	// Random philosophy objectives (3)
 	const { data: objectivesData } = await supabase
@@ -67,8 +46,6 @@ export const load: PageServerLoad = async ({ locals: { supabase } }) => {
 	}
 
 	return {
-		carouselItems: carouselData ?? [],
-		newsArticles: newsData ?? [],
 		policies: policiesData ?? [],
 		values: shuffleArray(valuesData ?? []).slice(0, 3),
 		objectives: shuffleArray(objectivesData ?? []).slice(0, 3),

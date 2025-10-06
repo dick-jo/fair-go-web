@@ -878,6 +878,42 @@ export type Database = {
         }
         Relationships: []
       }
+      philosophy_content: {
+        Row: {
+          category: string | null
+          content: string
+          created_at: string | null
+          id: string
+          order_priority: number | null
+          status: string | null
+          title: string
+          type: string
+          updated_at: string | null
+        }
+        Insert: {
+          category?: string | null
+          content: string
+          created_at?: string | null
+          id?: string
+          order_priority?: number | null
+          status?: string | null
+          title: string
+          type: string
+          updated_at?: string | null
+        }
+        Update: {
+          category?: string | null
+          content?: string
+          created_at?: string | null
+          id?: string
+          order_priority?: number | null
+          status?: string | null
+          title?: string
+          type?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       policy_content: {
         Row: {
           category: string[] | null
@@ -1044,15 +1080,19 @@ export type Database = {
           created_at: string | null
           email: string | null
           facebook_handle: string | null
+          hero_image_alt: string | null
+          hero_image_path: string | null
           id: string
           instagram_handle: string | null
           name: string
           order_priority: number | null
-          pet_policy_1_id: string | null
-          pet_policy_2_id: string | null
-          pet_policy_3_id: string | null
           phone: string | null
-          profile_image_id: string | null
+          policy_priority_1_id: string | null
+          policy_priority_2_id: string | null
+          policy_priority_3_id: string | null
+          profile_image_alt: string | null
+          profile_image_path: string | null
+          short_bio: string | null
           slug: string
           status: string | null
           title: string
@@ -1064,15 +1104,19 @@ export type Database = {
           created_at?: string | null
           email?: string | null
           facebook_handle?: string | null
+          hero_image_alt?: string | null
+          hero_image_path?: string | null
           id?: string
           instagram_handle?: string | null
           name: string
           order_priority?: number | null
-          pet_policy_1_id?: string | null
-          pet_policy_2_id?: string | null
-          pet_policy_3_id?: string | null
           phone?: string | null
-          profile_image_id?: string | null
+          policy_priority_1_id?: string | null
+          policy_priority_2_id?: string | null
+          policy_priority_3_id?: string | null
+          profile_image_alt?: string | null
+          profile_image_path?: string | null
+          short_bio?: string | null
           slug: string
           status?: string | null
           title: string
@@ -1084,15 +1128,19 @@ export type Database = {
           created_at?: string | null
           email?: string | null
           facebook_handle?: string | null
+          hero_image_alt?: string | null
+          hero_image_path?: string | null
           id?: string
           instagram_handle?: string | null
           name?: string
           order_priority?: number | null
-          pet_policy_1_id?: string | null
-          pet_policy_2_id?: string | null
-          pet_policy_3_id?: string | null
           phone?: string | null
-          profile_image_id?: string | null
+          policy_priority_1_id?: string | null
+          policy_priority_2_id?: string | null
+          policy_priority_3_id?: string | null
+          profile_image_alt?: string | null
+          profile_image_path?: string | null
+          short_bio?: string | null
           slug?: string
           status?: string | null
           title?: string
@@ -1101,21 +1149,21 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "team_members_pet_policy_1_id_fkey"
-            columns: ["pet_policy_1_id"]
+            columns: ["policy_priority_1_id"]
             isOneToOne: false
             referencedRelation: "policy_content"
             referencedColumns: ["id"]
           },
           {
             foreignKeyName: "team_members_pet_policy_2_id_fkey"
-            columns: ["pet_policy_2_id"]
+            columns: ["policy_priority_2_id"]
             isOneToOne: false
             referencedRelation: "policy_content"
             referencedColumns: ["id"]
           },
           {
             foreignKeyName: "team_members_pet_policy_3_id_fkey"
-            columns: ["pet_policy_3_id"]
+            columns: ["policy_priority_3_id"]
             isOneToOne: false
             referencedRelation: "policy_content"
             referencedColumns: ["id"]

@@ -3,7 +3,7 @@
 	import Button from '$lib/components/Button/Button.svelte'
 	import Input from '$lib/components/Input/Input.svelte'
 	import type { Database } from '$lib/types/supabase.types'
-	import { fade, fly, scale, slide } from 'svelte/transition'
+	import { fade, fly, scale } from 'svelte/transition'
 	import type { PageData } from '../$types'
 	import { FORM_CONTENT, HEADER_CONTENT, MEMBERSHIP_TIERS } from './content'
 	import type { ActionResult } from '@sveltejs/kit'
@@ -59,6 +59,7 @@
 	}
 
 	// MEMBERSHIP FORM: Element Bindings -------------------- //
+	let membershipFormContainerElt = $state<HTMLDivElement>()
 	let formEltElectoralRollDetails = $state<HTMLFormElement>()
 	let formEltConsent = $state<HTMLFormElement>()
 
@@ -75,6 +76,9 @@
 	// MEMBERSHIP FORM: Steps API --------------------------- //
 	function next() {
 		membershipFormStep += 1
+		if (membershipFormContainerElt) {
+			membershipFormContainerElt.scrollIntoView({ behavior: 'smooth', block: 'start' })
+		}
 	}
 
 	function handleNext() {
@@ -246,7 +250,6 @@
 		class="step-pip step-pip--pip"
 		data-active={index === membershipFormStep}
 		data-complete={index < membershipFormStep}
-		onclick={() => toStep(index)}
 	>
 		{#if index >= membershipFormStep}
 			<span>{index + 1}</span>
@@ -374,21 +377,21 @@
 <section id="section--membership--host" class="host">
 	<div class="clamp">
 		<!-- HEADER--------------------------------------------- -->
-		<!-- <header> -->
-		<!-- 	<div class="item item--title-container"> -->
-		<!-- 		<h2 class="title title--secondary">Join the fight for a fair go</h2> -->
-		<!-- 		<h1 class="title title--primary">Become a member</h1> -->
-		<!-- 	</div> -->
-		<!---->
-		<!-- 	{#each HEADER_CONTENT as item} -->
-		<!-- 		<div class="item item--content"> -->
-		<!-- 			{@render headerContentItem(item.content)} -->
-		<!-- 		</div> -->
-		<!-- 	{/each} -->
-		<!-- </header> -->
+		<header>
+			<div class="item item--title-container">
+				<h2 class="title title--secondary">Join the fight for a fair go</h2>
+				<h1 class="title title--primary">Become a member</h1>
+			</div>
+
+			{#each HEADER_CONTENT as item}
+				<div class="item item--content">
+					{@render headerContentItem(item.content)}
+				</div>
+			{/each}
+		</header>
 
 		<!-- FORM CONTAINER ------------------------------------ -->
-		<div id="membership--form-container">
+		<div id="membership--form-container" bind:this={membershipFormContainerElt}>
 			{#if data.user && data.profile && membershipFormStep === 0}
 				{@render existingUserOverlay()}
 			{/if}
@@ -723,6 +726,9 @@
 	section#section--membership--host.host {
 		padding: var(--gap-max);
 		align-items: center;
+		@media screen and (max-width: 720px) {
+			padding: var(--gap-s);
+		}
 
 		/* CLAMP ------------------------------------------------ */
 		& > .clamp {
@@ -737,6 +743,9 @@
 				display: grid;
 				grid-template-columns: repeat(12, 1fr);
 				gap: var(--loc-gap);
+				@media screen and (max-width: 960px) {
+					display: none;
+				}
 
 				& > .item {
 					--loc-grid-cols: 4;
@@ -782,16 +791,23 @@
 					min-height: var(--sp-10);
 					padding: 0 var(--loc-gap);
 					position: sticky;
-					top: 0;
+					top: var(--layout--nav-top--height);
 					display: grid;
 					grid-template-columns: repeat(12, 1fr);
 					gap: var(--loc-gap);
 					background-color: var(--clr-ev);
 					border-bottom: var(--bdw) solid var(--clr-dv);
 					border-radius: var(--bdr-max) var(--bdr-max) 0 0;
+					z-index: 4;
+					@media screen and (max-width: 720px) {
+						position: static;
+					}
 
 					.title-container {
 						--loc-grid-cols: 4;
+						@media screen and (max-width: 720px) {
+							--loc-grid-cols: 12;
+						}
 						grid-column: span var(--loc-grid-cols);
 						display: flex;
 						flex-direction: column;
@@ -816,7 +832,9 @@
 						grid-column: span var(--loc-grid-cols);
 						display: flex;
 						align-items: center;
-						/* gap: var(--loc-gap); */
+						@media screen and (max-width: 720px) {
+							display: none;
+						}
 					}
 				}
 
@@ -826,10 +844,18 @@
 					height: 100%;
 					display: grid;
 					grid-template-columns: repeat(12, 1fr);
+					@media screen and (max-width: 720px) {
+						align-items: start;
+						/* height: fit-content; */
+						/* min-height: fit-content; */
+					}
 
 					/* SECONDARY -------------------------------------------- */
 					& > .secondary {
 						--loc-grid-cols: 4;
+						@media screen and (max-width: 720px) {
+							--loc-grid-cols: 12;
+						}
 						padding: var(--loc-gap);
 						grid-column: span var(--loc-grid-cols);
 						/* display: flex; */
@@ -840,6 +866,9 @@
 					/* PRIMARY ---------------------------------------------- */
 					& > .primary {
 						--loc-grid-cols: 8;
+						@media screen and (max-width: 720px) {
+							--loc-grid-cols: 12;
+						}
 						padding: var(--loc-gap);
 						grid-column: span var(--loc-grid-cols);
 						display: flex;

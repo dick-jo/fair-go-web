@@ -32,15 +32,53 @@ export const POST: RequestHandler = async ({ request }) => {
 
 	console.log('Received webhook event:', event.type)
 
-	// CHECKOUT: Session Complete
+	// CHECKOUT: Session Complete (UPDATED - handles both membership and donations)
 	if (event.type === 'checkout.session.completed') {
 		const session = event.data.object as Stripe.Checkout.Session
 
+		const paymentType = session.metadata?.payment_type
 		const userId = session.client_reference_id
+		const stripePaymentId = session.payment_intent as string
+
+		// DONATION PAYMENT
+		if (paymentType === 'donation') {
+			console.log('Donation payment received')
+			console.log('User ID:', userId || 'Anonymous')
+			console.log('Amount:', session.amount_total)
+
+			const donorMetadata = {
+				email: session.metadata?.donor_email,
+				firstName: session.metadata?.donor_first_name,
+				lastName: session.metadata?.donor_last_name,
+				phone: session.metadata?.donor_phone,
+				streetAddress: session.metadata?.donor_street_address,
+				suburb: session.metadata?.donor_suburb,
+				postcode: session.metadata?.donor_postcode
+			}
+
+			const { error: transactionError } = await supabaseAdmin.from('transactions').insert({
+				user_id: userId || null,
+				stripe_payment_id: stripePaymentId,
+				transaction_type: 'donation',
+				amount: session.amount_total || 0,
+				currency: session.currency || 'aud',
+				status: 'succeeded',
+				donor_metadata: donorMetadata
+			})
+
+			if (transactionError) {
+				console.error('Failed to insert donation transaction:', transactionError)
+			} else {
+				console.log('Successfully recorded donation')
+			}
+
+			return new Response(null, { status: 200 })
+		}
+
+		// MEMBERSHIP PAYMENT (existing logic)
 		const tier = session.metadata?.membership_tier
 		const isRecurring = session.metadata?.is_recurring === 'true'
 		const stripeCustomerId = session.customer as string
-		const stripePaymentId = session.payment_intent as string
 		const stripeSubscriptionId = session.subscription as string | null
 
 		console.log('Payment succeeded for user:', userId)
@@ -53,7 +91,7 @@ export const POST: RequestHandler = async ({ request }) => {
 		}
 
 		const now = new Date()
-		const expiresAt = new Date(now.getTime() + 365 * 24 * 60 * 60 * 1000) // 1 year from now
+		const expiresAt = new Date(now.getTime() + 365 * 24 * 60 * 60 * 1000)
 
 		const { error: profileError } = await supabaseAdmin
 			.from('profiles')

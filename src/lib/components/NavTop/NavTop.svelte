@@ -1,7 +1,9 @@
 <script lang="ts">
 	import { NAV_ITEMS } from '$lib/config'
+	import { MenuIcon, Undo2Icon, XIcon } from '@lucide/svelte'
 	import Button from '../Button/Button.svelte'
 	import type { Session } from '@supabase/supabase-js'
+	import { fade } from 'svelte/transition'
 
 	let {
 		session = null
@@ -10,15 +12,24 @@
 	} = $props()
 
 	const navItems = NAV_ITEMS.filter((item) => item.showInTopNav)
+
+	// STATE ------------------------------------------------ //
+	let navCompactIsOpen = $state<boolean>(false)
+	$inspect(navCompactIsOpen)
+
+	function toggleNavCompact() {
+		navCompactIsOpen = !navCompactIsOpen
+	}
 </script>
 
+<!-- HTML ---------------------------------------------- -->
 <div id="nav-top" class="host nav-top">
 	<div class="clamp">
 		<a href="/" class="brand-container">
 			<img src="/brand/brand-a-text-ev.svg" alt="" />
 		</a>
 
-		<nav>
+		<nav id="nav-top--display--large">
 			<ul>
 				{#each navItems as item}
 					<li class="item">
@@ -59,7 +70,60 @@
 				</li>
 			</ul>
 		</nav>
+
+		<!-- COMPACT  -->
+		<button id="action--toggle-compact" onclick={toggleNavCompact}>
+			<MenuIcon />
+		</button>
 	</div>
+
+	{#if navCompactIsOpen}
+		<nav id="nav-top--display--compact" data-visible={navCompactIsOpen} transition:fade={{ duration: 150 }}>
+			<ul>
+				{#each navItems as item}
+					<li class="item">
+						<a href={item.href}>{item.label}</a>
+					</li>
+				{/each}
+
+				{#if !session}
+					<li class="item--action">
+						<a href="/auth">
+							<Button label="Log in" intent="secondary" colorway="dv" />
+						</a>
+					</li>
+
+					<li class="item--action">
+						<a href="/auth#section--auth--sign-up">
+							<Button label="Sign Up" intent="secondary" colorway="primary" />
+						</a>
+					</li>
+				{:else if session}
+					<li class="item--action">
+						<a href="/private">
+							<Button label="Your Profile" intent="secondary" colorway="primary" />
+						</a>
+					</li>
+				{/if}
+
+				<li class="item--action">
+					<a href="/membership">
+						<Button label="Membership" intent="primary" colorway="primary" />
+					</a>
+				</li>
+
+				<li class="item--action">
+					<a href="/donate">
+						<Button label="Donate" intent="primary" colorway="primary" />
+					</a>
+				</li>
+			</ul>
+
+			<button id="action--close-compact" onclick={toggleNavCompact}>
+				<Undo2Icon />
+			</button>
+		</nav>
+	{/if}
 </div>
 
 <!-- CSS ----------------------------------------------- -->
@@ -86,6 +150,7 @@
 			width: 100%;
 			max-width: var(--clamp--content-width--max);
 			display: flex;
+			justify-content: space-between;
 		}
 
 		/* BRAND ------------------------------------------------ */
@@ -106,11 +171,16 @@
 		}
 
 		/* NAV -------------------------------------------------- */
-		nav {
+		nav#nav-top--display--large {
 			flex: 1;
 			display: flex;
 			justify-content: end;
 			align-items: center;
+			&#nav-top--display--large {
+				@media screen and (max-width: 720px) {
+					display: none;
+				}
+			}
 
 			ul {
 				height: 100%;
@@ -133,11 +203,11 @@
 							--loc-clr-border: var(--clr-primary);
 						}
 					}
-					&:not(.item--action) {
-						@media screen and (max-width: 800px) {
-							display: none;
-						}
-					}
+					/* &:not(.item--action) { */
+					/* 	@media screen and (max-width: 800px) { */
+					/* 		display: none; */
+					/* 	} */
+					/* } */
 					height: 100%;
 					display: flex;
 					align-items: center;
@@ -156,6 +226,59 @@
 						transition: var(--loc-transition);
 					}
 				}
+			}
+		}
+
+		/* COMPACT ---------------------------------------------- */
+		button#action--toggle-compact {
+			--loc-size: var(--sp-6);
+			--loc-clr-ink: var(--clr-primary);
+			width: var(--sp-6);
+			/* height: var(--sp-6); */
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			border-style: none;
+			background-color: transparent;
+			cursor: pointer;
+
+			& > :global(svg) {
+				stroke: var(--loc-clr-ink);
+			}
+		}
+
+		nav#nav-top--display--compact {
+			padding: var(--gap-l);
+			position: fixed;
+			top: 0;
+			right: 0;
+			bottom: 0;
+			left: 0;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			gap: var(--gap-l);
+			background-color: var(--clr-dv-tr-heavy-x);
+			backdrop-filter: blur(var(--sp-2));
+
+			ul {
+				flex: 3;
+				list-style: none;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				gap: var(--gap-l);
+			}
+
+			#action--close-compact {
+				width: 100%;
+				flex: 1;
+				border-style: none;
+				background-color: transparent;
+				border-top: var(--bdw) solid var(--clr-primary-tr-light);
+				/* background-color: var(--clr-dv-heavy-tr-light); */
 			}
 		}
 	}

@@ -1,69 +1,48 @@
 import { error } from '@sveltejs/kit'
 import type { PageServerLoad } from './$types'
-import type { TeamMember } from '$lib/types'
+import type { Tables } from '$lib/types/supabase.types'
+
+type Policy = Tables<'policy_content'>
 
 export const load: PageServerLoad = async ({ params, locals: { supabase } }) => {
-	const { data: teamMemberData, error: teamMemberError } = await supabase
+	// Fetch team member
+	const { data: memberData, error: memberError } = await supabase
 		.from('team_members')
-		.select(
-			`
-			*,
-			profile_image:profile_image_id (
-				id,
-				bucket,
-				path,
-				alt,
-				mime
-			),
-			pet_policy_1:pet_policy_1_id (
-				id,
-				title,
-				short_title,
-				snippet,
-				category
-			),
-			pet_policy_2:pet_policy_2_id (
-				id,
-				title,
-				short_title,
-				snippet,
-				category
-			),
-			pet_policy_3:pet_policy_3_id (
-				id,
-				title,
-				short_title,
-				snippet,
-				category
-			)
-		`
-		)
+		.select('*')
 		.eq('slug', params.slug)
 		.eq('status', 'active')
 		.single()
 
-	if (teamMemberError || !teamMemberData) {
+	if (memberError || !memberData) {
 		throw error(404, 'Team member not found')
 	}
 
-	// Flatten the joined data
-	const teamMember: TeamMember = {
-		...teamMemberData,
-		profile_image: Array.isArray(teamMemberData.profile_image)
-			? (teamMemberData.profile_image[0] ?? null)
-			: (teamMemberData.profile_image ?? null),
-		pet_policy_1: Array.isArray(teamMemberData.pet_policy_1)
-			? (teamMemberData.pet_policy_1[0] ?? null)
-			: (teamMemberData.pet_policy_1 ?? null),
-		pet_policy_2: Array.isArray(teamMemberData.pet_policy_2)
-			? (teamMemberData.pet_policy_2[0] ?? null)
-			: (teamMemberData.pet_policy_2 ?? null),
-		pet_policy_3: Array.isArray(teamMemberData.pet_policy_3)
-			? (teamMemberData.pet_policy_3[0] ?? null)
-			: (teamMemberData.pet_policy_3 ?? null)
+	// Fetch their pet policies if they have any
+	const policyIds = [
+		memberData.policy_priority_1_id,
+		memberData.policy_priority_2_id,
+		memberData.policy_priority_3_id
+	].filter((id): id is string => id !== null)
+
+	let policies: Pick<Policy, 'id' | 'title' | 'short_title' | 'slug' | 'snippet' | 'category'>[] = []
+
+	if (policyIds.length > 0) {
+		const { data: policiesData } = await supabase
+			.from('policy_content')
+			.select('id, title, short_title, slug, snippet, category')
+			.in('id', policyIds)
+			.eq('status', 'published')
+
+		// Sort policies to match priority order
+		if (policiesData) {
+			policies = policyIds
+				.map((id) => policiesData.find((p) => p.id === id))
+				.filter((p): p is NonNullable<typeof p> => p !== undefined)
+		}
 	}
 
 	return {
-		teamMember
+		member: memberData,
+		petPolicies: policies
 	}
 }

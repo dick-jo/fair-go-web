@@ -2,31 +2,28 @@
 	import { UsersRoundIcon } from '@lucide/svelte'
 	import type { PageData } from './$types'
 	import Button from '$lib/components/Button/Button.svelte'
-	import { splitStringToChunks, getMediaUrl } from '$lib/utils'
-	import type { TeamMember } from '$lib/types'
+	import { getMediaUrl } from '$lib/utils'
+	import type { Tables } from '$lib/types/supabase.types'
+	import HeroTitle from '$lib/components/HeroTitle/HeroTitle.svelte'
+
+	type TeamMember = Tables<'team_members'>
 
 	let { data }: { data: PageData } = $props()
 </script>
 
-<!-- SNIPPETS ------------------------------------------ -->
 {#snippet teamMemberTile(member: TeamMember)}
 	<a href="/our-team/{member.slug}" class="team-member-tile">
 		<div class="container">
 			<div class="media-container">
-				{#if member.profile_image}
-					<img src={getMediaUrl(member.profile_image)} alt={member.profile_image.alt || member.name} />
+				{#if member.profile_image_path}
+					<img src={getMediaUrl(member.profile_image_path)} alt={member.profile_image_alt || member.name} />
 				{/if}
 				<div class="overlay"></div>
 			</div>
 
 			<div class="body">
 				<div class="primary">
-					<h4 class="title--secondary">{member.title}</h4>
-					<h3 class="title">
-						{#each splitStringToChunks(member.name, 1) as chunk}
-							<span>{chunk}</span>
-						{/each}
-					</h3>
+					<HeroTitle label={member.title} title={member.name} chunkSize={1} />
 				</div>
 
 				<div class="secondary">
@@ -37,11 +34,22 @@
 	</a>
 {/snippet}
 
-<!-- MARKUP -------------------------------------------- -->
 <section id="section--our-team">
-	<div class="section-header">
-		<UsersRoundIcon />
-		<h2 class="title">OUR TEAM</h2>
+	<div class="section-header section-header--grid">
+		<div class="title-container">
+			<UsersRoundIcon />
+			<h2 class="text text--title">OUR TEAM</h2>
+		</div>
+
+		<p>
+			Meet the FairGo team—everyday fighters driving change against the majors’ neglect. This is the crew shaping a
+			fairer future with grit and common sense.
+		</p>
+
+		<p>
+			Behind FairGo stands a bold crew of locals, tackling waste and lifting communities. Get to know the voices fueling
+			our fight for a stronger, fairer Australia.
+		</p>
 	</div>
 
 	<div class="section-body">
@@ -60,20 +68,6 @@
 <!-- CSS ----------------------------------------------- -->
 <style>
 	#section--our-team {
-		/* .section-header { */
-		/* 	height: var(--sp-6); */
-		/* 	padding: 0 var(--gap-l); */
-		/* 	display: flex; */
-		/* 	align-items: center; */
-		/* 	gap: calc(var(--gap-l) / 2); */
-		/* 	border-bottom: var(--bdw) solid var(--clr-dv); */
-		/**/
-		/* 	.title { */
-		/* 		font: var(--font--heading--secondary); */
-		/* 		font-size: var(--fs-4); */
-		/* 	} */
-		/* } */
-
 		.section-body {
 			/* ROW -------------------------------------------------- */
 			.row {
@@ -105,31 +99,24 @@
 
 		/* TEAM MEMBER TILE ------------------------------------- */
 		.team-member-tile {
-			--loc-height--min: calc(var(--sp-12) * 5);
 			--loc-transition: var(--t-ix-transition);
 			--loc-clr-border: var(--clr-dv-heavy-tr-light);
 			&:hover {
 				--loc-clr-border: var(--clr-primary);
 			}
-			@media screen and (max-width: 1200px) {
-				--loc-height--min: calc(var(--sp-12) * 4);
-			}
-			@media screen and (max-width: 960px) {
-				--loc-height--min: calc(var(--sp-12) * 6);
-			}
-			@media screen and (max-width: 560px) {
-				--loc-height--min: calc(var(--sp-12) * 4);
-			}
 			width: 100%;
 			height: 100%;
-			min-height: var(--loc-height--min);
 			padding: var(--gap-l);
 			display: block;
 
 			/* CONTAINER -------------------------------------------- */
 			& > .container {
+				--loc-ratio: 4/3;
+				@media screen and (max-width: 480px) {
+					--loc-ratio: 3/5;
+				}
 				width: 100%;
-				height: 100%;
+				aspect-ratio: var(--loc-ratio);
 				position: relative;
 				overflow: hidden;
 				display: flex;
@@ -186,34 +173,6 @@
 						display: flex;
 						flex-direction: column;
 						gap: var(--gap-l);
-					}
-
-					/* TITLES ----------------------------------------------- */
-					.title--secondary {
-						padding: var(--gap-min);
-						width: fit-content;
-						background-color: var(--clr-primary);
-						color: var(--clr-bg);
-						font: var(--font--heading--secondary--s);
-						text-transform: var(--text-case--heading);
-					}
-
-					.title {
-						--loc-gap-basis: var(--sp-1);
-						display: flex;
-						flex-direction: column;
-						text-transform: var(--text-case--heading);
-
-						span {
-							width: fit-content;
-							padding: var(--gap-min) var(--gap-s);
-							font: var(--font--heading--secondary--l);
-							background-color: var(--clr-bg);
-							box-shadow: var(--sp-1) var(--sp-1) 0 var(--clr-primary);
-							&:nth-child(2) {
-								margin-left: var(--loc-gap-basis);
-							}
-						}
 					}
 
 					/* SECONDARY -------------------------------------------- */

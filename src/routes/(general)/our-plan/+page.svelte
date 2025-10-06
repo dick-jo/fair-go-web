@@ -1,42 +1,29 @@
 <script lang="ts">
-	import type { PageData } from './$types'
-	import SectionHero from '$lib/components/SectionHero/SectionHero.svelte'
-	import NewsSnippetTile from '$lib/components/NewsSnippetTile/NewsSnippetTile.svelte'
-	import { HeartHandshakeIcon, LandPlotIcon, NewspaperIcon, ShieldXIcon, TargetIcon } from '@lucide/svelte'
-	import SectionCtaRow from '$lib/components/SectionCtaRow/SectionCtaRow.svelte'
+	import { LightbulbIcon, LandPlotIcon, HeartHandshakeIcon, TargetIcon, ShieldXIcon } from '@lucide/svelte'
 	import ContentSnippetTile from '$lib/components/ContentSnippetTile/ContentSnippetTile.svelte'
-	import { getPolicyIcon } from '$lib/utils'
 	import Button from '$lib/components/Button/Button.svelte'
+	import { getPolicyIcon } from '$lib/utils'
+	import type { PageData } from './$types'
 
 	let { data }: { data: PageData } = $props()
 </script>
 
-<SectionHero heroCarouselItems={data.carouselItems} />
-
-<!-- NEWS ---------------------------------------------- -->
-<section id="section--news-snippets-row">
-	<div class="section-header section-header--flex">
+<!-- MARKUP -------------------------------------------- -->
+<section id="section--our-plan" class="host">
+	<!-- HEADER -->
+	<div class="section-header section-header--grid">
 		<div class="title-container">
-			<NewspaperIcon />
-			<h2 class="text text--title">LATEST UPDATES</h2>
+			<LightbulbIcon />
+			<h1 class="text text--title">Our Plan</h1>
 		</div>
-
-		<a href="/news">
-			<Button label="More News & Updates" intent="secondary" />
-		</a>
-	</div>
-
-	<div class="section-body">
-		{#each data.newsArticles as article}
-			<div class="item">
-				<NewsSnippetTile
-					{article}
-					chips={article.category?.map((cat) => ({
-						label: cat
-					})) ?? []}
-				/>
-			</div>
-		{/each}
+		<p>
+			Welcome to FairGo's plan—your roadmap to a fairer Australia, built by everyday people fed up with the majors'
+			broken promises. Explore our vision here.
+		</p>
+		<p>
+			Dive into FairGo's policies, values, and strategies for change. See how we tackle waste, empower communities, and
+			shape a stronger future for all Australians.
+		</p>
 	</div>
 </section>
 
@@ -47,12 +34,10 @@
 			<LandPlotIcon />
 			<h2 class="text text--title">OUR POLICIES</h2>
 		</div>
-
 		<a href="/our-plan/policy">
 			<Button label="Explore Policies" intent="secondary" />
 		</a>
 	</div>
-
 	<div class="section-body">
 		{#each data.policies as policy}
 			<div class="item">
@@ -66,9 +51,6 @@
 		{/each}
 	</div>
 </section>
-
-<!-- CTA------------------------------------------------ -->
-<SectionCtaRow />
 
 <!-- VALUES -->
 <section id="section--values-snippets-row">
@@ -147,40 +129,9 @@
 
 <!-- CSS ----------------------------------------------- -->
 <style>
-	#section--news-snippets-row {
-		--loc-height: calc(var(--sp-12) * 2);
-		.section-body {
-			container-type: inline-size;
-			min-height: var(--loc-height);
-			display: grid;
-			grid-template-columns: repeat(12, 1fr);
-			& > .item {
-				--loc-grid-cols: 4;
-				@media screen and (max-width: 1440px) {
-					--loc-grid-cols: 6;
-				}
-				@media screen and (max-width: 960px) {
-					--loc-grid-cols: 12;
-				}
-				grid-column: span var(--loc-grid-cols);
-				border-right: var(--bdw) solid var(--clr-dv);
-				&:last-child {
-					border-right: none;
-				}
-				@media screen and (max-width: 1440px) {
-					&:nth-child(3) {
-						display: none;
-					}
-				}
-				@media screen and (max-width: 960px) {
-					&:nth-child(2) {
-						display: none;
-					}
-				}
-				@media screen and (max-width: 560px) {
-					height: fit-content;
-				}
-			}
+	#section--our-plan {
+		.section-header {
+			border-bottom: none;
 		}
 	}
 	#section--policy-snippets-row,

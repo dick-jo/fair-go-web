@@ -13,9 +13,20 @@
 
 <!-- HTML ---------------------------------------------- -->
 <section id="section--news" class="host">
-	<div class="section-header">
-		<NewspaperIcon />
-		<h1 class="title">{titleText}</h1>
+	<div class="section-header section-header--grid">
+		<div class="title-container">
+			<NewspaperIcon />
+			<h1 class="text text--title">{titleText}</h1>
+		</div>
+		<p>
+			Welcome to FairGo news & updates—your source for the latest on our fight for fairness. Get the latest from a
+			movement shaking up the majors’ grip, driven by real people.
+		</p>
+
+		<p>
+			Dive into FairGo headlines for fresh stories of change, accountability, and community strength. Stay in the loop
+			as we challenge the old guard with bold, no-nonsense action.
+		</p>
 	</div>
 
 	<!-- BODY ---------------------------------------------- -->
@@ -27,8 +38,7 @@
 						{article}
 						presentation="row"
 						chips={article.category?.map((cat) => ({
-							label: cat,
-							href: `/news?category=${cat}`
+							label: cat
 						})) ?? []}
 					/>
 				</div>

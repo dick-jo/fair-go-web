@@ -9,7 +9,7 @@
 			title="Become a Member"
 			label="join the fight, have a go"
 			intent="secondary"
-			content="Join Sarah Game's Fair Go For Australians and stand for a nation where hard work is rewarded, parents protect their kids, and communities are safe and strong. Be part of our movement to cut power bills, uphold parental rights, and deliver tough, fair justice—sign up today to help us build a better future for all Australians!"
+			content="Join FairGo For Australians and fight for a nation where hard work pays off, families thrive, and communities stand strong. Be part of our bold movement to slash waste, protect parental rights, and deliver fair justice—sign up now to shape a brighter future!"
 			buttonLabel="Become a Member"
 			href="/membership"
 		/>
@@ -20,8 +20,9 @@
 			title="Donate Today"
 			label="chip in"
 			intent="primary"
-			content="Join Sarah Game's Fair Go For Australians and stand for a nation where hard work is rewarded, parents protect their kids, and communities are safe and strong. Be part of our movement to cut power bills, uphold parental rights, and deliver tough, fair justice—sign up today to help us build a better future for all Australians!"
+			content="Back FairGo For Australians and power a country where effort is rewarded, kids are safe, and neighborhoods thrive. Fuel our gritty campaign to cut power bills, uphold freedoms, and enforce tough justice—donate today to drive real change!"
 			buttonLabel="Donate"
+			href="/donate"
 		/>
 	</div>
 </section>

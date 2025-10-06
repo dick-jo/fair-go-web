@@ -1,8 +1,9 @@
 <script lang="ts">
-	import { NAV_ITEMS, NAV_CATEGORIES } from '$lib/config'
+	import { NAV_ITEMS, NAV_CATEGORIES, CATEGORY_CONFIG } from '$lib/config'
 	import Input from '$lib/components/Input/Input.svelte'
 	import Button from '$lib/components/Button/Button.svelte'
 	import { toaster } from '$lib/services/toaster/service.svelte'
+	import type { NavItem } from '$lib/config'
 
 	// FORM HANDLING ---------------------------------------- //
 	let subscribeFormEmail = $state('')
@@ -11,7 +12,6 @@
 	async function handleSubscribe(e: Event) {
 		e.preventDefault()
 
-		// Guard clause - don't submit if already submitting or email is empty
 		if (!subscribeFormEmail.trim() || subscribeFormIsSubmitting) return
 
 		subscribeFormIsSubmitting = true
@@ -19,9 +19,7 @@
 		try {
 			const response = await fetch('/api/subscribe', {
 				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json'
-				},
+				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({
 					email: subscribeFormEmail.trim(),
 					source: 'website_footer'
@@ -30,30 +28,25 @@
 
 			const data = await response.json()
 
-			// Check if the request succeeded
 			if (!response.ok) {
-				// Show error toast
 				toaster.show('failure', data.message, { type: 'negative' })
 			} else {
-				// Show success toast
 				toaster.show('success', data.message, { type: 'positive' })
-				// Clear the form on success
 				subscribeFormEmail = ''
 			}
 		} catch (error) {
-			// Handle network errors or other unexpected errors
 			toaster.show('failure', 'Something went wrong. Please try again.', {
 				type: 'negative'
 			})
 		} finally {
-			// Always reset submitting state, whether success or failure
 			subscribeFormIsSubmitting = false
 		}
 	}
 
 	// CONTENT INIT ----------------------------------------- //
-	const getItemsByCategory = (category: string) => {
-		const items: any[] = []
+	const getItemsByCategory = (category: string): NavItem[] => {
+		const items: NavItem[] = []
+
 		NAV_ITEMS.forEach((item) => {
 			// Add main item if it matches category and should show in footer, but only if it has no children
 			if (item.category === category && item.showInFooter && !item.children) {
@@ -68,12 +61,8 @@
 				})
 			}
 		})
-		return items
-	}
 
-	// UTILS ------------------------------------------------ //
-	const getCategoryHref = (category: string) => {
-		return `/${category.toLowerCase().replace(/\s+/g, '-')}`
+		return items
 	}
 </script>
 
@@ -113,10 +102,11 @@
 
 		{#each NAV_CATEGORIES as category}
 			{@const categoryItems = getItemsByCategory(category)}
+			{@const categoryConfig = CATEGORY_CONFIG[category]}
 			{#if categoryItems.length > 0}
 				<div class="col">
-					<a class="category-link" href={getCategoryHref(category)}>
-						<h3>{category}</h3>
+					<a class="category-link" href={categoryConfig.href}>
+						<h3>{categoryConfig.label}</h3>
 					</a>
 					{#each categoryItems as item}
 						<a class="link-item" href={item.href}>{item.label}</a>
@@ -127,7 +117,7 @@
 	</div>
 </div>
 
-<!-- CSS ----------------------------------------------- -->
+<!-- CSS remains the same -->
 <style>
 	.host {
 		--loc-gap: var(--gap-l);
@@ -141,7 +131,6 @@
 			padding: 0 var(--loc-gap);
 		}
 
-		/* CLAMP ------------------------------------------------ */
 		.clamp {
 			width: 100%;
 			max-width: var(--clamp--content-width--max);
@@ -151,7 +140,6 @@
 				flex-direction: column;
 			}
 
-			/* COLS ------------------------------------------------- */
 			.col {
 				padding: var(--loc-gap) 0;
 				flex: 1;
@@ -170,7 +158,8 @@
 					}
 					color: var(--loc-clr-ink);
 					h3 {
-						font: var(--font--label--secondary);
+						font: var(--font--label--secondary--s);
+						text-transform: var(--text-case--label);
 					}
 				}
 
