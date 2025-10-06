@@ -241,6 +241,9 @@
 			border-style: none;
 			background-color: transparent;
 			cursor: pointer;
+			@media screen and (min-width: 720px) {
+				display: none;
+			}
 
 			& > :global(svg) {
 				stroke: var(--loc-clr-ink);
