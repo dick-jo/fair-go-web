@@ -6,7 +6,7 @@
 		children?: Snippet
 	}
 
-	let { fontSize = 'default', children }: Props = $props()
+	const { fontSize = 'default', children }: Props = $props()
 </script>
 
 <!-- MARKUP -------------------------------------------- -->

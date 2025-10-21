@@ -10,7 +10,7 @@
 		href?: string
 	}
 
-	let { title, label, content, buttonLabel, intent = 'secondary', href }: Props = $props()
+	const { title, label, content, buttonLabel, intent = 'secondary', href }: Props = $props()
 </script>
 
 <!-- SNIPPETS ------------------------------------------ -->

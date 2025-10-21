@@ -1,10 +1,10 @@
 <script lang="ts">
 	import type { ChipProps } from './types'
 
-	let { label, href }: ChipProps = $props()
+	const { label, href }: ChipProps = $props()
 
-	let tag = $derived(href ? 'a' : 'span')
-	let tagProps = $derived(href ? { href, rel: 'tag' } : {})
+	const tag = $derived(href ? 'a' : 'span')
+	const tagProps = $derived(href ? { href, rel: 'tag' } : {})
 </script>
 
 <!-- MARKUP -------------------------------------------- -->

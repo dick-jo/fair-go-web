@@ -1,15 +1,17 @@
+import js from '@eslint/js'
+import svelteKitConfig from '@sveltejs/eslint-config'
+import tsParser from '@typescript-eslint/parser'
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended'
 import eslintPluginSvelte from 'eslint-plugin-svelte'
-import js from '@eslint/js'
 import globals from 'globals'
 import svelteParser from 'svelte-eslint-parser'
 import tsEslint from 'typescript-eslint'
-import tsParser from '@typescript-eslint/parser'
 
 export default [
 	js.configs.recommended,
 	...tsEslint.configs.recommended,
 	...eslintPluginSvelte.configs['flat/recommended'],
+	...svelteKitConfig,
 	eslintPluginPrettierRecommended, // must be last
 	{
 		languageOptions: {

@@ -9,7 +9,7 @@
 	import Breadcrumbs from '$lib/components/Breadcrumbs/Breadcrumbs.svelte'
 	import Delin from '$lib/components/Delin/Delin.svelte'
 
-	let { data }: { data: PageData } = $props()
+	const { data }: { data: PageData } = $props()
 	const { article } = data
 </script>
 

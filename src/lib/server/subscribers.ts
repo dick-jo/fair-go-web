@@ -120,7 +120,7 @@ export async function subscribeToCommunications(
 	const { error: insertError } = await supabase.from('subscribers').insert({
 		email: normalizedEmail,
 		email_opt_in: true,
-		source: source // Track where they subscribed from
+		source // Track where they subscribed from
 	})
 
 	if (insertError) {

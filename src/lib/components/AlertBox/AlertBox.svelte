@@ -11,7 +11,7 @@
 		useShadow?: boolean
 	}
 
-	let {
+	const {
 		label,
 		message,
 		fit = 'intrinsic',

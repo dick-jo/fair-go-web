@@ -24,7 +24,7 @@ export const load: PageServerLoad = async ({ params, locals: { supabase } }) => 
 		memberData.policy_priority_3_id
 	].filter((id): id is string => id !== null)
 
-	let policies: Pick<Policy, 'id' | 'title' | 'short_title' | 'slug' | 'snippet' | 'category'>[] = []
+	let policies: Array<Pick<Policy, 'id' | 'title' | 'short_title' | 'slug' | 'snippet' | 'category'>> = []
 
 	if (policyIds.length > 0) {
 		const { data: policiesData } = await supabase

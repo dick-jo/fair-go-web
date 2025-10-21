@@ -3,7 +3,7 @@
 	import Button from '$lib/components/Button/Button.svelte'
 	import { OctagonAlert } from '@lucide/svelte'
 
-	let { data } = $props()
+	const { data } = $props()
 
 	let cancelling = $state(false)
 	let message = $state('')

@@ -7,10 +7,10 @@
 	import type { Tables } from '$lib/types/supabase.types'
 
 	interface Props {
-		heroCarouselItems: Tables<'carousel_items'>[]
+		heroCarouselItems: Array<Tables<'carousel_items'>>
 	}
 
-	let { heroCarouselItems }: Props = $props()
+	const { heroCarouselItems }: Props = $props()
 
 	// STATE
 	let email = $state('')

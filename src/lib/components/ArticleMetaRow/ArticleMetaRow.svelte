@@ -6,7 +6,7 @@
 		dates?: Snippet
 	}
 
-	let { categories, dates }: Props = $props()
+	const { categories, dates }: Props = $props()
 </script>
 
 <!-- MARKUP -------------------------------------------- -->

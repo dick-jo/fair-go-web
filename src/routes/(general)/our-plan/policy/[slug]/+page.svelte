@@ -9,7 +9,7 @@
 	import Chip from '$lib/components/Chip/Chip.svelte'
 	import DateLabel from '$lib/components/DateLabel/DateLabel.svelte'
 
-	let { data }: { data: PageData } = $props()
+	const { data }: { data: PageData } = $props()
 	const { policy } = data
 </script>
 

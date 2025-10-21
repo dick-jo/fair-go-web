@@ -4,7 +4,7 @@
 	import type { PageData } from './$types'
 	import SectionCtaRow from '$lib/components/SectionCtaRow/SectionCtaRow.svelte'
 
-	let { data }: { data: PageData } = $props()
+	const { data }: { data: PageData } = $props()
 </script>
 
 <!-- HTML ---------------------------------------------- -->

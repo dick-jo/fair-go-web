@@ -15,12 +15,12 @@
 		subscriber: Database['public']['Tables']['subscribers']['Row'] | null
 	}
 
-	let { data }: { data: PrivatePageData; form: ActionData } = $props()
+	const { data }: { data: PrivatePageData; form: ActionData } = $props()
 
 	// STATE ------------------------------------------------ //
 	type FormStatus = 'idle' | 'pending'
 
-	let formState = $state({
+	const formState = $state({
 		yourDetails: {
 			status: 'idle' as FormStatus,
 			hasChanges: false

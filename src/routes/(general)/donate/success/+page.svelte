@@ -2,7 +2,7 @@
 	import Button from '$lib/components/Button/Button.svelte'
 	import { CircleCheckBig } from '@lucide/svelte'
 
-	let { data } = $props()
+	const { data } = $props()
 </script>
 
 <section style="padding: var(--gap-max); text-align: center;">

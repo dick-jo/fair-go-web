@@ -1539,10 +1539,10 @@ export type Database = {
 			}
 			get_size_by_bucket: {
 				Args: Record<PropertyKey, never>
-				Returns: {
+				Returns: Array<{
 					bucket_id: string
 					size: number
-				}[]
+				}>
 			}
 			list_multipart_uploads_with_delimiter: {
 				Args: {
@@ -1553,11 +1553,11 @@ export type Database = {
 					next_upload_token?: string
 					prefix_param: string
 				}
-				Returns: {
+				Returns: Array<{
 					created_at: string
 					id: string
 					key: string
-				}[]
+				}>
 			}
 			list_objects_with_delimiter: {
 				Args: {
@@ -1568,12 +1568,12 @@ export type Database = {
 					prefix_param: string
 					start_after?: string
 				}
-				Returns: {
+				Returns: Array<{
 					id: string
 					metadata: Json
 					name: string
 					updated_at: string
-				}[]
+				}>
 			}
 			lock_top_prefixes: {
 				Args: { bucket_ids: string[]; names: string[] }
@@ -1594,14 +1594,14 @@ export type Database = {
 					sortcolumn?: string
 					sortorder?: string
 				}
-				Returns: {
+				Returns: Array<{
 					created_at: string
 					id: string
 					last_accessed_at: string
 					metadata: Json
 					name: string
 					updated_at: string
-				}[]
+				}>
 			}
 			search_legacy_v1: {
 				Args: {
@@ -1614,14 +1614,14 @@ export type Database = {
 					sortcolumn?: string
 					sortorder?: string
 				}
-				Returns: {
+				Returns: Array<{
 					created_at: string
 					id: string
 					last_accessed_at: string
 					metadata: Json
 					name: string
 					updated_at: string
-				}[]
+				}>
 			}
 			search_v1_optimised: {
 				Args: {
@@ -1634,14 +1634,14 @@ export type Database = {
 					sortcolumn?: string
 					sortorder?: string
 				}
-				Returns: {
+				Returns: Array<{
 					created_at: string
 					id: string
 					last_accessed_at: string
 					metadata: Json
 					name: string
 					updated_at: string
-				}[]
+				}>
 			}
 			search_v2: {
 				Args: {
@@ -1654,7 +1654,7 @@ export type Database = {
 					sort_order?: string
 					start_after?: string
 				}
-				Returns: {
+				Returns: Array<{
 					created_at: string
 					id: string
 					key: string
@@ -1662,7 +1662,7 @@ export type Database = {
 					metadata: Json
 					name: string
 					updated_at: string
-				}[]
+				}>
 			}
 		}
 		Enums: {

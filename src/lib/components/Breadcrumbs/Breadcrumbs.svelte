@@ -10,7 +10,7 @@
 		items: BreadcrumbItem[]
 	}
 
-	let { items }: Props = $props()
+	const { items }: Props = $props()
 </script>
 
 <!-- MARKUP -------------------------------------------- -->

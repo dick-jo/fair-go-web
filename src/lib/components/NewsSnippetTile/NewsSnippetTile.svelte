@@ -15,7 +15,7 @@
 		chips?: ChipProps[]
 	}
 
-	let { article, presentation = 'column', chips = [] }: Props = $props()
+	const { article, presentation = 'column', chips = [] }: Props = $props()
 
 	const displaySnippet = truncateText(article.snippet, SNIPPET_MAX_LENGTH)
 </script>

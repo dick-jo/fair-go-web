@@ -8,7 +8,7 @@
 		colorway?: 'primary' | 'bg' | 'dv' | 'ev'
 	}
 
-	let { label, fit = 'intrinsic', intent = 'primary', colorway = 'primary', ...buttonProps }: Props = $props()
+	const { label, fit = 'intrinsic', intent = 'primary', colorway = 'primary', ...buttonProps }: Props = $props()
 </script>
 
 <!-- MARKUP -------------------------------------------- -->

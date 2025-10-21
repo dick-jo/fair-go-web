@@ -10,7 +10,7 @@
 		chunkSize?: number
 	}
 
-	let { title, label, colorway = 'ev', chunkSize = 3 }: Props = $props()
+	const { title, label, colorway = 'ev', chunkSize = 3 }: Props = $props()
 </script>
 
 <!-- MARKUP -------------------------------------------- -->

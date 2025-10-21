@@ -12,11 +12,11 @@
 		chips?: ChipProps[]
 	}
 
-	let { title, content, href, linkText = 'Read More', icon: IconComponent, chips = [] }: Props = $props()
+	const { title, content, href, linkText = 'Read More', icon: IconComponent, chips = [] }: Props = $props()
 
 	// Determine the tag and props
-	let tag = $derived(href ? 'a' : 'div')
-	let tagProps = $derived(href ? { href } : {})
+	const tag = $derived(href ? 'a' : 'div')
+	const tagProps = $derived(href ? { href } : {})
 </script>
 
 <!-- MARKUP -------------------------------------------- -->

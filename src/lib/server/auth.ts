@@ -49,7 +49,7 @@ export async function createUserWithMagicLink(
 				first_name: first_name.trim(),
 				last_name: last_name.trim(),
 				postcode: postcode.trim(),
-				source: source
+				source
 			}
 		}
 	})

@@ -10,8 +10,8 @@
 	import { invalidate } from '$app/navigation'
 	import Footer from '$lib/components/Footer/Footer.svelte'
 
-	let { data, children } = $props()
-	let { session, supabase } = $derived(data)
+	const { data, children } = $props()
+	const { session, supabase } = $derived(data)
 
 	onMount(() => {
 		const { data } = supabase.auth.onAuthStateChange((_event: AuthChangeEvent, newSession: Session | null) => {

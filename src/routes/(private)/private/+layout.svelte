@@ -6,7 +6,7 @@
 	import { signOut } from '$lib/client/auth'
 	import { page } from '$app/state'
 
-	let { data, children } = $props()
+	const { data, children } = $props()
 	// $inspect(data)
 
 	// CONFIG ----------------------------------------------- //
@@ -25,8 +25,8 @@
 	]
 
 	// STATE ------------------------------------------------ //
-	let activeNavItem = $derived(NAV_ITEMS.find((item) => page.url.pathname === item.href))
-	let pageTitle = $derived(activeNavItem?.label?.toUpperCase() || 'PRIVATE AREA')
+	const activeNavItem = $derived(NAV_ITEMS.find((item) => page.url.pathname === item.href))
+	const pageTitle = $derived(activeNavItem?.label?.toUpperCase() || 'PRIVATE AREA')
 
 	// HANDLERS --------------------------------------------- //
 	const handleSignOut = async () => {

@@ -1,5 +1,5 @@
 <script lang="ts">
-	let { data } = $props()
+	const { data } = $props()
 
 	function formatDate(dateString: string | null) {
 		if (!dateString) return 'N/A'

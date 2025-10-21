@@ -5,7 +5,7 @@
 	import type { Session } from '@supabase/supabase-js'
 	import { fade } from 'svelte/transition'
 
-	let {
+	const {
 		session = null
 	}: {
 		session: Session | null

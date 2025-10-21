@@ -6,10 +6,10 @@
 	import type { Tables } from '$lib/types/supabase.types'
 
 	interface Props {
-		items: Tables<'carousel_items'>[]
+		items: Array<Tables<'carousel_items'>>
 	}
 
-	let { items }: Props = $props()
+	const { items }: Props = $props()
 
 	// STATE ------------------------------------------------ //
 	let activeItemIndex = $state<number>(0)

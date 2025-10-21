@@ -4,7 +4,7 @@
 	import { NewspaperIcon } from '@lucide/svelte'
 	import type { PageData } from './$types'
 
-	let { data }: { data: PageData } = $props()
+	const { data }: { data: PageData } = $props()
 
 	const titleText = data.selectedCategory
 		? `${data.selectedCategory.charAt(0).toUpperCase() + data.selectedCategory.slice(1)} News`

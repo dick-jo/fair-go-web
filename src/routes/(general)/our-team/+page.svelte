@@ -8,7 +8,7 @@
 
 	type TeamMember = Tables<'team_members'>
 
-	let { data }: { data: PageData } = $props()
+	const { data }: { data: PageData } = $props()
 </script>
 
 {#snippet teamMemberTile(member: TeamMember)}

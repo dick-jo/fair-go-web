@@ -10,7 +10,7 @@
 	import { getPolicyIcon } from '$lib/utils/policyIcons'
 	import type { PageData } from './$types'
 
-	let { data }: { data: PageData } = $props()
+	const { data }: { data: PageData } = $props()
 	const { member, petPolicies } = data
 </script>
 

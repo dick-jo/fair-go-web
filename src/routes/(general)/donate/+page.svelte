@@ -14,7 +14,7 @@
 		profile: Tables<'profiles'> | null
 	}
 
-	let { data }: { data: DonatePageData } = $props()
+	const { data }: { data: DonatePageData } = $props()
 
 	// LOGIN ------------------------------------------------ //
 	let loginStatus = $state<'idle' | 'pending'>('idle')
@@ -36,7 +36,7 @@
 
 	// DONATION AMOUNT SELECTION ---------------------------- //
 	let donateAmountSelection = $state<number>(1) // Default to $50
-	let donateAmountSelected = $derived(DONATION_AMOUNTS[donateAmountSelection])
+	const donateAmountSelected = $derived(DONATION_AMOUNTS[donateAmountSelection])
 
 	function handleDonationAmountSelect(index: number) {
 		donateAmountSelection = index

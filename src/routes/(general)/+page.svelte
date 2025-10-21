@@ -8,7 +8,7 @@
 	import { getPolicyIcon } from '$lib/utils'
 	import Button from '$lib/components/Button/Button.svelte'
 
-	let { data }: { data: PageData } = $props()
+	const { data }: { data: PageData } = $props()
 </script>
 
 <SectionHero heroCarouselItems={data.carouselItems} />

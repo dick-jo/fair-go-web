@@ -7,12 +7,12 @@
 	import type { ActionResult } from '@sveltejs/kit'
 	import type { ActionData, PageData } from './$types'
 
-	let { data }: { data: PageData; form: ActionData } = $props()
+	const { data }: { data: PageData; form: ActionData } = $props()
 
 	// STATE ------------------------------------------------ //
 	type FormStatus = 'idle' | 'pending'
 
-	let formState = $state({
+	const formState = $state({
 		communicationPreferences: {
 			status: 'idle' as FormStatus,
 			hasChanges: false

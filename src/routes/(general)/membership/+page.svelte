@@ -19,7 +19,7 @@
 		subscriber: Database['public']['Tables']['subscribers']['Row'] | null
 	}
 
-	let { data }: { data: MembershipPageData } = $props()
+	const { data }: { data: MembershipPageData } = $props()
 
 	// $inspect(data)
 
@@ -71,7 +71,7 @@
 	let formElectoralRollDetailsStatus = $state<FormStatus>('idle')
 	let formConsentStatus = $state<FormStatus>('idle')
 
-	let isNextButtonDisabled = $derived(formElectoralRollDetailsStatus === 'pending' || formConsentStatus === 'pending')
+	const isNextButtonDisabled = $derived(formElectoralRollDetailsStatus === 'pending' || formConsentStatus === 'pending')
 
 	// MEMBERSHIP FORM: Steps API --------------------------- //
 	function next() {
@@ -177,9 +177,9 @@
 	// FEE SELECTOR: State ---------------------------------- //
 	let feeSelectorIndex = $state<number>(0)
 	let feeSelectorIndexUserSelection = $state<number>(0)
-	let feeSelectorValue = $derived(MEMBERSHIP_TIERS[feeSelectorIndex].value)
-	let feeSelectorLabel = $derived(MEMBERSHIP_TIERS[feeSelectorIndex].label)
-	let feeSelectorMeterPerc = $derived((feeSelectorIndex / (MEMBERSHIP_TIERS.length - 1)) * 100)
+	const feeSelectorValue = $derived(MEMBERSHIP_TIERS[feeSelectorIndex].value)
+	const feeSelectorLabel = $derived(MEMBERSHIP_TIERS[feeSelectorIndex].label)
+	const feeSelectorMeterPerc = $derived((feeSelectorIndex / (MEMBERSHIP_TIERS.length - 1)) * 100)
 
 	// FEE SELECTOR: Handlers ------------------------------- //
 	function handleFeeSelectorMouseOver(i: number) {

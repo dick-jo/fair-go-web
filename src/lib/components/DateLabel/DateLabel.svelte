@@ -6,7 +6,7 @@
 		date: string | null
 	}
 
-	let { label, date }: Props = $props()
+	const { label, date }: Props = $props()
 </script>
 
 <!-- HTML ---------------------------------------------- -->

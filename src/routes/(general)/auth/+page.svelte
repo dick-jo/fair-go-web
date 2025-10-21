@@ -6,12 +6,12 @@
 	import { enhance } from '$app/forms'
 	import type { ActionData } from './$types'
 
-	let { form }: { form: ActionData } = $props()
+	const { form }: { form: ActionData } = $props()
 
 	// STATE ------------------------------------------------ //
 	type FormStatus = 'idle' | 'pending'
 
-	let formState = $state({
+	const formState = $state({
 		login: {
 			status: 'idle' as FormStatus
 		},
