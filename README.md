@@ -143,11 +143,11 @@ This project is optimized for development with **Claude Code** using Model Conte
 ### What is Claude Code?
 
 Claude Code is an AI-powered CLI that integrates with your development workflow, providing:
-- Direct database access via Supabase MCP
-- Automatic type generation
-- Deployment assistance via Netlify CLI
-- Real-time Svelte 5 documentation access
-- Code review and security audits
+- Direct database access and management via Supabase MCP (no credentials in config needed)
+- Automatic type generation from your Supabase schema
+- Deployment assistance via Netlify CLI integration
+- Real-time Svelte 5 documentation access via Svelte MCP
+- Code review, security audits, and AI-assisted development
 
 ### Setup for Claude Code Users
 
@@ -163,13 +163,17 @@ brew install netlify-cli
 
 #### 2. Configure MCP Servers
 
-The project includes `.mcp.json` configuration for:
-- **Supabase MCP** - Direct database access
-- **Svelte MCP** - Svelte 5 documentation
+**Svelte MCP** (Already configured):
+- Located in `.mcp.json` (project-level)
+- Provides Svelte 5 documentation access
+- No additional setup required
 
-**First time setup**:
-1. Copy `.mcp.json` and add your Supabase credentials
-2. See [`docs/NEW_SESSION_INSTRUCTIONS.md`](./docs/NEW_SESSION_INSTRUCTIONS.md) for detailed setup
+**Supabase MCP** (User-level setup):
+- Installed globally via: `claude mcp add --transport http supabase "https://mcp.supabase.com/mcp"`
+- Stored in your user `~/.claude.json` (not in project)
+- No credentials needed in config files
+- Authentication happens via browser OAuth when you run `/mcp` in Claude Code
+- See [Supabase MCP Docs](https://supabase.com/docs/guides/getting-started/mcp) for details
 
 #### 3. Authenticate Services
 
@@ -189,11 +193,16 @@ Once configured, you can ask Claude to:
 ```
 "Regenerate my Supabase types"
 "Show me all tables in the database"
+"Apply a migration to add an index"
 "Deploy to Netlify preview"
 "Check deployment status"
 "Explain how the membership payment flow works"
 "Review my code for security issues"
+"Get security and performance advisors for my database"
 ```
+
+**Verify MCP Setup:**
+Run `/mcp` in Claude Code to authenticate with Supabase (one-time browser OAuth). After that, Claude will have full access to manage your database, apply migrations, and generate types.
 
 See [`.claude.md`](./.claude.md) for project-specific context that Claude uses.
 

@@ -8,17 +8,28 @@ Your development environment has been configured to work seamlessly with Claude 
 
 ✅ **Supabase CLI** - For generating database types
 ✅ **Netlify CLI** - For deployment management
-✅ **Supabase MCP Server** - Gives Claude direct database access
-✅ **Svelte MCP Server** - Already configured for Svelte 5 help
+✅ **Supabase MCP Server** - User-level (via `~/.claude.json`), authenticated via browser OAuth
+✅ **Svelte MCP Server** - Project-level (in `.mcp.json`), provides Svelte 5 documentation
 ✅ **`.claude.md`** - Project context file
 ✅ **Database types generated** - `src/lib/types/database.types.ts`
-✅ **`.mcp.json` gitignored** - Your credentials are safe
 
 ---
 
 ## Next Steps (Do these now!)
 
-### 1. Authenticate with Netlify
+### 1. Set Up Supabase MCP (First Time Only)
+
+If you haven't already added the Supabase MCP server, run:
+
+```bash
+claude mcp add --transport http supabase "https://mcp.supabase.com/mcp"
+```
+
+Then authenticate by running `/mcp` in Claude Code, which will open your browser for OAuth login. This is a **one-time setup** stored in your `~/.claude.json` (user-level, not project-level).
+
+**Already set up?** Skip to step 2.
+
+### 2. Authenticate with Netlify
 
 Run this command in your terminal:
 ```bash
@@ -35,7 +46,7 @@ After logging in, verify it worked:
 netlify status
 ```
 
-### 2. Link to your Netlify site
+### 3. Link to your Netlify site
 
 ```bash
 cd /Users/dickjones/project-local/fair-go-web
@@ -44,7 +55,7 @@ netlify link
 
 Choose your existing Fair Go site from the list.
 
-### 3. Restart Claude Code
+### 4. Restart Claude Code (If You Just Added Supabase MCP)
 
 **IMPORTANT**: The Supabase MCP server won't activate until you restart Claude Code.
 
@@ -114,9 +125,10 @@ Instead of opening Supabase dashboard, just ask Claude:
 ## Troubleshooting
 
 ### MCP server not working?
-1. Make sure you restarted Claude Code
-2. Check `.mcp.json` has valid credentials (no "YOUR_" placeholders)
-3. Try running `supabase gen types` manually to verify credentials work
+1. Make sure you restarted Claude Code after setup
+2. Run `/mcp` in Claude Code to authenticate with Supabase via browser OAuth
+3. Check that Supabase MCP was added to `~/.claude.json` (user-level, not project-level)
+4. Verify Svelte MCP is in project's `.mcp.json`
 
 ### Netlify commands failing?
 1. Make sure you ran `netlify login`
@@ -142,10 +154,12 @@ Instead of opening Supabase dashboard, just ask Claude:
 ## Files Created/Modified
 
 - `.claude.md` - Project documentation and conventions
-- `.mcp.json` - MCP server configuration (gitignored for security)
-- `.gitignore` - Updated to ignore `.mcp.json`
-- `src/lib/types/database.types.ts` - Supabase types (18KB)
-- `NEW_SESSION_INSTRUCTIONS.md` - This file
+- `.mcp.json` - Svelte MCP server configuration (project-level, no secrets)
+- `~/.claude.json` - Supabase MCP configuration (user-level, managed by `claude mcp add`)
+- `src/lib/types/database.types.ts` - Supabase types (auto-generated)
+- `docs/NEW_SESSION_INSTRUCTIONS.md` - This file
+
+**Note**: Supabase MCP is user-level (not in this repo) and requires no credentials in config files. Authentication happens via browser OAuth when you run `/mcp`.
 
 ---
 
