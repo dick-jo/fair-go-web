@@ -139,7 +139,7 @@ npm run build            # Production build
 npm run preview          # Preview production build locally
 
 # Supabase (requires Supabase CLI)
-supabase gen types typescript --project-id YOUR_PROJECT_ID > src/lib/types/database.types.ts
+supabase gen types typescript --project-id YOUR_PROJECT_ID > src/lib/types/supabase.types.ts
 ```
 
 ---
@@ -229,7 +229,7 @@ src/
 │   ├── client/          # Client-side utilities
 │   ├── services/        # Business logic (toaster, etc.)
 │   ├── utils/           # Helper functions
-│   ├── types/           # TypeScript types (including database.types.ts)
+│   ├── types/           # TypeScript types (including supabase.types.ts)
 │   ├── config/          # Configuration files
 │   ├── style/           # Global CSS and design tokens
 │   └── assets/          # Static assets
@@ -311,7 +311,7 @@ The `SECRETS_SCAN_OMIT_PATHS` tells Netlify to ignore environment variables in s
 After any database schema changes:
 
 ```bash
-supabase gen types typescript --project-id cejoaoqhphkhwbdagzib > src/lib/types/database.types.ts
+supabase gen types typescript --project-id cejoaoqhphkhwbdagzib > src/lib/types/supabase.types.ts
 ```
 
 **With Claude Code**:

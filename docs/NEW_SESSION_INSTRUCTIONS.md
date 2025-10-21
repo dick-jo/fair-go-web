@@ -11,7 +11,7 @@ Your development environment has been configured to work seamlessly with Claude 
 ✅ **Supabase MCP Server** - User-level (via `~/.claude.json`), authenticated via browser OAuth
 ✅ **Svelte MCP Server** - Project-level (in `.mcp.json`), provides Svelte 5 documentation
 ✅ **`.claude.md`** - Project context file
-✅ **Database types generated** - `src/lib/types/database.types.ts`
+✅ **Database types generated** - `src/lib/types/supabase.types.ts`
 
 ---
 
@@ -92,7 +92,7 @@ Ask Claude:
 Claude should run:
 
 ```bash
-supabase gen types typescript --project-id cejoaoqhphkhwbdagzib > src/lib/types/database.types.ts
+supabase gen types typescript --project-id cejoaoqhphkhwbdagzib > src/lib/types/supabase.types.ts
 ```
 
 ### Test 3: Netlify CLI
@@ -177,7 +177,7 @@ Instead of opening Supabase dashboard, just ask Claude:
 - `.claude.md` - Project documentation and conventions
 - `.mcp.json` - Svelte MCP server configuration (project-level, no secrets)
 - `~/.claude.json` - Supabase MCP configuration (user-level, managed by `claude mcp add`)
-- `src/lib/types/database.types.ts` - Supabase types (auto-generated)
+- `src/lib/types/supabase.types.ts` - Supabase types (auto-generated)
 - `docs/NEW_SESSION_INSTRUCTIONS.md` - This file
 
 **Note**: Supabase MCP is user-level (not in this repo) and requires no credentials in config files. Authentication happens via browser OAuth when you run `/mcp`.
