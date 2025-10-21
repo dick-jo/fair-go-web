@@ -9,6 +9,7 @@ Official website and member platform for Fair Go - a political party's primary w
 ## Overview
 
 This is a full-stack SvelteKit application serving as the primary digital funnel for:
+
 - Member onboarding and management
 - Email collection and communications
 - Payment processing (donations & subscriptions)
@@ -20,17 +21,20 @@ This is a full-stack SvelteKit application serving as the primary digital funnel
 ## Tech Stack
 
 ### Frontend
+
 - **SvelteKit 2** - Meta-framework for Svelte
 - **Svelte 5** - UI framework with runes syntax
 - **TypeScript** - Type safety
 - **Vite** - Build tooling
 
 ### Backend & Services
+
 - **Supabase** - Authentication, database (PostgreSQL), and API
 - **Stripe** - Payment processing (subscriptions & one-time payments)
 - **Netlify** - Hosting, serverless functions, and deployment
 
 ### Development Tools
+
 - **ESLint + Prettier** - Code formatting and linting
 - **Claude Code** - AI-assisted development (recommended)
 
@@ -45,6 +49,7 @@ This is a full-stack SvelteKit application serving as the primary digital funnel
 - **Netlify account** - [netlify.com](https://netlify.com)
 
 ### Optional (for AI-assisted workflow)
+
 - **Supabase CLI** - For type generation
 - **Netlify CLI** - For local deployment testing
 - **Claude Code** - Enhanced development experience with MCP servers
@@ -64,6 +69,7 @@ npm install
 ### 2. Environment Setup
 
 Copy the example environment file:
+
 ```bash
 cp .env.example .env
 ```
@@ -82,6 +88,7 @@ STRIPE_WEBHOOK_SECRET=whsec_...
 ```
 
 **Security Note**:
+
 - Never commit `.env` to git (already in `.gitignore`)
 - Use test keys (`sk_test_`) for development
 - Production keys are managed in Netlify environment variables
@@ -98,15 +105,16 @@ Visit [http://localhost:5173](http://localhost:5173)
 
 ## Environment Variables
 
-| Variable | Type | Description | Where to Get |
-|----------|------|-------------|--------------|
-| `PUBLIC_SUPABASE_URL` | Public | Supabase project URL | Supabase Dashboard → Settings → API |
-| `PUBLIC_SUPABASE_ANON_KEY` | Public | Supabase anon/public key | Supabase Dashboard → Settings → API |
-| `SUPABASE_SERVICE_ROLE_KEY` | Secret | Supabase service role key (bypasses RLS) | Supabase Dashboard → Settings → API |
-| `STRIPE_SECRET_KEY` | Secret | Stripe API secret key | Stripe Dashboard → Developers → API Keys |
-| `STRIPE_WEBHOOK_SECRET` | Secret | Stripe webhook signing secret | Stripe Dashboard → Webhooks |
+| Variable                    | Type   | Description                              | Where to Get                             |
+| --------------------------- | ------ | ---------------------------------------- | ---------------------------------------- |
+| `PUBLIC_SUPABASE_URL`       | Public | Supabase project URL                     | Supabase Dashboard → Settings → API      |
+| `PUBLIC_SUPABASE_ANON_KEY`  | Public | Supabase anon/public key                 | Supabase Dashboard → Settings → API      |
+| `SUPABASE_SERVICE_ROLE_KEY` | Secret | Supabase service role key (bypasses RLS) | Supabase Dashboard → Settings → API      |
+| `STRIPE_SECRET_KEY`         | Secret | Stripe API secret key                    | Stripe Dashboard → Developers → API Keys |
+| `STRIPE_WEBHOOK_SECRET`     | Secret | Stripe webhook signing secret            | Stripe Dashboard → Webhooks              |
 
 **Public vs Secret**:
+
 - `PUBLIC_*` variables are safe for client-side code (bundled into browser JavaScript)
 - Other variables are server-only (used in `+server.ts` and `+page.server.ts` files)
 
@@ -143,6 +151,7 @@ This project is optimized for development with **Claude Code** using Model Conte
 ### What is Claude Code?
 
 Claude Code is an AI-powered CLI that integrates with your development workflow, providing:
+
 - Direct database access and management via Supabase MCP (no credentials in config needed)
 - Automatic type generation from your Supabase schema
 - Deployment assistance via Netlify CLI integration
@@ -164,11 +173,13 @@ brew install netlify-cli
 #### 2. Configure MCP Servers
 
 **Svelte MCP** (Already configured):
+
 - Located in `.mcp.json` (project-level)
 - Provides Svelte 5 documentation access
 - No additional setup required
 
 **Supabase MCP** (User-level setup):
+
 - Installed globally via: `claude mcp add --transport http supabase "https://mcp.supabase.com/mcp"`
 - Stored in your user `~/.claude.json` (not in project)
 - No credentials needed in config files
@@ -258,6 +269,7 @@ src/
 The site auto-deploys from the `master` branch to Netlify.
 
 **Manual deploy via CLI**:
+
 ```bash
 # Preview deploy
 netlify deploy
@@ -272,6 +284,7 @@ Settings → Environment Variables
 ### Build Configuration
 
 See `netlify.toml`:
+
 ```toml
 [build]
   command = "npm run build"
@@ -302,6 +315,7 @@ supabase gen types typescript --project-id cejoaoqhphkhwbdagzib > src/lib/types/
 ```
 
 **With Claude Code**:
+
 ```
 "Regenerate my Supabase types"
 ```
@@ -315,10 +329,12 @@ Claude will automatically run the command and update the types file.
 ### Stripe Integration
 
 **Test Mode** (development):
+
 - Use test API keys (`sk_test_...`)
 - Test cards: `4242 4242 4242 4242` (any future date, any CVC)
 
 **Webhooks** (required for subscriptions):
+
 1. Install Stripe CLI: `brew install stripe/stripe-cli/stripe`
 2. Forward webhooks locally:
    ```bash
@@ -327,6 +343,7 @@ Claude will automatically run the command and update the types file.
 3. Copy the webhook secret to `.env` as `STRIPE_WEBHOOK_SECRET`
 
 **Production**:
+
 - Webhook endpoint: `https://fairgo.org.au/api/stripe-webhook`
 - Configure in Stripe Dashboard → Webhooks
 - Events to listen for:
@@ -354,6 +371,7 @@ Claude will automatically run the command and update the types file.
 - **Server/client separation** - use `$env/static/private` for secrets
 
 Run checks before committing:
+
 ```bash
 npm run check
 ```
@@ -371,6 +389,7 @@ npm run check
 ## Support
 
 For issues or questions:
+
 - Check existing documentation in `/docs`
 - Review code comments in complex files
 - Ask Claude Code (if using): "Explain how [feature] works"
@@ -385,4 +404,4 @@ For issues or questions:
 
 **Built with ❤️ for Fair Go**
 
-*Powered by SvelteKit, Supabase, Stripe, and Claude Code*
+_Powered by SvelteKit, Supabase, Stripe, and Claude Code_

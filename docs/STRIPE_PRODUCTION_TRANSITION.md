@@ -9,6 +9,7 @@
 ## Overview
 
 You're transitioning from a personal sandbox Stripe account to the stakeholders' official Stripe account. This guide walks you through:
+
 1. Understanding test vs production modes
 2. Getting the new keys
 3. Testing thoroughly with test mode
@@ -24,12 +25,14 @@ You're transitioning from a personal sandbox Stripe account to the stakeholders'
 ### Every Stripe Account Has TWO Modes
 
 **Test Mode** (for development):
+
 - Keys start with `sk_test_...` and `whsec_test_...`
 - Uses test credit cards (4242 4242 4242 4242)
 - No real money changes hands
 - Perfect for development and testing
 
 **Production Mode** (for real payments):
+
 - Keys start with `sk_live_...` and `whsec_live_...`
 - Uses real credit cards
 - Real money is charged
@@ -105,6 +108,7 @@ STRIPE_WEBHOOK_SECRET=whsec_NEW_STAKEHOLDER_ACCOUNT
 ### Why Webhooks Matter
 
 Your app needs webhooks for:
+
 - Confirming donations completed
 - Activating memberships after payment
 - Handling subscription renewals
@@ -115,17 +119,21 @@ Your app needs webhooks for:
 **Option A: Using Stripe CLI** (Recommended for local testing)
 
 1. **Install Stripe CLI**:
+
    ```bash
    brew install stripe/stripe-cli/stripe
    ```
 
 2. **Login to Stripe CLI**:
+
    ```bash
    stripe login
    ```
+
    This opens browser to connect to your Stripe account.
 
 3. **Forward webhooks to local dev server**:
+
    ```bash
    # Start your dev server first
    npm run dev
@@ -194,6 +202,7 @@ npm run dev
 Use Stripe test cards: https://stripe.com/docs/testing
 
 **Test Card Numbers:**
+
 - Success: `4242 4242 4242 4242`
 - Declined: `4000 0000 0000 0002`
 - Requires authentication: `4000 0025 0000 3155`
@@ -284,6 +293,7 @@ Use any future expiry date, any 3-digit CVC, any ZIP code.
    - `SUPABASE_SERVICE_ROLE_KEY`
 
 5. **Save and redeploy**:
+
    ```bash
    netlify deploy --prod
    ```
@@ -309,6 +319,7 @@ Use any future expiry date, any 3-digit CVC, any ZIP code.
 ### Then Ask Stakeholders to Test
 
 Once you've verified it works, ask a stakeholder to:
+
 - [ ] Make a small donation
 - [ ] Sign up for membership (they can cancel immediately after)
 - [ ] Verify they receive confirmation emails (if configured)
@@ -322,6 +333,7 @@ Once you've verified it works, ask a stakeholder to:
 **Problem**: Payment succeeds but database doesn't update.
 
 **Solutions**:
+
 1. **Check webhook endpoint is correct**: `https://fairgo.org.au/api/stripe-webhook`
 2. **Check webhook events** are selected:
    - `checkout.session.completed`
@@ -335,6 +347,7 @@ Once you've verified it works, ask a stakeholder to:
 **Problem**: Webhook receives request but signature doesn't match.
 
 **Solution**: Webhook secret in Netlify doesn't match Stripe Dashboard.
+
 1. Go to Stripe Dashboard → Webhooks → Click your webhook
 2. Reveal signing secret
 3. Copy to Netlify exactly
@@ -344,11 +357,13 @@ Once you've verified it works, ask a stakeholder to:
 **Problem**: Webhook fires but database doesn't update.
 
 **Solution**: Check server logs for errors:
+
 ```bash
 netlify functions:log stripe-webhook
 ```
 
 Common causes:
+
 - Wrong user ID in `client_reference_id`
 - Supabase service role key incorrect
 - RLS policy blocking update
@@ -358,6 +373,7 @@ Common causes:
 **Problem**: Test card is declined in test mode.
 
 **Solution**:
+
 - Ensure you're in TEST mode in Stripe Dashboard
 - Use correct test card: `4242 4242 4242 4242`
 - Check you didn't accidentally use a "declined" test card
@@ -371,6 +387,7 @@ If something goes wrong in production:
 ### Quick Rollback
 
 1. **Revert to old Stripe account**:
+
    ```bash
    # In Netlify, change environment variables back
    STRIPE_SECRET_KEY=sk_test_OLD_ACCOUNT
@@ -378,6 +395,7 @@ If something goes wrong in production:
    ```
 
 2. **Redeploy**:
+
    ```bash
    netlify deploy --prod
    ```
@@ -443,6 +461,7 @@ stripe events retrieve evt_xxxxx
 ## Need Help?
 
 Ask Claude Code:
+
 - "Walk me through testing Stripe donations"
 - "Check my Stripe webhook handler for issues"
 - "Verify my Stripe configuration is correct"

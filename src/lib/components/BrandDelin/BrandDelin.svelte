@@ -1,7 +1,7 @@
 <script lang="ts">
 	interface Props {}
 
-	let {}: Props = $props();
+	let {}: Props = $props()
 </script>
 
 <!-- MARKUP -------------------------------------------- -->

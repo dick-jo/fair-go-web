@@ -32,16 +32,19 @@ Then authenticate by running `/mcp` in Claude Code, which will open your browser
 ### 2. Authenticate with Netlify
 
 Run this command in your terminal:
+
 ```bash
 netlify login
 ```
 
 This will:
+
 - Open your browser for authentication
 - Save your credentials locally
 - Allow Claude to help with deployments
 
 After logging in, verify it worked:
+
 ```bash
 netlify status
 ```
@@ -60,6 +63,7 @@ Choose your existing Fair Go site from the list.
 **IMPORTANT**: The Supabase MCP server won't activate until you restart Claude Code.
 
 After restart, the MCP server will load and I'll be able to help you with:
+
 - Database queries and schema inspection
 - Table creation and modifications
 - Data analysis
@@ -72,28 +76,37 @@ After restart, the MCP server will load and I'll be able to help you with:
 After restarting Claude Code, try these to verify everything works:
 
 ### Test 1: Supabase MCP (Database Access)
+
 Ask Claude:
+
 > "Show me all the tables in my database"
 
 Claude should be able to query your Supabase database directly and list tables like `authors`, `carousel_items`, etc.
 
 ### Test 2: Supabase Type Generation
+
 Ask Claude:
+
 > "Regenerate my Supabase types"
 
 Claude should run:
+
 ```bash
 supabase gen types typescript --project-id cejoaoqhphkhwbdagzib > src/lib/types/database.types.ts
 ```
 
 ### Test 3: Netlify CLI
+
 Ask Claude:
+
 > "Check my Netlify deployment status"
 
 Claude should run `netlify status` and tell you about your site.
 
 ### Test 4: Svelte MCP
+
 Ask Claude:
+
 > "Show me the Svelte 5 documentation for $state"
 
 Claude should fetch the official Svelte 5 runes documentation.
@@ -103,19 +116,24 @@ Claude should fetch the official Svelte 5 runes documentation.
 ## Common Workflows
 
 ### When you change the database schema:
+
 1. Make changes in Supabase dashboard (or ask Claude to help via MCP)
 2. Ask Claude: "Regenerate my database types"
 3. Claude runs the type generation command automatically
 4. Use the new types in your code
 
 ### When you want to deploy:
+
 Ask Claude:
+
 > "Deploy to Netlify preview"
 
 Claude will run `netlify deploy` for you.
 
 ### When you need database info:
+
 Instead of opening Supabase dashboard, just ask Claude:
+
 > "What columns are in the authors table?"
 > "Show me the last 5 news articles"
 > "Create a new table for campaign events"
@@ -125,17 +143,20 @@ Instead of opening Supabase dashboard, just ask Claude:
 ## Troubleshooting
 
 ### MCP server not working?
+
 1. Make sure you restarted Claude Code after setup
 2. Run `/mcp` in Claude Code to authenticate with Supabase via browser OAuth
 3. Check that Supabase MCP was added to `~/.claude.json` (user-level, not project-level)
 4. Verify Svelte MCP is in project's `.mcp.json`
 
 ### Netlify commands failing?
+
 1. Make sure you ran `netlify login`
 2. Make sure you ran `netlify link` to connect to your site
 3. Try `netlify status` to verify authentication
 
 ### Types generation failing?
+
 1. Check your Supabase project ID is correct in `.claude.md`
 2. Verify you have internet connection
 3. Check Supabase is not having an outage

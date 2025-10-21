@@ -4,16 +4,16 @@
  * @returns true if valid, false otherwise
  */
 export function validatePostcode(postcode: string): boolean {
-	if (!postcode) return false;
+	if (!postcode) return false
 
 	// Remove any whitespace
-	const cleaned = postcode.trim();
+	const cleaned = postcode.trim()
 
 	// Must be exactly 4 digits
-	if (!/^\d{4}$/.test(cleaned)) return false;
+	if (!/^\d{4}$/.test(cleaned)) return false
 
 	// Convert to number for range checking
-	const code = parseInt(cleaned, 10);
+	const code = parseInt(cleaned, 10)
 
 	// Australian postcode ranges
 	// NSW: 1000-1999, 2000-2599, 2619-2899, 2921-2999
@@ -43,5 +43,5 @@ export function validatePostcode(postcode: string): boolean {
 		(code >= 7000 && code <= 7999) || // TAS
 		(code >= 8000 && code <= 8999) || // VIC
 		(code >= 9000 && code <= 9999) // QLD
-	);
+	)
 }

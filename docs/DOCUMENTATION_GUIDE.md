@@ -25,11 +25,13 @@ This document explains how documentation is organized in this project and what s
 ### ✅ COMMIT These (Helpful for collaborators)
 
 **Root Level:**
+
 - `README.md` - Main project documentation
 - `.claude.md` - Project context for Claude Code users
 - `.env.example` - Template for environment variables (NO SECRETS)
 
 **`/docs` Directory:**
+
 - `SECURITY_AUDIT_REPORT.md` - Security practices and patterns
 - `NEW_SESSION_INSTRUCTIONS.md` - Claude Code setup guide
 - `DOCUMENTATION_GUIDE.md` - This file
@@ -49,6 +51,7 @@ This document explains how documentation is organized in this project and what s
 ### Root-Level Files
 
 **README.md** - The main entry point for new developers
+
 - Project overview
 - Setup instructions
 - Development commands
@@ -56,6 +59,7 @@ This document explains how documentation is organized in this project and what s
 - Links to other docs
 
 **.claude.md** - Context for Claude Code
+
 - Project architecture
 - Code conventions
 - Tech stack details
@@ -63,6 +67,7 @@ This document explains how documentation is organized in this project and what s
 - Things Claude should know
 
 **.env.example** - Environment variable template
+
 - All required environment variables
 - Placeholder values (NEVER real secrets)
 - Comments explaining where to get values
@@ -73,18 +78,21 @@ This document explains how documentation is organized in this project and what s
 Additional documentation that supports the README:
 
 **SECURITY_AUDIT_REPORT.md**
+
 - Security audit findings
 - Best practices
 - Common pitfalls to avoid
 - How the security model works
 
 **NEW_SESSION_INSTRUCTIONS.md**
+
 - Claude Code setup guide
 - Testing instructions
 - MCP server configuration
 - Post-setup verification
 
 **Other Potential Docs:**
+
 - `ARCHITECTURE.md` - System architecture diagrams
 - `API.md` - API endpoint documentation
 - `DEPLOYMENT.md` - Detailed deployment procedures
@@ -114,7 +122,9 @@ Additional documentation that supports the README:
 **Bold** for emphasis
 `code` for inline code
 ```
+
 Code blocks for multi-line code
+
 ```
 
 - Bullet lists
@@ -126,6 +136,7 @@ Code blocks for multi-line code
 ### Code Examples
 
 Always include:
+
 - Language identifier in code blocks
 - Context about what the code does
 - Any necessary setup or prerequisites
@@ -137,6 +148,7 @@ Always include:
 ### When to Create New Docs
 
 Create a new doc in `/docs` when:
+
 - Topic is too detailed for README
 - Information is reference material (vs. getting started)
 - Content is specific to a workflow (like Claude Code)
@@ -145,6 +157,7 @@ Create a new doc in `/docs` when:
 ### When to Update Existing Docs
 
 Update documentation when:
+
 - Adding new features or dependencies
 - Changing setup requirements
 - Fixing errors or outdated information
@@ -154,6 +167,7 @@ Update documentation when:
 ### When to Delete Docs
 
 Delete or archive when:
+
 - Information is completely outdated
 - Feature was removed
 - Doc was temporary (like onboarding guides after onboarding)
@@ -165,6 +179,7 @@ Delete or archive when:
 ### Why `.claude.md` is Important
 
 `.claude.md` serves as the "system prompt" for Claude when working on your project. It should contain:
+
 - Project purpose and context
 - Architecture decisions
 - Code conventions
@@ -177,6 +192,7 @@ Delete or archive when:
 ### AI-Assisted Documentation
 
 Claude Code can help with documentation:
+
 - "Update the README with the new deployment process"
 - "Add this new environment variable to .env.example"
 - "Explain how the webhook flow works in ARCHITECTURE.md"
@@ -202,6 +218,7 @@ git commit -m "fix typo"
 ### When to Commit
 
 Commit documentation changes:
+
 - With the feature they document (atomic commits)
 - As soon as you clarify something confusing
 - When onboarding reveals gaps
@@ -226,6 +243,7 @@ Before committing documentation, verify:
 ## Questions About Documentation?
 
 Ask Claude Code:
+
 - "What should I document about this new feature?"
 - "Is this the right place for this information?"
 - "Review this documentation for clarity"

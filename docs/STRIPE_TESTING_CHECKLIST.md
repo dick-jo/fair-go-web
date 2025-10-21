@@ -20,6 +20,7 @@ Quick reference checklist for testing Stripe integration before production deplo
 ## Test 1: One-Time Donation
 
 ### Steps
+
 1. Navigate to: http://localhost:5173/donate
 2. Fill in donor information
 3. Select amount (e.g., $50)
@@ -28,6 +29,7 @@ Quick reference checklist for testing Stripe integration before production deplo
 6. Should redirect to success page
 
 ### Verify
+
 - [ ] Success page displays
 - [ ] Payment in Stripe Dashboard → Payments (Test mode)
 - [ ] Terminal shows webhook fired: `checkout.session.completed`
@@ -37,13 +39,15 @@ Quick reference checklist for testing Stripe integration before production deplo
 - [ ] Database: `donor_metadata` contains donor info
 
 **Notes:**
-_________________________________________________
+
+---
 
 ---
 
 ## Test 2: One-Time Membership
 
 ### Steps
+
 1. Sign in or create account: http://localhost:5173/auth
 2. Navigate to: http://localhost:5173/membership
 3. Choose tier (e.g., Supporter - $50)
@@ -53,6 +57,7 @@ _________________________________________________
 7. Should redirect to success page
 
 ### Verify
+
 - [ ] Success page displays
 - [ ] Payment in Stripe Dashboard
 - [ ] Terminal shows webhook: `checkout.session.completed`
@@ -65,13 +70,15 @@ _________________________________________________
 - [ ] User dashboard shows active membership
 
 **Notes:**
-_________________________________________________
+
+---
 
 ---
 
 ## Test 3: Recurring Membership (Subscription)
 
 ### Steps
+
 1. Sign in as new user (or use different email)
 2. Navigate to: http://localhost:5173/membership
 3. Choose tier (e.g., Advocate - $100)
@@ -80,6 +87,7 @@ _________________________________________________
 6. Should redirect to success page
 
 ### Verify
+
 - [ ] Success page displays
 - [ ] Stripe Dashboard → Subscriptions shows active subscription
 - [ ] Terminal shows webhook: `checkout.session.completed`
@@ -91,13 +99,15 @@ _________________________________________________
 - [ ] User dashboard shows subscription status
 
 **Notes:**
-_________________________________________________
+
+---
 
 ---
 
 ## Test 4: Subscription Renewal
 
 ### Steps
+
 1. In Stripe Dashboard (Test mode):
    - Go to: Subscriptions
    - Find your test subscription
@@ -106,6 +116,7 @@ _________________________________________________
 2. Check terminal for webhook
 
 ### Verify
+
 - [ ] Terminal shows webhook: `invoice.payment_succeeded`
 - [ ] Database: `membership_expires_at` extended by 1 year
 - [ ] Database: New record in `transactions` table
@@ -113,18 +124,21 @@ _________________________________________________
 - [ ] Database: `stripe_subscription_id` populated
 
 **Notes:**
-_________________________________________________
+
+---
 
 ---
 
 ## Test 5: Subscription Cancellation
 
 ### Steps
+
 1. Navigate to: http://localhost:5173/private/membership
 2. Click "Cancel Subscription" (or cancel in Stripe Dashboard)
 3. Confirm cancellation
 
 ### Verify
+
 - [ ] Terminal shows webhook: `customer.subscription.deleted`
 - [ ] Database: `profiles` → `is_member` = false
 - [ ] Database: `stripe_membership_subscription_id` = null
@@ -132,13 +146,15 @@ _________________________________________________
 - [ ] Stripe Dashboard shows subscription status = "Canceled"
 
 **Notes:**
-_________________________________________________
+
+---
 
 ---
 
 ## Test 6: Anonymous Donation
 
 ### Steps
+
 1. Log out (if logged in)
 2. Navigate to: http://localhost:5173/donate
 3. Fill in donor info
@@ -146,6 +162,7 @@ _________________________________________________
 5. Complete checkout
 
 ### Verify
+
 - [ ] Success page displays
 - [ ] Payment in Stripe Dashboard
 - [ ] Terminal shows webhook
@@ -153,49 +170,57 @@ _________________________________________________
 - [ ] Database: `donor_metadata` contains info
 
 **Notes:**
-_________________________________________________
+
+---
 
 ---
 
 ## Test 7: Error Handling - Declined Card
 
 ### Steps
+
 1. Go to donation or membership page
 2. Use declined test card: `4000 0000 0000 0002`
 3. Attempt checkout
 
 ### Verify
+
 - [ ] Stripe shows decline message
 - [ ] User returned to form (not charged)
 - [ ] NO webhook fired
 - [ ] NO database entry created
 
 **Notes:**
-_________________________________________________
+
+---
 
 ---
 
 ## Test 8: Error Handling - 3D Secure Required
 
 ### Steps
+
 1. Go to donation or membership page
 2. Use 3D Secure card: `4000 0025 0000 3155`
 3. Complete authentication
 
 ### Verify
+
 - [ ] Authentication modal appears
 - [ ] After auth, payment succeeds
 - [ ] Webhook fires
 - [ ] Database updated correctly
 
 **Notes:**
-_________________________________________________
+
+---
 
 ---
 
 ## Production Verification (Real Money!)
 
 ### Before Going Live
+
 - [ ] All above tests passed in test mode
 - [ ] Webhook endpoint configured in Stripe (Live mode): `https://fairgo.org.au/api/stripe-webhook`
 - [ ] Webhook events selected: `checkout.session.completed`, `invoice.payment_succeeded`, `customer.subscription.deleted`
@@ -203,6 +228,7 @@ _________________________________________________
 - [ ] Production deployment complete
 
 ### Small Real Payment Test
+
 - [ ] Make $5 donation with real card
 - [ ] Payment appears in Stripe (Live mode)
 - [ ] Webhook fires (check Netlify logs)
@@ -210,6 +236,7 @@ _________________________________________________
 - [ ] Refund processed successfully
 
 ### Stakeholder Test
+
 - [ ] Stakeholder makes small donation
 - [ ] Stakeholder signs up for membership
 - [ ] All webhooks fire correctly
@@ -217,24 +244,28 @@ _________________________________________________
 - [ ] Stakeholder can access member area
 
 **Notes:**
-_________________________________________________
+
+---
 
 ---
 
 ## Troubleshooting
 
 ### Webhook Not Firing
+
 1. Check Stripe CLI is running: `stripe listen --forward-to localhost:5173/api/stripe-webhook`
 2. Check webhook secret matches in `.env`
 3. Check terminal for errors
 
 ### Database Not Updating
+
 1. Check server logs for errors
 2. Verify Supabase service role key in `.env`
 3. Check webhook handler code for bugs
 4. Verify RLS policies allow updates
 
 ### Payment Succeeds but Webhook Fails
+
 1. Check Stripe Dashboard → Developers → Events
 2. Look for failed webhook attempts
 3. Check response code (should be 200)
@@ -264,11 +295,11 @@ npm run dev
 
 ## Test Cards Reference
 
-| Scenario | Card Number | Result |
-|----------|-------------|--------|
-| Success | 4242 4242 4242 4242 | Payment succeeds |
-| Decline | 4000 0000 0000 0002 | Payment declined |
-| 3D Secure | 4000 0025 0000 3155 | Requires authentication |
+| Scenario           | Card Number         | Result                        |
+| ------------------ | ------------------- | ----------------------------- |
+| Success            | 4242 4242 4242 4242 | Payment succeeds              |
+| Decline            | 4000 0000 0000 0002 | Payment declined              |
+| 3D Secure          | 4000 0025 0000 3155 | Requires authentication       |
 | Insufficient funds | 4000 0000 0000 9995 | Declined (insufficient funds) |
 
 **All cards**: Use any future expiry date, any 3-digit CVC, any ZIP code
