@@ -111,22 +111,22 @@ export const POST: RequestHandler = async ({ request }) => {
 			console.log('Successfully updated profile for user:', userId)
 		}
 
-		// Only insert transaction for one-time payments
-		if (!isRecurring) {
-			const { error: transactionError } = await supabaseAdmin.from('transactions').insert({
-				user_id: userId,
-				stripe_payment_id: stripePaymentId,
-				transaction_type: 'membership',
-				amount: session.amount_total || 0,
-				currency: 'aud',
-				status: 'succeeded'
-			})
+		// Insert transaction for initial payment (both one-time and recurring)
+		// Note: invoice.paid handles RENEWAL payments for subscriptions
+		const { error: transactionError} = await supabaseAdmin.from('transactions').insert({
+			user_id: userId,
+			stripe_payment_id: stripePaymentId,
+			...(stripeSubscriptionId && { stripe_subscription_id: stripeSubscriptionId }),
+			transaction_type: 'membership',
+			amount: session.amount_total || 0,
+			currency: 'aud',
+			status: 'succeeded'
+		})
 
-			if (transactionError) {
-				console.error('Failed to insert transaction:', transactionError)
-			} else {
-				console.log('Successfully recorded transaction')
-			}
+		if (transactionError) {
+			console.error('Failed to insert transaction:', transactionError)
+		} else {
+			console.log('Successfully recorded transaction')
 		}
 	}
 
