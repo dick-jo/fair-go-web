@@ -73,15 +73,29 @@ export const HEADER_CONTENT: HeaderContentItem[] = [
 	}
 ]
 
+import { PUBLIC_ENABLE_TEST_PRICING } from '$env/static/public'
+
 export interface MembershipTier {
 	label: string
 	value: number
 }
 
-export const MEMBERSHIP_TIERS: MembershipTier[] = [
+// Test pricing: $1 for all tiers (Stripe's minimum for subscriptions)
+// Production pricing: $50-$250
+const TEST_TIERS: MembershipTier[] = [
+	{ label: 'supporter', value: 1 },
+	{ label: 'advocate', value: 1 },
+	{ label: 'partisan', value: 1 },
+	{ label: 'champion', value: 1 },
+	{ label: 'visionary', value: 1 }
+]
+
+const PROD_TIERS: MembershipTier[] = [
 	{ label: 'supporter', value: 50 },
 	{ label: 'advocate', value: 100 },
 	{ label: 'partisan', value: 150 },
 	{ label: 'champion', value: 200 },
 	{ label: 'visionary', value: 250 }
 ]
+
+export const MEMBERSHIP_TIERS: MembershipTier[] = PUBLIC_ENABLE_TEST_PRICING === 'true' ? TEST_TIERS : PROD_TIERS

@@ -1,20 +1,31 @@
 import type { RequestHandler } from './$types'
 import Stripe from 'stripe'
-import { STRIPE_SECRET_KEY } from '$env/static/private'
+import { STRIPE_SECRET_KEY, ENABLE_TEST_PRICING } from '$env/static/private'
 import { error, json } from '@sveltejs/kit'
 
 const stripe = new Stripe(STRIPE_SECRET_KEY, {
 	apiVersion: '2025-08-27.basil'
 })
 
-// Your fee structure
-const ALLOWED_TIERS = {
+// Test pricing: $1 for all tiers
+const TEST_TIERS = {
+	supporter: 100, // $1
+	advocate: 100, // $1
+	partisan: 100, // $1
+	champion: 100, // $1
+	visionary: 100 // $1
+} as const
+
+// Production pricing
+const PROD_TIERS = {
 	supporter: 5000, // $50
 	advocate: 10000, // $100
 	partisan: 15000, // $150
 	champion: 20000, // $200
 	visionary: 25000 // $250
 } as const
+
+const ALLOWED_TIERS = ENABLE_TEST_PRICING === 'true' ? TEST_TIERS : PROD_TIERS
 
 export const POST: RequestHandler = async ({ request, locals }) => {
 	const { user } = await locals.safeGetSession()
