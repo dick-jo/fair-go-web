@@ -418,16 +418,18 @@
 			<!-- BODY ---------------------------------------------- -->
 			<div class="body">
 				<div class="secondary">
-					{#each FORM_CONTENT[membershipFormStep].description as p, i}
-						{#key membershipFormStep}
-							<p in:fly={{ x: 12.5, duration: ANIM_CONFIG.duration * 3, delay: ANIM_CONFIG.delay * (i + 1) }}>
-								{p}
-							</p>
-							{#if i < FORM_CONTENT[membershipFormStep].description.length - 1}
-								<br />
-							{/if}
-						{/key}
-					{/each}
+					<div class="wrapper">
+						{#each FORM_CONTENT[membershipFormStep].description as p, i}
+							{#key membershipFormStep}
+								<p in:fly={{ x: 12.5, duration: ANIM_CONFIG.duration * 3, delay: ANIM_CONFIG.delay * (i + 1) }}>
+									{p}
+								</p>
+								{#if i < FORM_CONTENT[membershipFormStep].description.length - 1}
+									<br />
+								{/if}
+							{/key}
+						{/each}
+					</div>
 				</div>
 
 				<div class="primary">
@@ -846,8 +848,6 @@
 					grid-template-columns: repeat(12, 1fr);
 					@media screen and (max-width: 720px) {
 						align-items: start;
-						/* height: fit-content; */
-						/* min-height: fit-content; */
 					}
 
 					/* SECONDARY -------------------------------------------- */
@@ -858,9 +858,11 @@
 						}
 						padding: var(--loc-gap);
 						grid-column: span var(--loc-grid-cols);
-						/* display: flex; */
-						/* flex-direction: column; */
-						/* justify-content: center; */
+
+						& > .wrapper {
+							position: sticky;
+							top: calc(var(--sp-10) + var(--layout--nav-top--height) + var(--gap-s));
+						}
 					}
 
 					/* PRIMARY ---------------------------------------------- */
@@ -909,6 +911,9 @@
 										width: 100%;
 										display: flex;
 										gap: var(--loc-gap);
+										@media screen and (max-width: 560px) {
+											flex-direction: column;
+										}
 									}
 								}
 
