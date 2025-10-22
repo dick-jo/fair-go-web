@@ -77,11 +77,7 @@
 	</div>
 
 	{#if navCompactIsOpen}
-		<nav
-			id="nav-top--display--compact"
-			data-visible={navCompactIsOpen}
-			transition:fade={{ duration: 150 }}
-		>
+		<nav id="nav-top--display--compact" data-visible={navCompactIsOpen} transition:fade={{ duration: 150 }}>
 			<ul>
 				{#each navItems as item}
 					<li class="item">
@@ -92,32 +88,32 @@
 				{#if !session}
 					<li class="item--action">
 						<a href="/auth" onclick={toggleNavCompact}>
-							<Button label="Log in" intent="secondary" colorway="dv" />
+							<Button label="Log in" intent="secondary" colorway="dv" fit="extrinsic" />
 						</a>
 					</li>
 
 					<li class="item--action">
 						<a href="/auth#section--auth--sign-up" onclick={toggleNavCompact}>
-							<Button label="Sign Up" intent="secondary" colorway="primary" />
+							<Button label="Sign Up" intent="secondary" colorway="primary" fit="extrinsic" />
 						</a>
 					</li>
 				{:else if session}
 					<li class="item--action">
 						<a href="/private" onclick={toggleNavCompact}>
-							<Button label="Your Profile" intent="secondary" colorway="primary" />
+							<Button label="Your Profile" intent="secondary" colorway="primary" fit="extrinsic" />
 						</a>
 					</li>
 				{/if}
 
 				<li class="item--action">
 					<a href="/membership" onclick={toggleNavCompact}>
-						<Button label="Membership" intent="primary" colorway="primary" />
+						<Button label="Membership" intent="primary" colorway="primary" fit="extrinsic" />
 					</a>
 				</li>
 
 				<li class="item--action">
 					<a href="/donate" onclick={toggleNavCompact}>
-						<Button label="Donate" intent="primary" colorway="primary" />
+						<Button label="Donate" intent="primary" colorway="primary" fit="extrinsic" />
 					</a>
 				</li>
 			</ul>
@@ -180,7 +176,7 @@
 			justify-content: end;
 			align-items: center;
 			&#nav-top--display--large {
-				@media screen and (max-width: 720px) {
+				@media screen and (max-width: 800px) {
 					display: none;
 				}
 			}
@@ -206,11 +202,6 @@
 							--loc-clr-border: var(--clr-primary);
 						}
 					}
-					/* &:not(.item--action) { */
-					/* 	@media screen and (max-width: 800px) { */
-					/* 		display: none; */
-					/* 	} */
-					/* } */
 					height: 100%;
 					display: flex;
 					align-items: center;
@@ -237,14 +228,13 @@
 			--loc-size: var(--sp-6);
 			--loc-clr-ink: var(--clr-primary);
 			width: var(--sp-6);
-			/* height: var(--sp-6); */
 			display: flex;
 			justify-content: center;
 			align-items: center;
 			border-style: none;
 			background-color: transparent;
 			cursor: pointer;
-			@media screen and (min-width: 720px) {
+			@media screen and (min-width: 800px) {
 				display: none;
 			}
 
@@ -270,6 +260,9 @@
 			backdrop-filter: blur(var(--sp-2));
 
 			ul {
+				width: 100%;
+				max-width: calc(var(--sp-12) * 3);
+				/* background-color: red; */
 				flex: 3;
 				list-style: none;
 				display: flex;
@@ -277,6 +270,16 @@
 				align-items: center;
 				justify-content: center;
 				gap: var(--gap-l);
+
+				li {
+					width: 100%;
+
+					& > a {
+						width: 100%;
+						display: flex;
+						justify-content: center;
+					}
+				}
 			}
 
 			#action--close-compact {
@@ -285,7 +288,6 @@
 				border-style: none;
 				background-color: transparent;
 				border-top: var(--bdw) solid var(--clr-primary-tr-light);
-				/* background-color: var(--clr-dv-heavy-tr-light); */
 			}
 		}
 	}
