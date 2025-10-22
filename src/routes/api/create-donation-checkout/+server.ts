@@ -9,9 +9,6 @@ const stripe = new Stripe(STRIPE_SECRET_KEY, {
 })
 
 export const POST: RequestHandler = async ({ request, locals, url }) => {
-	// DEBUG: Log last 4 chars of Stripe key to verify which one is being used
-	console.log('STRIPE_SECRET_KEY last 4 chars:', STRIPE_SECRET_KEY.slice(-4))
-
 	const { user } = await locals.safeGetSession()
 
 	const body = await request.json()
