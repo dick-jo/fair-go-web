@@ -15,9 +15,11 @@
 	}
 
 	function getStripeUrl(paymentId: string) {
-		// Links to Stripe Dashboard - test mode for now
-		// TODO
-		const baseUrl = 'https://dashboard.stripe.com/test'
+		// Determine if we're in test or live mode based on environment
+		// In production (fairgo.org.au), use live dashboard; otherwise use test
+		const isProduction = typeof window !== 'undefined' && window.location.hostname === 'fairgo.org.au'
+		const mode = isProduction ? 'live' : 'test'
+		const baseUrl = `https://dashboard.stripe.com/${mode}`
 
 		if (paymentId.startsWith('pi_')) {
 			return `${baseUrl}/payments/${paymentId}`
