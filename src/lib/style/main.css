@@ -70,6 +70,9 @@ main {
 				grid-template-columns: repeat(12, 1fr);
 				align-items: start;
 				gap: var(--loc-gap);
+				@media screen and (max-width: 560px) {
+					gap: var(--gap-min);
+				}
 
 				& > * {
 					--loc-grid-cols: 4;
