@@ -66,7 +66,7 @@ export async function createUserWithMagicLink(
 
 	// SUCCESS ---------------------------------------------- //
 	return {
-		message: 'Account Created! Check your inbox for your magic link.'
+		message: 'Account Created! Check your inbox for your magic link. (Check spam/junk if you don't see it)'
 	}
 }
 
@@ -111,6 +111,6 @@ export async function sendLoginMagicLink(
 	}
 
 	return {
-		message: 'Check your inbox for a magic login link!'
+		message: 'Check your inbox for a magic login link! (Check spam/junk if you don't see it)'
 	}
 }
