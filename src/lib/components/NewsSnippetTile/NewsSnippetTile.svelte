@@ -2,6 +2,7 @@
 	import { getMediaUrl, truncateText } from '$lib/utils'
 	import DateLabel from '$lib/components/DateLabel/DateLabel.svelte'
 	import Chip from '$lib/components/Chip/Chip.svelte'
+	import OptimizedImage from '$lib/components/OptimizedImage/OptimizedImage.svelte'
 	import type { Tables } from '$lib/types/supabase.types'
 	import type { ChipProps } from '../Chip/types'
 
@@ -25,7 +26,11 @@
 	<!-- MEDIA --------------------------------------------- -->
 	<div class="media-container">
 		{#if article.featured_image_path}
-			<img src={getMediaUrl(article.featured_image_path)} alt={article.featured_image_alt || article.title} />
+			<OptimizedImage
+				src={article.featured_image_path}
+				alt={article.featured_image_alt || article.title}
+				sizes="(max-width: 960px) 100vw, (max-width: 1440px) 50vw, 33vw"
+			/>
 		{/if}
 	</div>
 
@@ -110,14 +115,18 @@
 				min-height: calc(var(--sp-12) * 2);
 			}
 
-			img {
+			/* OptimizedImage should fill container */
+			:global(.optimized-image-container) {
 				width: 100%;
 				height: 100%;
-				object-fit: cover;
+			}
+
+			/* Hover effect on OptimizedImage */
+			:global(.optimized-image-container img) {
 				transition: var(--loc-transition);
-				.host:hover & {
-					transform: scale(1.125);
-				}
+			}
+			.host:hover & :global(.optimized-image-container img) {
+				transform: scale(1.125);
 			}
 		}
 
