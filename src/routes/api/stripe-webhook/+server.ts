@@ -7,7 +7,7 @@ import { error } from '@sveltejs/kit'
 import type { Database } from '$lib/types/supabase.types'
 
 const stripe = new Stripe(STRIPE_SECRET_KEY, {
-	apiVersion: '2025-08-27.basil'
+	apiVersion: '2025-09-30.clover'
 })
 
 const supabaseAdmin = createClient<Database>(PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
@@ -134,7 +134,7 @@ export const POST: RequestHandler = async ({ request }) => {
 	if (event.type === 'invoice.payment_succeeded') {
 		const invoice = event.data.object as Stripe.Invoice
 
-		const subscriptionId = invoice.parent?.subscription_details?.subscription as string
+		const subscriptionId = invoice.subscription as string
 		const invoiceId = invoice.id as string
 		const customerId = invoice.customer as string
 
