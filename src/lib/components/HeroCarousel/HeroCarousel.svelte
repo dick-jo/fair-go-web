@@ -116,7 +116,7 @@
 
 	<div class="body">
 		{#if !isTransitioning}
-			<div class="primary">
+			<a href={items[activeItemIndex].href} class="primary">
 				<h3 class="label" transition:fly={{ x: -100, duration: HERO_CAROUSEL_T_TRANSITION }}>
 					{items[activeItemIndex].label}
 				</h3>
@@ -125,7 +125,7 @@
 						<span>{chunk}</span>
 					{/each}
 				</h2>
-			</div>
+			</a>
 		{/if}
 
 		<div class="secondary">
@@ -220,6 +220,8 @@
 				display: flex;
 				flex-direction: column;
 				gap: var(--gap-s);
+				text-decoration: none;
+				color: inherit;
 
 				/* TEXT ------------------------------------------------- */
 				& > .label {
