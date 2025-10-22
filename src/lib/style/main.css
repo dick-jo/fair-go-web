@@ -25,6 +25,7 @@ body {
 	--clamp--content-width--max: 1600px;
 	--clamp--content-width--s: 1080px;
 	--clamp--content-width--s-x: 800px;
+	--clamp--content-width--min: 600px;
 }
 
 /* LAYOUT ----------------------------------------------- */
