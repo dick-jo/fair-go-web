@@ -76,12 +76,20 @@
 			flex-direction: column;
 			/* ROW -------------------------------------------------- */
 			& > .row {
+				--loc-grid-cols: 2;
+				@media screen and (max-width: 600px) {
+					--loc-grid-cols: 1;
+				}
 				display: grid;
-				grid-template-columns: repeat(2, 1fr);
+				grid-template-columns: repeat(var(--loc-grid-cols), 1fr);
 				border-bottom: var(--bdw) solid var(--clr-dv);
 				& > :global(*) {
 					&:first-child {
 						border-right: var(--bdw) solid var(--clr-dv);
+						@media screen and (max-width: 600px) {
+							border-right: none;
+							border-bottom: var(--bdw) solid var(--clr-dv);
+						}
 					}
 				}
 			}
