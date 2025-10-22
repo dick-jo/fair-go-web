@@ -130,8 +130,8 @@ export const POST: RequestHandler = async ({ request }) => {
 		}
 	}
 
-	// INVOICE: Payment Succeeded
-	if (event.type === 'invoice.payment_succeeded') {
+	// INVOICE: Payment Succeeded (handles both invoice.paid and invoice.payment_succeeded)
+	if (event.type === 'invoice.payment_succeeded' || event.type === 'invoice.paid') {
 		const invoice = event.data.object as Stripe.Invoice
 
 		const subscriptionId = invoice.subscription as string
