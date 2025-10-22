@@ -5,7 +5,7 @@
 	import type { Tables } from '$lib/types/supabase.types'
 	import type { ChipProps } from '../Chip/types'
 
-	const SNIPPET_MAX_LENGTH = 256
+	const SNIPPET_MAX_LENGTH = 200
 
 	type NewsArticle = Tables<'news_articles'>
 
@@ -79,7 +79,7 @@
 		gap: var(--loc-gap);
 		background-color: var(--loc-clr-bg);
 		transition: var(--loc-transition);
-		@container (max-width: 400px) {
+		@container (max-width: 600px) {
 			flex-direction: column;
 		}
 
@@ -89,18 +89,20 @@
 				--loc-width: 100%;
 				--loc-height: auto;
 				--loc-ratio: 16/9;
+				--loc-flex: 0 1 auto;
 			}
 			.host.presentation--row & {
 				--loc-width: auto;
 				--loc-height: 100%;
 				--loc-ratio: 16/9;
+				--loc-flex: 1;
 			}
 			width: var(--loc-width);
 			height: var(--loc-height);
 			aspect-ratio: var(--loc-ratio);
 			overflow: hidden;
 			background-color: var(--clr-dv);
-			@container (max-width: 400px) {
+			@container (max-width: 600px) {
 				min-height: calc(var(--sp-12) * 2);
 			}
 
