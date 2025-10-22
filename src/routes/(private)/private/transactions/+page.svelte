@@ -14,20 +14,8 @@
 		return `$${(cents / 100).toFixed(2)}`
 	}
 
-	function getStripeUrl(paymentId: string) {
-		// Determine if we're in test or live mode based on environment
-		// In production (fairgo.org.au), use live dashboard; otherwise use test
-		const isProduction = typeof window !== 'undefined' && window.location.hostname === 'fairgo.org.au'
-		const mode = isProduction ? 'live' : 'test'
-		const baseUrl = `https://dashboard.stripe.com/${mode}`
-
-		if (paymentId.startsWith('pi_')) {
-			return `${baseUrl}/payments/${paymentId}`
-		} else if (paymentId.startsWith('in_')) {
-			return `${baseUrl}/invoices/${paymentId}`
-		}
-		return null
-	}
+	// Note: Stripe dashboard links removed - they're only accessible to admins with Stripe account access,
+	// not to regular users. All transaction details are shown in the table below.
 </script>
 
 {#if data.transactions.length === 0}
@@ -40,8 +28,7 @@
 				<th>Type</th>
 				<th>Amount</th>
 				<th>Status</th>
-				<th>Subscription</th>
-				<th>Receipt</th>
+				<th>Payment</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -52,13 +39,6 @@
 					<td>{formatAmount(txn.amount)}</td>
 					<td>{txn.status}</td>
 					<td>{txn.stripe_subscription_id ? 'Recurring' : 'One-time'}</td>
-					<td>
-						{#if txn.stripe_payment_id && getStripeUrl(txn.stripe_payment_id)}
-							<a href={getStripeUrl(txn.stripe_payment_id)} target="_blank" rel="noopener"> View </a>
-						{:else}
-							-
-						{/if}
-					</td>
 				</tr>
 			{/each}
 		</tbody>
