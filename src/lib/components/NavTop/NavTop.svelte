@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { NAV_ITEMS } from '$lib/config'
-	import { MenuIcon, Undo2Icon, XIcon } from '@lucide/svelte'
+	import { MenuIcon, Undo2Icon } from '@lucide/svelte'
 	import Button from '../Button/Button.svelte'
 	import type { Session } from '@supabase/supabase-js'
 	import { fade } from 'svelte/transition'
@@ -15,7 +15,6 @@
 
 	// STATE ------------------------------------------------ //
 	let navCompactIsOpen = $state<boolean>(false)
-	$inspect(navCompactIsOpen)
 
 	function toggleNavCompact() {
 		navCompactIsOpen = !navCompactIsOpen
@@ -78,42 +77,46 @@
 	</div>
 
 	{#if navCompactIsOpen}
-		<nav id="nav-top--display--compact" data-visible={navCompactIsOpen} transition:fade={{ duration: 150 }}>
+		<nav
+			id="nav-top--display--compact"
+			data-visible={navCompactIsOpen}
+			transition:fade={{ duration: 150 }}
+		>
 			<ul>
 				{#each navItems as item}
 					<li class="item">
-						<a href={item.href}>{item.label}</a>
+						<a href={item.href} onclick={toggleNavCompact}>{item.label}</a>
 					</li>
 				{/each}
 
 				{#if !session}
 					<li class="item--action">
-						<a href="/auth">
+						<a href="/auth" onclick={toggleNavCompact}>
 							<Button label="Log in" intent="secondary" colorway="dv" />
 						</a>
 					</li>
 
 					<li class="item--action">
-						<a href="/auth#section--auth--sign-up">
+						<a href="/auth#section--auth--sign-up" onclick={toggleNavCompact}>
 							<Button label="Sign Up" intent="secondary" colorway="primary" />
 						</a>
 					</li>
 				{:else if session}
 					<li class="item--action">
-						<a href="/private">
+						<a href="/private" onclick={toggleNavCompact}>
 							<Button label="Your Profile" intent="secondary" colorway="primary" />
 						</a>
 					</li>
 				{/if}
 
 				<li class="item--action">
-					<a href="/membership">
+					<a href="/membership" onclick={toggleNavCompact}>
 						<Button label="Membership" intent="primary" colorway="primary" />
 					</a>
 				</li>
 
 				<li class="item--action">
-					<a href="/donate">
+					<a href="/donate" onclick={toggleNavCompact}>
 						<Button label="Donate" intent="primary" colorway="primary" />
 					</a>
 				</li>
@@ -250,6 +253,7 @@
 			}
 		}
 
+		/* COMPACT NAV ------------------------------------------ */
 		nav#nav-top--display--compact {
 			padding: var(--gap-l);
 			position: fixed;
