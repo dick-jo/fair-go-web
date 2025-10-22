@@ -56,20 +56,31 @@ export const POST: RequestHandler = async ({ request }) => {
 				postcode: session.metadata?.donor_postcode
 			}
 
-			const { error: transactionError } = await supabaseAdmin.from('transactions').insert({
-				user_id: userId || null,
-				stripe_payment_id: stripePaymentId,
-				transaction_type: 'donation',
-				amount: session.amount_total || 0,
-				currency: session.currency || 'aud',
-				status: 'succeeded',
-				donor_metadata: donorMetadata
-			})
+			// Check for duplicates first (multiple events can fire for same payment)
+			const { data: existingDonation } = await supabaseAdmin
+				.from('transactions')
+				.select('id')
+				.eq('stripe_payment_id', stripePaymentId)
+				.single()
 
-			if (transactionError) {
-				console.error('Failed to insert donation transaction:', transactionError)
+			if (existingDonation) {
+				console.log('Donation transaction already exists for payment:', stripePaymentId)
 			} else {
-				console.log('Successfully recorded donation')
+				const { error: transactionError } = await supabaseAdmin.from('transactions').insert({
+					user_id: userId || null,
+					stripe_payment_id: stripePaymentId,
+					transaction_type: 'donation',
+					amount: session.amount_total || 0,
+					currency: session.currency || 'aud',
+					status: 'succeeded',
+					donor_metadata: donorMetadata
+				})
+
+				if (transactionError) {
+					console.error('Failed to insert donation transaction:', transactionError)
+				} else {
+					console.log('Successfully recorded donation')
+				}
 			}
 
 			return new Response(null, { status: 200 })
