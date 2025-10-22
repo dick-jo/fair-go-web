@@ -5,7 +5,8 @@
 	const { data } = $props()
 </script>
 
-<section style="padding: var(--gap-max); text-align: center;">
+<!-- TEMPLATE ------------------------------------------ -->
+<section>
 	<CircleCheckBig size={64} style="color: var(--clr-success); margin: 0 auto;" />
 
 	<h1>Thank You for Your Donation!</h1>
@@ -27,3 +28,7 @@
 		<Button label="Return to Home" onclick={() => (window.location.href = '/')} />
 	</div>
 </section>
+
+<!-- CSS ----------------------------------------------- -->
+<style>
+</style>

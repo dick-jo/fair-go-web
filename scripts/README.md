@@ -1,45 +1,47 @@
 # Database Testing Utility Scripts
 
-SQL scripts to help with testing and development. **Only use on test data!**
+SQL scripts for testing payment flows during development. **Only use on test data!**
 
-## Quick Reference
+## Available Scripts
+
+All SQL scripts are in `scripts/sql/`:
 
 ### Reset Test User's Membership
 
-**Use case:** You want to test membership signup again with the same user account.
+**Use case:** Clean slate for testing membership signup flow again.
 
 ```bash
-# Edit the script first to set your test email
-code scripts/reset-test-membership.sql
+# Edit the script first to replace 'your-test-email@example.com'
+code scripts/sql/reset-test-membership.sql
 
 # Run it
-supabase db execute --file scripts/reset-test-membership.sql
+supabase db execute --file scripts/sql/reset-test-membership.sql
 ```
 
-Or use the Supabase web GUI: Dashboard → SQL Editor → paste script contents.
+Or use the Supabase Dashboard → SQL Editor → paste script contents.
 
 ### View Test User Status
 
-**Use case:** Check if a user's membership data is correct.
+**Use case:** Check current membership status and Stripe IDs for a user.
 
 ```bash
 # Edit the script first to set your test email
-code scripts/view-test-user.sql
+code scripts/sql/view-test-user.sql
 
 # Run it
-supabase db execute --file scripts/view-test-user.sql
+supabase db execute --file scripts/sql/view-test-user.sql
 ```
 
 ### Delete Test Transactions
 
-**Use case:** Clean up test payment records (be careful!).
+**Use case:** Clean up test payment records (careful - deletes transaction history!).
 
 ```bash
 # Edit the script first to set your test email
-code scripts/delete-test-transactions.sql
+code scripts/sql/delete-test-transactions.sql
 
 # Run it (shows transactions but doesn't delete by default)
-supabase db execute --file scripts/delete-test-transactions.sql
+supabase db execute --file scripts/sql/delete-test-transactions.sql
 
 # To actually delete, uncomment the DELETE line in the script
 ```
@@ -80,7 +82,7 @@ Instead of `your-test-email@example.com`, use an alias:
 Create a bash alias in your `~/.zshrc` or `~/.bashrc`:
 
 ```bash
-alias reset-membership="supabase db execute --file ~/project-local/fair-go-web/scripts/reset-test-membership.sql"
+alias reset-membership="supabase db execute --file ~/project-local/fair-go-web/scripts/sql/reset-test-membership.sql"
 ```
 
 Then just run: `reset-membership`
@@ -99,5 +101,5 @@ WHERE email = :'TEST_EMAIL';
 
 Then run:
 ```bash
-psql -v TEST_EMAIL='test@example.com' -f scripts/reset-test-membership.sql
+psql -v TEST_EMAIL='test@example.com' -f scripts/sql/reset-test-membership.sql
 ```
