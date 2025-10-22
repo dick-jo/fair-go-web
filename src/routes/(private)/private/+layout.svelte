@@ -97,7 +97,9 @@
 			}
 			padding: var(--loc-gap);
 			grid-column: span var(--loc-grid-cols);
-			border-bottom: var(--bdw) solid var(--clr-dv);
+			@media screen and (max-width: 720px) {
+				border-bottom: var(--bdw) solid var(--clr-dv);
+			}
 
 			ul {
 				--loc-gap: var(--gap-s);
