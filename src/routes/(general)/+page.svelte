@@ -20,31 +20,31 @@
 <SectionHero heroCarouselItems={data.carouselItems} />
 
 <!-- NEWS ---------------------------------------------- -->
-<section id="section--news-snippets-row">
-	<div class="section-header section-header--flex">
-		<div class="title-container">
-			<NewspaperIcon />
-			<h2 class="text text--title">LATEST UPDATES</h2>
-		</div>
-
-		<a href="/news">
-			<Button label="More News & Updates" intent="secondary" />
-		</a>
-	</div>
-
-	<div class="section-body">
-		{#each data.newsArticles as article}
-			<div class="item">
-				<NewsSnippetTile
-					{article}
-					chips={article.category?.map((cat) => ({
-						label: cat
-					})) ?? []}
-				/>
-			</div>
-		{/each}
-	</div>
-</section>
+<!-- <section id="section--news-snippets-row"> -->
+<!-- 	<div class="section-header section-header--flex"> -->
+<!-- 		<div class="title-container"> -->
+<!-- 			<NewspaperIcon /> -->
+<!-- 			<h2 class="text text--title">LATEST UPDATES</h2> -->
+<!-- 		</div> -->
+<!---->
+<!-- 		<a href="/news"> -->
+<!-- 			<Button label="More News & Updates" intent="secondary" /> -->
+<!-- 		</a> -->
+<!-- 	</div> -->
+<!---->
+<!-- 	<div class="section-body"> -->
+<!-- 		{#each data.newsArticles as article} -->
+<!-- 			<div class="item"> -->
+<!-- 				<NewsSnippetTile -->
+<!-- 					{article} -->
+<!-- 					chips={article.category?.map((cat) => ({ -->
+<!-- 						label: cat -->
+<!-- 					})) ?? []} -->
+<!-- 				/> -->
+<!-- 			</div> -->
+<!-- 		{/each} -->
+<!-- 	</div> -->
+<!-- </section> -->
 
 <!-- POLICY -------------------------------------------- -->
 <section id="section--policy-snippets-row">
