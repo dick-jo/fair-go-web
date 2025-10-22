@@ -81,7 +81,7 @@
 					width: 100%;
 					max-width: var(--clamp--content-width--s);
 					max-height: calc(var(--sp-12) * 3);
-					@media screen and (max-width: 600px) {
+					@media screen and (max-width: 720px) {
 						max-height: auto;
 						height: fit-content;
 						min-height: fit-content;

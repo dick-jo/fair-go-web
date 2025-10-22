@@ -79,7 +79,7 @@
 		gap: var(--loc-gap);
 		background-color: var(--loc-clr-bg);
 		transition: var(--loc-transition);
-		@container (max-width: 600px) {
+		@container (max-width: 720px) {
 			flex-direction: column;
 		}
 
@@ -87,22 +87,26 @@
 		.media-container {
 			.host.presentation--column & {
 				--loc-width: 100%;
+				--loc-width--max: 100%;
 				--loc-height: auto;
 				--loc-ratio: 16/9;
-				--loc-flex: 0 1 auto;
 			}
 			.host.presentation--row & {
 				--loc-width: auto;
+				--loc-width--max: 50%;
 				--loc-height: 100%;
 				--loc-ratio: 16/9;
-				--loc-flex: 1;
+				@container (max-width: 720px) {
+					--loc-width--max: 100%;
+				}
 			}
 			width: var(--loc-width);
+			max-width: var(--loc-width--max);
 			height: var(--loc-height);
 			aspect-ratio: var(--loc-ratio);
 			overflow: hidden;
 			background-color: var(--clr-dv);
-			@container (max-width: 600px) {
+			@container (max-width: 720px) {
 				min-height: calc(var(--sp-12) * 2);
 			}
 
