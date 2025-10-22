@@ -32,6 +32,7 @@
 		--loc-height: var(--sp-5);
 		--loc-gap: var(--gap-l);
 		height: var(--loc-height);
+		min-height: fit-content;
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
