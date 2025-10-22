@@ -112,21 +112,31 @@ export const POST: RequestHandler = async ({ request }) => {
 		}
 
 		// Insert transaction for initial payment (both one-time and recurring)
-		// Note: invoice.paid handles RENEWAL payments for subscriptions
-		const { error: transactionError} = await supabaseAdmin.from('transactions').insert({
-			user_id: userId,
-			stripe_payment_id: stripePaymentId,
-			...(stripeSubscriptionId && { stripe_subscription_id: stripeSubscriptionId }),
-			transaction_type: 'membership',
-			amount: session.amount_total || 0,
-			currency: 'aud',
-			status: 'succeeded'
-		})
+		// Check for duplicates first (multiple events can fire for same payment)
+		const { data: existingTransaction } = await supabaseAdmin
+			.from('transactions')
+			.select('id')
+			.eq('stripe_payment_id', stripePaymentId)
+			.single()
 
-		if (transactionError) {
-			console.error('Failed to insert transaction:', transactionError)
+		if (existingTransaction) {
+			console.log('Transaction already exists for payment:', stripePaymentId)
 		} else {
-			console.log('Successfully recorded transaction')
+			const { error: transactionError } = await supabaseAdmin.from('transactions').insert({
+				user_id: userId,
+				stripe_payment_id: stripePaymentId,
+				...(stripeSubscriptionId && { stripe_subscription_id: stripeSubscriptionId }),
+				transaction_type: 'membership',
+				amount: session.amount_total || 0,
+				currency: 'aud',
+				status: 'succeeded'
+			})
+
+			if (transactionError) {
+				console.error('Failed to insert transaction:', transactionError)
+			} else {
+				console.log('Successfully recorded transaction')
+			}
 		}
 	}
 
@@ -180,20 +190,31 @@ export const POST: RequestHandler = async ({ request }) => {
 			})
 			.eq('id', profile.data.id)
 
-		const { error: transactionError } = await supabaseAdmin.from('transactions').insert({
-			user_id: profile.data.id,
-			stripe_payment_id: invoiceId,
-			stripe_subscription_id: subscriptionId,
-			transaction_type: 'membership',
-			amount: invoice.amount_paid,
-			currency: invoice.currency,
-			status: 'succeeded'
-		})
+		// Check for duplicates (multiple invoice events fire for same payment)
+		const { data: existingTransaction } = await supabaseAdmin
+			.from('transactions')
+			.select('id')
+			.eq('stripe_payment_id', invoiceId)
+			.single()
 
-		if (transactionError) {
-			console.error('Failed to insert transaction from invoice:', transactionError)
+		if (existingTransaction) {
+			console.log('Transaction already exists for invoice:', invoiceId)
 		} else {
-			console.log('Successfully recorded subscription payment')
+			const { error: transactionError } = await supabaseAdmin.from('transactions').insert({
+				user_id: profile.data.id,
+				stripe_payment_id: invoiceId,
+				stripe_subscription_id: subscriptionId,
+				transaction_type: 'membership',
+				amount: invoice.amount_paid,
+				currency: invoice.currency,
+				status: 'succeeded'
+			})
+
+			if (transactionError) {
+				console.error('Failed to insert transaction from invoice:', transactionError)
+			} else {
+				console.log('Successfully recorded subscription payment')
+			}
 		}
 	}
 
