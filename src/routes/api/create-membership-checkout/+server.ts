@@ -59,6 +59,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 		const checkoutSession = await stripe.checkout.sessions.create({
 			payment_method_types: ['card'],
 			mode: recurring ? 'subscription' : 'payment', // Dynamic mode
+			customer_creation: 'always', // Always create Stripe customer for consistent tracking
 			line_items: [
 				{
 					price_data: {
