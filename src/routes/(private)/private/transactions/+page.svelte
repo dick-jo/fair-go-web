@@ -1,4 +1,6 @@
 <script lang="ts">
+	import SEO from '$lib/components/SEO/SEO.svelte'
+
 	const { data } = $props()
 
 	function formatDate(dateString: string | null) {
@@ -17,6 +19,12 @@
 	// Note: Stripe dashboard links removed - they're only accessible to admins with Stripe account access,
 	// not to regular users. All transaction details are shown in the table below.
 </script>
+
+<SEO
+	title="Transaction History"
+	description="View your Fair Go donation and membership payment history."
+	noindex={true}
+/>
 
 {#if data.transactions.length === 0}
 	<p>No transactions yet.</p>

@@ -3,9 +3,15 @@
 	import ContentSnippetTile from '$lib/components/ContentSnippetTile/ContentSnippetTile.svelte'
 	import type { PageData } from './$types'
 	import SectionCtaRow from '$lib/components/SectionCtaRow/SectionCtaRow.svelte'
+	import SEO from '$lib/components/SEO/SEO.svelte'
 
 	const { data }: { data: PageData } = $props()
 </script>
+
+<SEO
+	title="Our Philosophy"
+	description="Explore Fair Go's guiding principles of freedom, accountability, and community strength. Learn about our values, objectives, and what we stand against in building a fairer Australia."
+/>
 
 <!-- HTML ---------------------------------------------- -->
 <section id="section--philosophy">

@@ -1,7 +1,10 @@
 <script lang="ts">
 	import Button from '$lib/components/Button/Button.svelte'
 	import { CircleCheckBig } from '@lucide/svelte'
+	import SEO from '$lib/components/SEO/SEO.svelte'
 </script>
+
+<SEO title="Membership Successful" description="Welcome to Fair Go! Your membership is now active." noindex={true} />
 
 <!-- TEMPLATE ------------------------------------------ -->
 <section id="section--membership--success" class="host">

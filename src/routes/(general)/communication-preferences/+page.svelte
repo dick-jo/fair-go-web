@@ -6,6 +6,7 @@
 	import { toaster } from '$lib/services/toaster/service.svelte'
 	import type { ActionResult } from '@sveltejs/kit'
 	import type { ActionData, PageData } from './$types'
+	import SEO from '$lib/components/SEO/SEO.svelte'
 
 	const { data }: { data: PageData; form: ActionData } = $props()
 
@@ -51,6 +52,12 @@
 		}
 	}
 </script>
+
+<SEO
+	title="Communication Preferences"
+	description="Manage your email subscription preferences with Fair Go."
+	noindex={true}
+/>
 
 <!-- MARKUP -------------------------------------------- -->
 <section id="section--email-preferences">

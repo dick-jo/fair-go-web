@@ -7,9 +7,15 @@
 	import ContentSnippetTile from '$lib/components/ContentSnippetTile/ContentSnippetTile.svelte'
 	import { getPolicyIcon } from '$lib/utils'
 	import Button from '$lib/components/Button/Button.svelte'
+	import SEO from '$lib/components/SEO/SEO.svelte'
 
 	const { data }: { data: PageData } = $props()
 </script>
+
+<SEO
+	title="A Political Movement for All Australians"
+	description="Join Fair Go in building a fairer Australia. Explore our policies on housing, healthcare, climate, and social justice. Become a member today."
+/>
 
 <SectionHero heroCarouselItems={data.carouselItems} />
 

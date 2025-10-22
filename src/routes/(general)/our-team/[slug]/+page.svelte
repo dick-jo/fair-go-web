@@ -9,10 +9,30 @@
 	import { LandPlotIcon } from '@lucide/svelte'
 	import { getPolicyIcon } from '$lib/utils/policyIcons'
 	import type { PageData } from './$types'
+	import SEO from '$lib/components/SEO/SEO.svelte'
+	import { generateBreadcrumbSchema } from '$lib/utils/breadcrumbSchema'
 
 	const { data }: { data: PageData } = $props()
 	const { member, petPolicies } = data
+
+	const breadcrumbItems = [
+		{ label: 'Home', href: '/' },
+		{ label: 'Our Team', href: '/our-team' },
+		{ label: member.name }
+	]
+
+	const breadcrumbSchema = generateBreadcrumbSchema(breadcrumbItems)
 </script>
+
+<SEO
+	title={member.name}
+	description={member.short_bio || member.bio || `Meet ${member.name}, ${member.title} at Fair Go`}
+	image={member.profile_image_path ? getMediaUrl(member.profile_image_path) : undefined}
+/>
+
+<svelte:head>
+	{@html `<script type="application/ld+json">${breadcrumbSchema}</script>`}
+</svelte:head>
 
 <!-- HTML ---------------------------------------------- -->
 <!-- HERO -->

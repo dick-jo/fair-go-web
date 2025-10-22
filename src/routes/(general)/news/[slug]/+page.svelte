@@ -8,10 +8,25 @@
 	import HeroTitle from '$lib/components/HeroTitle/HeroTitle.svelte'
 	import Breadcrumbs from '$lib/components/Breadcrumbs/Breadcrumbs.svelte'
 	import Delin from '$lib/components/Delin/Delin.svelte'
+	import SEO from '$lib/components/SEO/SEO.svelte'
 
 	const { data }: { data: PageData } = $props()
 	const { article } = data
 </script>
+
+<SEO
+	title={article.short_title || article.title}
+	description={article.snippet}
+	image={article.featured_image_path ? getMediaUrl(article.featured_image_path) : undefined}
+	type="article"
+	article={{
+		publishedTime: article.published_at,
+		modifiedTime: article.updated_at,
+		author: 'Fair Go',
+		section: 'News',
+		tags: article.category || []
+	}}
+/>
 
 <!-- HTML ---------------------------------------------- -->
 {#if article.featured_image_path}

@@ -4,9 +4,15 @@
 	import Button from '$lib/components/Button/Button.svelte'
 	import { getPolicyIcon } from '$lib/utils'
 	import type { PageData } from './$types'
+	import SEO from '$lib/components/SEO/SEO.svelte'
 
 	const { data }: { data: PageData } = $props()
 </script>
+
+<SEO
+	title="Our Plan"
+	description="Discover Fair Go's comprehensive plan for a fairer Australia. Explore our policies, values, and strategies to tackle waste, empower communities, and build a better future."
+/>
 
 <!-- MARKUP -------------------------------------------- -->
 <section id="section--our-plan" class="host">

@@ -5,11 +5,17 @@
 	import { getMediaUrl } from '$lib/utils'
 	import type { Tables } from '$lib/types/supabase.types'
 	import HeroTitle from '$lib/components/HeroTitle/HeroTitle.svelte'
+	import SEO from '$lib/components/SEO/SEO.svelte'
 
 	type TeamMember = Tables<'team_members'>
 
 	const { data }: { data: PageData } = $props()
 </script>
+
+<SEO
+	title="Our Team"
+	description="Meet the Fair Go team—passionate Australians driving change and fighting for fairness. Get to know the people building a stronger, fairer Australia."
+/>
 
 {#snippet teamMemberTile(member: TeamMember)}
 	<a href="/our-team/{member.slug}" class="team-member-tile">

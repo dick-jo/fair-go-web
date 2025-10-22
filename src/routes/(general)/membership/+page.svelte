@@ -13,6 +13,7 @@
 	import { ArrowRightIcon, CheckIcon, OctagonAlertIcon } from '@lucide/svelte'
 	import InputCheckbox from '$lib/components/InputCheckbox/InputCheckbox.svelte'
 	import { elasticOut } from 'svelte/easing'
+	import SEO from '$lib/components/SEO/SEO.svelte'
 
 	interface MembershipPageData extends PageData {
 		profile: Database['public']['Tables']['profiles']['Row'] | null
@@ -372,6 +373,11 @@
 		</footer>
 	</div>
 {/snippet}
+
+<SEO
+	title="Become a Member"
+	description="Join Fair Go and become part of Australia's growing movement for fairness and change. Choose your membership tier and help us fight for a fair go for all Australians."
+/>
 
 <!-- MARKUP -------------------------------------------- -->
 <section id="section--membership--host" class="host">

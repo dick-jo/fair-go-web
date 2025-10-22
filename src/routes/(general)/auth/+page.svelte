@@ -5,6 +5,7 @@
 	import type { ActionResult } from '@sveltejs/kit'
 	import { enhance } from '$app/forms'
 	import type { ActionData } from './$types'
+	import SEO from '$lib/components/SEO/SEO.svelte'
 
 	const { form }: { form: ActionData } = $props()
 
@@ -51,6 +52,12 @@
 		}
 	}
 </script>
+
+<SEO
+	title="Log In or Sign Up"
+	description="Access your Fair Go account or create a new one to get started."
+	noindex={true}
+/>
 
 <!-- MARKUP -------------------------------------------- -->
 <section id="section--auth" class="host">

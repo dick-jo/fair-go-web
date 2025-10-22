@@ -8,6 +8,7 @@
 	import type { ActionData } from './$types'
 	import { toaster } from '$lib/services/toaster/service.svelte'
 	import type { ActionResult } from '@sveltejs/kit'
+	import SEO from '$lib/components/SEO/SEO.svelte'
 
 	interface PrivatePageData {
 		user: any | null
@@ -113,6 +114,12 @@
 		}
 	}
 </script>
+
+<SEO
+	title="Member Dashboard"
+	description="Manage your Fair Go profile, volunteer status, and communication preferences."
+	noindex={true}
+/>
 
 <!-- SNIPPETS ------------------------------------------ -->
 {#snippet accordionHeader(title: string, isOpen: boolean, toggle: () => void)}

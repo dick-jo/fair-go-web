@@ -2,6 +2,7 @@
 	import AlertBox from '$lib/components/AlertBox/AlertBox.svelte'
 	import Button from '$lib/components/Button/Button.svelte'
 	import { OctagonAlert } from '@lucide/svelte'
+	import SEO from '$lib/components/SEO/SEO.svelte'
 
 	const { data } = $props()
 
@@ -34,6 +35,12 @@
 		}
 	}
 </script>
+
+<SEO
+	title="Manage Membership"
+	description="View and manage your Fair Go membership status and subscription."
+	noindex={true}
+/>
 
 <!-- MARKUP -------------------------------------------- -->
 {#if !data.profile?.is_member}

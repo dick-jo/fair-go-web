@@ -1,9 +1,16 @@
 <script lang="ts">
 	import Button from '$lib/components/Button/Button.svelte'
 	import { CircleCheckBig } from '@lucide/svelte'
+	import SEO from '$lib/components/SEO/SEO.svelte'
 
 	const { data } = $props()
 </script>
+
+<SEO
+	title="Donation Successful"
+	description="Thank you for your support! Your donation has been processed successfully."
+	noindex={true}
+/>
 
 <!-- TEMPLATE ------------------------------------------ -->
 <section id="section--donate--success" class="host">

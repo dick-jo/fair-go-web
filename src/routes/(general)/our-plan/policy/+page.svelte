@@ -4,13 +4,20 @@
 	import { getPolicyIcon } from '$lib/utils/policyIcons'
 	import { LandPlotIcon } from '@lucide/svelte'
 	import type { PageData } from './$types'
+	import SEO from '$lib/components/SEO/SEO.svelte'
 
 	const { data }: { data: PageData } = $props()
 
 	const titleText = data.selectedCategory
 		? `${data.selectedCategory.charAt(0).toUpperCase() + data.selectedCategory.slice(1)} Policies`
 		: 'Our Policies'
+
+	const pageDescription = data.selectedCategory
+		? `Explore Fair Go's ${data.selectedCategory} policies. Practical solutions for a fairer Australia, shaped by everyday people.`
+		: "Explore Fair Go's comprehensive policy platform. Practical, common-sense solutions for housing, healthcare, climate, and more."
 </script>
+
+<SEO title={titleText} description={pageDescription} />
 
 <!-- HTML ---------------------------------------------- -->
 <section id="section--our-policies" class="host">

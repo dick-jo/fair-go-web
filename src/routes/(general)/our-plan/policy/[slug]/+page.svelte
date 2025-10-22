@@ -8,10 +8,38 @@
 	import Breadcrumbs from '$lib/components/Breadcrumbs/Breadcrumbs.svelte'
 	import Chip from '$lib/components/Chip/Chip.svelte'
 	import DateLabel from '$lib/components/DateLabel/DateLabel.svelte'
+	import SEO from '$lib/components/SEO/SEO.svelte'
+	import { generateBreadcrumbSchema } from '$lib/utils/breadcrumbSchema'
 
 	const { data }: { data: PageData } = $props()
 	const { policy } = data
+
+	const breadcrumbItems = [
+		{ label: 'Home', href: '/' },
+		{ label: 'Our Plan', href: '/our-plan' },
+		{ label: 'Policy', href: '/our-plan/policy' },
+		...(policy.category?.[0]
+			? [
+					{
+						label: policy.category[0],
+						href: `/our-plan/policy?category=${policy.category[0]}`
+					}
+				]
+			: []),
+		{ label: policy.short_title || policy.title }
+	]
+
+	const breadcrumbSchema = generateBreadcrumbSchema(breadcrumbItems)
 </script>
+
+<SEO
+	title={policy.short_title || policy.title}
+	description={policy.snippet || policy.introduction || `Fair Go's policy on ${policy.title}`}
+/>
+
+<svelte:head>
+	{@html `<script type="application/ld+json">${breadcrumbSchema}</script>`}
+</svelte:head>
 
 <!-- HTML ---------------------------------------------- -->
 <div class="page-clamp">

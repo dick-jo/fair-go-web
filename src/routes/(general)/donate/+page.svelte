@@ -9,6 +9,7 @@
 	import Button from '$lib/components/Button/Button.svelte'
 	import Delin from '$lib/components/Delin/Delin.svelte'
 	import { DONATION_AMOUNTS } from '$lib/config/donations'
+	import SEO from '$lib/components/SEO/SEO.svelte'
 
 	interface DonatePageData extends PageData {
 		profile: Tables<'profiles'> | null
@@ -63,6 +64,11 @@
 		}
 	}
 </script>
+
+<SEO
+	title="Donate to Fair Go"
+	description="Support Fair Go's fight for a fairer Australia. Your donation helps us tackle rising costs, weak governance, and build strong communities across the nation."
+/>
 
 <!-- INTRO -->
 <section id="section--donate--intro">

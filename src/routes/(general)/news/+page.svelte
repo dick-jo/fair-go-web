@@ -3,13 +3,20 @@
 	import Chip from '$lib/components/Chip/Chip.svelte'
 	import { NewspaperIcon } from '@lucide/svelte'
 	import type { PageData } from './$types'
+	import SEO from '$lib/components/SEO/SEO.svelte'
 
 	const { data }: { data: PageData } = $props()
 
 	const titleText = data.selectedCategory
 		? `${data.selectedCategory.charAt(0).toUpperCase() + data.selectedCategory.slice(1)} News`
 		: 'News & Updates'
+
+	const pageDescription = data.selectedCategory
+		? `Latest ${data.selectedCategory} news and updates from Fair Go. Stay informed about our fight for fairness and change in Australia.`
+		: 'Stay up to date with the latest news, updates, and announcements from Fair Go. Follow our fight for a fairer Australia.'
 </script>
+
+<SEO title={titleText} description={pageDescription} />
 
 <!-- HTML ---------------------------------------------- -->
 <section id="section--news" class="host">

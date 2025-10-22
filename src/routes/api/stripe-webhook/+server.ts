@@ -152,7 +152,11 @@ export const POST: RequestHandler = async ({ request }) => {
 	}
 
 	// INVOICE: Payment Succeeded (handles all invoice payment events for renewals)
-	if (event.type === 'invoice.payment_succeeded' || event.type === 'invoice.paid' || event.type === 'invoice_payment.paid') {
+	if (
+		event.type === 'invoice.payment_succeeded' ||
+		event.type === 'invoice.paid' ||
+		event.type === 'invoice_payment.paid'
+	) {
 		const invoice = event.data.object as Stripe.Invoice
 
 		// TypeScript types incomplete - subscription exists at runtime
