@@ -4,7 +4,7 @@ import { STRIPE_SECRET_KEY } from '$env/static/private'
 import { error, json } from '@sveltejs/kit'
 
 const stripe = new Stripe(STRIPE_SECRET_KEY, {
-	apiVersion: '2025-09-30.clover'
+	apiVersion: '2025-09-30.clover' as '2025-08-27.basil'
 })
 
 export const POST: RequestHandler = async ({ locals }) => {

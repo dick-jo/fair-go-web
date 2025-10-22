@@ -2,7 +2,7 @@ import Stripe from 'stripe'
 import { STRIPE_SECRET_KEY } from '$env/static/private'
 import type { PageServerLoad } from '../$types'
 
-const stripe = new Stripe(STRIPE_SECRET_KEY, { apiVersion: '2025-09-30.clover' })
+const stripe = new Stripe(STRIPE_SECRET_KEY, { apiVersion: '2025-09-30.clover' as '2025-08-27.basil' })
 
 export const load: PageServerLoad = async ({ locals: { safeGetSession, supabase } }) => {
 	const { user } = await safeGetSession()
