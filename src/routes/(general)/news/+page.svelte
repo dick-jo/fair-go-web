@@ -59,6 +59,7 @@
 			<div class="clamp">
 				<h4 class="text--title">Browse by Category:</h4>
 				<div class="chips-container">
+					<Chip label="All" href="/news" />
 					{#each data.allCategories as cat}
 						<Chip label={cat} href="/news?category={cat}" />
 					{/each}
