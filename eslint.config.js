@@ -43,5 +43,10 @@ export default [
 				parser: tsParser
 			}
 		}
+	},
+	{
+		rules: {
+			'n/prefer-global/process': 'off'
+		}
 	}
 ]

@@ -73,6 +73,7 @@ export const POST: RequestHandler = async ({ request }) => {
 					amount: session.amount_total || 0,
 					currency: session.currency || 'aud',
 					status: 'succeeded',
+					env: process.env.NODE_ENV,
 					donor_metadata: donorMetadata
 				})
 
@@ -140,7 +141,8 @@ export const POST: RequestHandler = async ({ request }) => {
 				transaction_type: 'membership',
 				amount: session.amount_total || 0,
 				currency: 'aud',
-				status: 'succeeded'
+				status: 'succeeded',
+				env: process.env.NODE_ENV
 			})
 
 			if (transactionError) {
@@ -222,7 +224,8 @@ export const POST: RequestHandler = async ({ request }) => {
 				transaction_type: 'membership',
 				amount: invoice.amount_paid,
 				currency: invoice.currency,
-				status: 'succeeded'
+				status: 'succeeded',
+				env: process.env.NODE_ENV
 			})
 
 			if (transactionError) {
