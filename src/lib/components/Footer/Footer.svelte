@@ -117,6 +117,10 @@
 	</div>
 </div>
 
+<div id="footer--authorisation">
+	<span>Authorised by J. Lutman for FairGo for Australians, 447 Brighton Road Brighton 5048</span>
+</div>
+
 <!-- CSS remains the same -->
 <style>
 	.host {
@@ -208,6 +212,19 @@
 					}
 				}
 			}
+		}
+	}
+
+	#footer--authorisation {
+		padding: var(--gap-l);
+		display: flex;
+		justify-content: center;
+		align-items: center;
+
+		& > span {
+			font: var(--font--body--secondary);
+			font-size: var(--fs-1);
+			text-align: center;
 		}
 	}
 </style>
