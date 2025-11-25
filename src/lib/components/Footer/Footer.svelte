@@ -118,7 +118,10 @@
 </div>
 
 <div id="footer--authorisation">
-	<span>Authorised by J. Lutman for FairGo for Australians, 447 Brighton Road Brighton 5048</span>
+	<span
+		>Authorized by Henry Davis for Sarah Game-Fair Go for Australians (Incorporation Number A45670), 447 Brighton Rd.,
+		Brighton, 5048</span
+	>
 </div>
 
 <!-- CSS remains the same -->
