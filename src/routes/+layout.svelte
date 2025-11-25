@@ -9,8 +9,12 @@
 	import { invalidate } from '$app/navigation'
 	import Footer from '$lib/components/Footer/Footer.svelte'
 	import { seoConfig } from '$lib/config/seo'
+	import { page } from '$app/state'
 
 	const { data, children } = $props()
+
+	// TEMPORARY: Hide nav/footer on holding page
+	const isHoldingPage = $derived(page.url.pathname === '/holding')
 	const { session, supabase } = $derived(data)
 
 	onMount(() => {
@@ -59,7 +63,11 @@
 	{@html `<script type="application/ld+json">${websiteSchema}</script>`}
 </svelte:head>
 
-<Toaster />
-<NavTop session={data.session} />
+{#if !isHoldingPage}
+	<Toaster />
+	<NavTop session={data.session} />
+{/if}
 {@render children()}
-<Footer />
+{#if !isHoldingPage}
+	<Footer />
+{/if}
